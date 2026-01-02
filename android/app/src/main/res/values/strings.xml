@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SuperCycle</string>
+    <string name="facebook_app_id">2056723885157530</string>
+    <string name="facebook_client_token">cd2437f23d7d15dd6da98de7eac256cd</string>
+    <string name="fb_login_protocol_scheme">fb2056723885157530</string>
+</resources>

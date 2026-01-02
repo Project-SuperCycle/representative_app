@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "855015056699",
+    "project_id": "supercycle-b07f1",
+    "storage_bucket": "supercycle-b07f1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855015056699:android:46041f5a5b09d9acd5831e",
+        "android_client_info": {
+          "package_name": "com.example.supercycle_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855015056699-o21tck1692lvdu6s5nfmgqr7m78b6tnf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.supercycle_app",
+            "certificate_hash": "e350bae9673d6bf7d1057e156b4c4b97625e2a84"
+          }
+        },
+        {
+          "client_id": "855015056699-af2slad2cj0pcqkaauans322pbllinms.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwyjJgIOgY7LQjjjP2VIrQA-Zg3GQdPNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855015056699-af2slad2cj0pcqkaauans322pbllinms.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "855015056699-4a0rkmpqo2o3l02f99o5ddu1a8po0taa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.supercycleApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
