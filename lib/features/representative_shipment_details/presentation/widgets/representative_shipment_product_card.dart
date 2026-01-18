@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
 import 'package:supercycle/core/services/dosh_types_manager.dart';
 import 'package:supercycle/core/services/services_locator.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
 
 class RepresentativeShipmentProductCard extends StatelessWidget {
   final DoshItemModel item;

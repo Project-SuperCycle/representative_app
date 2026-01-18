@@ -3,17 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:supercycle/core/cubits/add_notes_cubit/add_notes_cubit.dart';
 import 'package:supercycle/core/cubits/local_cubit/local_cubit.dart';
 import 'package:supercycle/core/cubits/social_auth/social_auth_cubit.dart';
 import 'package:supercycle/core/repos/social_auth_repo_imp.dart';
 import 'package:supercycle/core/routes/routes.dart';
 import 'package:supercycle/core/services/services_locator.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/environment/data/cubits/create_request_cubit/create_request_cubit.dart';
-import 'package:supercycle/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
-import 'package:supercycle/features/environment/data/cubits/requests_cubit/requests_cubit.dart';
-import 'package:supercycle/features/environment/data/repos/environment_repo_imp.dart';
 import 'package:supercycle/features/forget_password/data/cubits/forget_password_cubit.dart';
 import 'package:supercycle/features/forget_password/data/repos/forget_password_repo_imp.dart';
 import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
@@ -29,10 +24,6 @@ import 'package:supercycle/features/representative_shipment_review/data/cubits/f
 import 'package:supercycle/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
 import 'package:supercycle/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
 import 'package:supercycle/features/representative_shipment_review/data/repos/rep_shipment_review_repo_imp.dart';
-import 'package:supercycle/features/sales_process/data/repos/sales_process_repo_imp.dart';
-import 'package:supercycle/features/trader_shipment_details/data/cubits/shipment_cubit/shipment_cubit.dart';
-import 'package:supercycle/features/trader_shipment_details/data/repos/shipment_details_repo_imp.dart';
-import 'package:supercycle/features/trader_shipment_details/data/repos/shipment_notes_repo_imp.dart';
 import 'package:supercycle/features/shipment_edit/data/cubits/shipment_edit_cubit.dart';
 import 'package:supercycle/features/shipment_edit/data/repos/shipment_edit_repo_imp.dart';
 import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
@@ -42,7 +33,6 @@ import 'package:supercycle/features/sign_in/data/repos/signin_repo_imp.dart';
 import 'package:supercycle/features/sign_up/data/managers/sign_up_cubit/sign_up_cubit.dart';
 import 'package:supercycle/features/sign_up/data/repos/signup_repo_imp.dart';
 import 'package:supercycle/firebase_options.dart';
-import 'features/sales_process/data/cubit/create_shipment_cubit/create_shipment_cubit.dart';
 import 'generated/l10n.dart';
 
 void main() async {
@@ -67,21 +57,6 @@ void main() async {
         ),
         BlocProvider(
           create: (context) => HomeCubit(homeRepo: getIt.get<HomeRepoImp>()),
-        ),
-        BlocProvider(
-          create: (context) => CreateShipmentCubit(
-            shipmentReviewRepo: getIt.get<SalesProcessRepoImp>(),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => ShipmentCubit(
-            shipmentDetailsRepo: getIt.get<ShipmentDetailsRepoImp>(),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => AddNotesCubit(
-            shipmentNotesRepo: getIt.get<ShipmentNotesRepoImp>(),
-          ),
         ),
         BlocProvider(
           create: (context) => ShipmentsCalendarCubit(
@@ -136,25 +111,10 @@ void main() async {
             return cubit;
           },
         ),
-        BlocProvider(
-          create: (context) =>
-              EcoCubit(environmentRepoImp: getIt.get<EnvironmentRepoImp>()),
-        ),
+
         BlocProvider(
           create: (context) => ForgetPasswordCubit(
             forgetPasswordRepoImp: getIt.get<ForgetPasswordRepoImp>(),
-          ),
-        ),
-
-        BlocProvider(
-          create: (context) => RequestsCubit(
-            environmentRepoImp: getIt.get<EnvironmentRepoImp>(),
-          ),
-        ),
-
-        BlocProvider(
-          create: (context) => CreateRequestCubit(
-            environmentRepoImp: getIt.get<EnvironmentRepoImp>(),
           ),
         ),
 

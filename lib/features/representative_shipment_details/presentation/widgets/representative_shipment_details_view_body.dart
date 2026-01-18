@@ -12,7 +12,7 @@ import 'package:supercycle/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
 import 'package:supercycle/features/representative_shipment_details/presentation/widgets/representative_shipment_actions_row.dart';
 import 'package:supercycle/features/representative_shipment_details/presentation/widgets/representative_shipment_details_content.dart';
 import 'package:supercycle/features/representative_shipment_details/presentation/widgets/representative_shipment_details_header.dart';
@@ -461,7 +461,7 @@ class _RepresentativeShipmentDetailsViewBodyState
     final status = widget.shipment.status;
 
     // إذا الحالة 'approved' ولم يتم اتخاذ إجراء واليوم هو تاريخ الاستلام
-    if (status == 'approved' && !hasActionBeenTaken) {
+    if (status == 'approved' && !hasActionBeenTaken && _isPickupDateToday()) {
       // إذا لم يتم الضغط على زر "بدأ المعاينة"، اعرض الزر
       if (!showInspectionActions) {
         return CustomButton(onPress: _startInspection, title: 'بدأ المعاينة');

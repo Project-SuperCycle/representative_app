@@ -60,9 +60,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
       },
       listener: (context, state) {
         if (state is GetShipmentSuccess && _isNavigating) {
-          final targetRoute = (userRole == 'representative')
-              ? EndPoints.representativeShipmentDetailsView
-              : EndPoints.traderShipmentDetailsView;
+          final targetRoute = EndPoints.representativeShipmentDetailsView;
 
           // استخدم push مع then للرجوع
           context.push(targetRoute, extra: state.shipment).then((_) {

@@ -45,17 +45,12 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   int _getIndexFromCurrentRoute() {
     final currentRoute = _getCurrentRoute();
 
-    if (currentRoute.contains(EndPoints.calculatorView)) {
-      return 0;
-    } else if (currentRoute.contains(EndPoints.salesProcessView)) {
+    if (currentRoute.contains(EndPoints.homeView) || currentRoute == '/') {
       return 1;
-    } else if (currentRoute.contains(EndPoints.homeView) ||
-        currentRoute == '/') {
-      return 2;
     } else if (currentRoute.contains(EndPoints.shipmentsCalendarView)) {
-      return 3;
+      return 0;
     } else if (currentRoute.contains(EndPoints.contactUsView)) {
-      return 4;
+      return 2;
     }
 
     return widget.currentIndex; // default fallback
@@ -128,18 +123,12 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   String? _getTargetRoute(int index) {
     switch (index) {
       case 0:
-        return EndPoints.calculatorView;
-      case 1:
-        return isUserLoggedIn
-            ? EndPoints.salesProcessView
-            : EndPoints.signInView;
-      case 2:
-        return EndPoints.homeView;
-      case 3:
         return isUserLoggedIn
             ? EndPoints.shipmentsCalendarView
             : EndPoints.signInView;
-      case 4:
+      case 1:
+        return EndPoints.homeView;
+      case 2:
         return EndPoints.contactUsView;
       default:
         return null;
@@ -180,26 +169,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     try {
       switch (index) {
         case 0:
-          // حاسبة الشحنات - متاحة للجميع
-          router.push(EndPoints.calculatorView);
-          break;
-
-        case 1:
-          // عملية البيع - تتطلب تسجيل دخول
-          if (isUserLoggedIn) {
-            router.push(EndPoints.salesProcessView);
-          } else {
-            _showLoginRequired('عملية البيع');
-            router.push(EndPoints.signInView);
-          }
-          break;
-
-        case 2:
-          // الصفحة الرئيسية - متاحة للجميع
-          router.pushReplacement(EndPoints.homeView);
-          break;
-
-        case 3:
           // جدول الشحنات - يتطلب تسجيل دخول
           if (isUserLoggedIn) {
             router.push(EndPoints.shipmentsCalendarView);
@@ -209,7 +178,12 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
           }
           break;
 
-        case 4:
+        case 1:
+          // الصفحة الرئيسية - متاحة للجميع
+          router.pushReplacement(EndPoints.homeView);
+          break;
+
+        case 2:
           // اتصل بنا - متاح للجميع
           router.push(EndPoints.contactUsView);
           break;
@@ -257,26 +231,15 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
       animationCurve: Curves.easeInOut,
       items: <Widget>[
         _buildNavigationItem(
-          asset: AppAssets.calculatorIcon,
+          asset: AppAssets.calendarIcon,
           isSvg: true,
-          label: 'حاسبة',
-        ),
-        _buildNavigationItem(
-          asset: AppAssets.boxIcon,
-          isSvg: true,
-          height: 30,
-          label: 'عملية بيع',
+          label: 'الجدول',
         ),
         _buildNavigationItem(
           asset: AppAssets.homeIcon,
           isSvg: false,
           height: 30,
           label: 'الرئيسية',
-        ),
-        _buildNavigationItem(
-          asset: AppAssets.calendarIcon,
-          isSvg: true,
-          label: 'الجدول',
         ),
         _buildNavigationItem(
           asset: AppAssets.chatIcon,

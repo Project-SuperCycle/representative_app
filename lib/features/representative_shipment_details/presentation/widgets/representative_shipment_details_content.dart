@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/features/representative_shipment_details/presentation/widgets/representative_shipment_details_summary.dart';
 import 'package:supercycle/features/representative_shipment_details/presentation/widgets/representative_shipment_product_card.dart';
-import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
 
 class RepresentativeShipmentDetailsContent extends StatelessWidget {
   final List<DoshItemModel> items;

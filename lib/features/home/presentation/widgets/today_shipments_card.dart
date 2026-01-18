@@ -26,7 +26,7 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
   void initState() {
     super.initState();
     getUserData();
-    // _loadTodayShipments();
+    _loadTodayShipments();
 
     // عند فتح الـ widget، اعرض الداتا المخزنة لو موجودة
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -214,15 +214,10 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
                       >(
                         listener: (context, state) {
                           if (state is GetShipmentSuccess) {
-                            (user.role == "representative")
-                                ? GoRouter.of(context).push(
-                                    EndPoints.representativeShipmentDetailsView,
-                                    extra: state.shipment,
-                                  )
-                                : GoRouter.of(context).push(
-                                    EndPoints.traderShipmentDetailsView,
-                                    extra: state.shipment,
-                                  );
+                            GoRouter.of(context).push(
+                              EndPoints.representativeShipmentDetailsView,
+                              extra: state.shipment,
+                            );
                           }
                         },
                         child: _ShipmentItem(

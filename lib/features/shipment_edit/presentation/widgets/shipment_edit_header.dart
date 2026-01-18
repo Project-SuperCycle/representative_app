@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:supercycle/core/helpers/date_time_picker_util.dart';
-import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
-import 'package:supercycle/features/sales_process/presentation/widgets/image_picker_widget.dart';
+import 'package:supercycle/features/shipment_edit/presentation/widgets/image_picker_widget.dart';
 
 class ShipmentEditHeader extends StatefulWidget {
   final List<File> selectedImages;

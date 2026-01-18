@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
 import 'package:supercycle/core/helpers/network_images_preview_dialog.dart';
 
 class RepresentativeShipmentDetailsHeader extends StatelessWidget {

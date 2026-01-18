@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supercycle/core/helpers/app_transitions.dart';
-import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
 import 'package:supercycle/core/models/user_profile_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/features/calculator/presentation/view/calculator_view.dart';
 import 'package:supercycle/features/contact_us/presentation/view/contact_us_view.dart';
-import 'package:supercycle/features/environment/presentation/views/environmental_impact_view.dart';
 import 'package:supercycle/features/forget_password/presentation/views/forget_password_view.dart';
 import 'package:supercycle/features/forget_password/presentation/views/reset_password_view.dart';
 import 'package:supercycle/features/forget_password/presentation/views/verify_reset_otp_view.dart';
@@ -20,7 +19,6 @@ import 'package:supercycle/features/representative_main_profile/presentation/vie
 import 'package:supercycle/features/representative_shipment_details/presentation/views/representative_shipment_details_view.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/views/representative_shipment_edit_view.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
-import 'package:supercycle/features/sales_process/presentation/views/sales_process_view.dart';
 import 'package:supercycle/features/shipment_edit/presentation/views/shipment_edit_view.dart';
 import 'package:supercycle/features/sign_in/presentation/views/sign_in_view.dart';
 import 'package:supercycle/features/sign_up/presentation/views/sign_up_details_view.dart';
@@ -28,8 +26,6 @@ import 'package:supercycle/features/sign_up/presentation/views/sign_up_verify_vi
 import 'package:supercycle/features/sign_up/presentation/views/sign_up_view.dart';
 import 'package:supercycle/features/splash/views/splash_view.dart';
 import 'package:supercycle/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
-import 'package:supercycle/features/trader_main_profile/presentation/view/trader_profile_view.dart';
-import 'package:supercycle/features/trader_shipment_details/presentation/views/trader_shipment_details_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -175,32 +171,6 @@ class AppRouter {
         ),
       ),
 
-      // ============================================================
-      // Sales Process - Smooth Transition
-      // ============================================================
-      GoRoute(
-        path: EndPoints.salesProcessView,
-        name: 'SalesProcess',
-        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
-          state.pageKey,
-          const SalesProcessView(),
-        ),
-      ),
-
-      // ============================================================
-      // Shipment Details - Fade with Scale
-      // ============================================================
-      GoRoute(
-        path: EndPoints.traderShipmentDetailsView,
-        name: 'TraderShipmentDetails',
-        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
-          state.pageKey,
-          TraderShipmentDetailsView(
-            shipment: state.extra as SingleShipmentModel,
-          ),
-        ),
-      ),
-
       GoRoute(
         path: EndPoints.representativeShipmentDetailsView,
         name: 'Representative Shipment Details',
@@ -263,15 +233,6 @@ class AppRouter {
         ),
       ),
 
-      GoRoute(
-        path: EndPoints.traderProfileView,
-        name: 'Trader Profile',
-        pageBuilder: (context, state) => AppTransitions.smoothFade(
-          state.pageKey,
-          TraderProfileView(userProfile: state.extra as UserProfileModel),
-        ),
-      ),
-
       // ============================================================
       // Review Screens - Details Transition
       // ============================================================
@@ -283,18 +244,6 @@ class AppRouter {
           RepresentativeShipmentReviewView(
             shipment: state.extra as SingleShipmentModel,
           ),
-        ),
-      ),
-
-      // ============================================================
-      // Environmental Impact - Main Style
-      // ============================================================
-      GoRoute(
-        path: EndPoints.environmentalImpactView,
-        name: 'Environmental Impact',
-        pageBuilder: (context, state) => AppTransitions.fadeForMain(
-          state.pageKey,
-          EnvironmentalImpactView(),
         ),
       ),
     ],

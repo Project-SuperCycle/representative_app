@@ -9,13 +9,9 @@ abstract class EndPoints {
   static const String secondOnboardingView = '/secondOnboardingView';
   static const String thirdOnboardingView = '/thirdOnboardingView';
   static const String fourthOnboardingView = '/fourthOnboardingView';
-  static const String salesProcessView = '/salesProcessView';
-  static const String traderShipmentPreviewView = '/traderShipmentPreviewView';
-  static const String traderShipmentDetailsView = '/traderShipmentDetailsView';
   static const String shipmentEditView = '/shipmentEditView';
   static const String shipmentsCalendarView = '/shipmentsCalendarView';
   static const String contactUsView = '/contactUsView';
-  static const String traderProfileView = '/traderProfileView';
   static const String editTraderProfileView = '/editTraderProfileView';
   static const String editProfileView = '/editProfileView';
 
@@ -36,6 +32,5 @@ abstract class EndPoints {
   static const String representativeShipmentEditView =
       '/representativeShipmentEditView';
 
-  static const String environmentalImpactView = '/environmentalImpactView';
   static const String calculatorView = '/calculatorView';
 }

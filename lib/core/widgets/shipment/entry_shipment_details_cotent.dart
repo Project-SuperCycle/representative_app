@@ -4,20 +4,22 @@ import 'package:supercycle/core/models/shipment/unit.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/widgets/shipment/editable_product_card.dart';
 
-class ShipmentEditContent extends StatefulWidget {
+class EntryShipmentDetailsContent extends StatefulWidget {
   final List<DoshItemModel> products;
   final Function(List<DoshItemModel>) onProductsChanged;
-  const ShipmentEditContent({
+  const EntryShipmentDetailsContent({
     super.key,
     required this.products,
     required this.onProductsChanged,
   });
 
   @override
-  State<ShipmentEditContent> createState() => _ShipmentEditContentState();
+  State<EntryShipmentDetailsContent> createState() =>
+      _EntryShipmentDetailsContentState();
 }
 
-class _ShipmentEditContentState extends State<ShipmentEditContent> {
+class _EntryShipmentDetailsContentState
+    extends State<EntryShipmentDetailsContent> {
   late List<DoshItemModel> editableProducts;
   bool _isUpdating = false; // Flag to prevent recursive updates
 
@@ -38,7 +40,7 @@ class _ShipmentEditContentState extends State<ShipmentEditContent> {
   }
 
   @override
-  void didUpdateWidget(ShipmentEditContent oldWidget) {
+  void didUpdateWidget(EntryShipmentDetailsContent oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Only update if products actually changed and we're not in the middle of an update
     if (!_isUpdating && widget.products != oldWidget.products) {

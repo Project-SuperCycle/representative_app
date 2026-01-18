@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
 import 'package:supercycle/features/shipments_calendar/data/models/shipment_model.dart';
 
 sealed class ShipmentsCalendarState extends Equatable {

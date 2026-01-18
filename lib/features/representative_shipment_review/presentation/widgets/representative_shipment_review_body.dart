@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
-import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/widgets/representative_shipment_review_header.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_card.dart';
 import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_states_row/representative_shipment_states.dart';

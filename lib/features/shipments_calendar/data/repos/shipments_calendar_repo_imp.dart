@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:supercycle/core/errors/failures.dart';
 import 'package:supercycle/core/helpers/error_handler.dart';
-import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
 import 'package:supercycle/core/services/api_endpoints.dart';
 import 'package:supercycle/core/services/api_services.dart';
 import 'package:supercycle/core/services/storage_services.dart';

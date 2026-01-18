@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/helpers/custom_snack_bar.dart';
-import 'package:supercycle/core/routes/end_points.dart';
-import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/widgets/custom_button.dart';
 import 'package:supercycle/features/home/data/models/dosh_type_model.dart';
-import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 import 'package:supercycle/generated/l10n.dart';
 
 class TypeCardItem extends StatefulWidget {
@@ -42,23 +36,6 @@ class _TypeCardItemState extends State<TypeCardItem> {
   }
 
   /// التحقق من تسجيل الدخول والانتقال للصفحة المناسبة
-  Future<void> _handleMakeProcess() async {
-    // جلب بيانات المستخدم
-    LoginedUserModel? user = await StorageServices.getUserData();
-
-    if (!mounted) return;
-
-    if (user != null) {
-      // المستخدم مسجل دخول - الانتقال لصفحة عملية البيع
-      GoRouter.of(context).push(EndPoints.salesProcessView);
-    } else {
-      // المستخدم غير مسجل - عرض رسالة والانتقال لصفحة تسجيل الدخول
-      CustomSnackBar.showError(context, 'يرجى تسجيل الدخول لإتمام عملية البيع');
-
-      // الانتقال لصفحة تسجيل الدخول
-      GoRouter.of(context).push(EndPoints.signInView);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -189,11 +166,6 @@ class _TypeCardItemState extends State<TypeCardItem> {
                             ],
                           ),
                         ),
-                      ),
-                      // ----- Button -----
-                      CustomButton(
-                        title: S.of(context).make_process,
-                        onPress: _handleMakeProcess,
                       ),
                     ],
                   ),

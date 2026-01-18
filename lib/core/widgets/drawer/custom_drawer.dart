@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/helpers/custom_snack_bar.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/services/auth_manager_services.dart';
@@ -9,7 +7,6 @@ import 'package:supercycle/core/services/storage_services.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/drawer/user_info_list_tile.dart';
-import 'package:supercycle/features/environment/data/cubits/eco_cubit/eco_cubit.dart';
 import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -153,33 +150,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       context.push(EndPoints.calculatorView);
                     },
                   ),
-
-                  if (user != null && user!.isEcoParticipant == true)
-                    BlocConsumer<EcoCubit, EcoState>(
-                      listener: (context, state) {
-                        if (state is GetEcoDataSuccess) {
-                          context.push(EndPoints.environmentalImpactView);
-                        }
-                      },
-                      builder: (context, state) {
-                        return (state is GetEcoDataLoading)
-                            ? SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: const CustomLoadingIndicator(),
-                              )
-                            : _buildDrawerItem(
-                                icon: Icons.eco_rounded,
-                                title: 'الأثر البيئي',
-                                isActive:
-                                    currentLocation ==
-                                    EndPoints.environmentalImpactView,
-                                onTap: () {
-                                  context.read<EcoCubit>().getTraderEcoInfo();
-                                },
-                              );
-                      },
-                    ),
 
                   _buildDrawerItem(
                     icon: Icons.notifications_rounded,

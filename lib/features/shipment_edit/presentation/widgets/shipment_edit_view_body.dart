@@ -6,19 +6,19 @@ import 'package:supercycle/core/constants.dart';
 import 'package:supercycle/core/functions/shipment_manager.dart';
 import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
 import 'package:supercycle/core/helpers/custom_snack_bar.dart';
-import 'package:supercycle/core/models/single_shipment_model.dart';
+import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
+import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
 import 'package:supercycle/core/utils/app_assets.dart';
 import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/custom_button.dart';
 import 'package:supercycle/core/helpers/custom_back_button.dart';
+import 'package:supercycle/core/widgets/shipment/entry_shipment_details_cotent.dart';
 import 'package:supercycle/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle/core/widgets/shipment/shipment_logo.dart';
 import 'package:supercycle/core/widgets/shipment/progress_widgets.dart';
 import 'package:supercycle/core/widgets/custom_text_field.dart';
-import 'package:supercycle/features/sales_process/data/models/dosh_item_model.dart';
-import 'package:supercycle/features/sales_process/presentation/widgets/entry_shipment_details_cotent.dart';
 import 'package:supercycle/core/widgets/shipment/shipment_details_notes.dart';
 import 'package:supercycle/features/shipment_edit/data/cubits/shipment_edit_cubit.dart';
 import 'package:supercycle/features/shipment_edit/data/models/edit_shipment_model.dart';
@@ -139,25 +139,7 @@ class _ShipmentEditViewBodyState extends State<ShipmentEditViewBody> {
                         const SizedBox(height: 20),
                         const ProgressBar(completedSteps: 0),
                         const SizedBox(height: 30),
-                        // Column(
-                        //   children: [
-                        //     Container(
-                        //       clipBehavior: Clip.antiAliasWithSaveLayer,
-                        //       decoration: BoxDecoration(
-                        //         borderRadius: BorderRadius.circular(8),
-                        //       ),
-                        //       child: ExpandableSection(
-                        //         title: 'بيانات جهة التعامل',
-                        //         iconPath: AppAssets.entityCard,
-                        //         isExpanded: isClientDataExpanded,
-                        //         maxHeight: 320,
-                        //         onTap: _toggleClientData,
-                        //         content: const ClientDataContent(),
-                        //       ),
-                        //     ),
-                        //     const SizedBox(height: 25),
-                        //   ],
-                        // ),
+
                         Container(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           decoration: BoxDecoration(

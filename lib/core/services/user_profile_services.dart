@@ -89,7 +89,6 @@ class UserProfileService {
       }
 
       final route = switch (fetchedUser.role) {
-        'trader_uncontracted' => EndPoints.traderProfileView,
         'representative' => EndPoints.representativeProfileView,
         _ => null,
       };
@@ -130,8 +129,6 @@ class UserProfileService {
       }
 
       final route = switch (fetchedUser.role) {
-        'trader_uncontracted' => EndPoints.traderProfileView,
-        'trader_contracted' => EndPoints.traderProfileView,
         'representative' => EndPoints.representativeProfileView,
         _ => null,
       };
