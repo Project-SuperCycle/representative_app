@@ -30,8 +30,6 @@ import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_cal
 import 'package:supercycle/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
 import 'package:supercycle/features/sign_in/data/cubits/sign-in-cubit/sign_in_cubit.dart';
 import 'package:supercycle/features/sign_in/data/repos/signin_repo_imp.dart';
-import 'package:supercycle/features/sign_up/data/managers/sign_up_cubit/sign_up_cubit.dart';
-import 'package:supercycle/features/sign_up/data/repos/signup_repo_imp.dart';
 import 'package:supercycle/firebase_options.dart';
 import 'generated/l10n.dart';
 
@@ -46,10 +44,6 @@ void main() async {
         BlocProvider(
           create: (context) =>
               SignInCubit(signInRepo: getIt.get<SignInRepoImp>()),
-        ),
-        BlocProvider(
-          create: (context) =>
-              SignUpCubit(signUpRepo: getIt.get<SignUpRepoImp>()),
         ),
         BlocProvider(
           create: (context) =>

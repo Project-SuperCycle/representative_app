@@ -4,7 +4,6 @@ import 'package:supercycle/core/helpers/app_transitions.dart';
 import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
 import 'package:supercycle/core/models/user_profile_model.dart';
 import 'package:supercycle/core/routes/end_points.dart';
-import 'package:supercycle/features/calculator/presentation/view/calculator_view.dart';
 import 'package:supercycle/features/contact_us/presentation/view/contact_us_view.dart';
 import 'package:supercycle/features/forget_password/presentation/views/forget_password_view.dart';
 import 'package:supercycle/features/forget_password/presentation/views/reset_password_view.dart';
@@ -21,9 +20,6 @@ import 'package:supercycle/features/representative_shipment_review/presentation/
 import 'package:supercycle/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
 import 'package:supercycle/features/shipment_edit/presentation/views/shipment_edit_view.dart';
 import 'package:supercycle/features/sign_in/presentation/views/sign_in_view.dart';
-import 'package:supercycle/features/sign_up/presentation/views/sign_up_details_view.dart';
-import 'package:supercycle/features/sign_up/presentation/views/sign_up_verify_view.dart';
-import 'package:supercycle/features/sign_up/presentation/views/sign_up_view.dart';
 import 'package:supercycle/features/splash/views/splash_view.dart';
 import 'package:supercycle/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
 
@@ -86,14 +82,6 @@ class AppRouter {
         pageBuilder: (context, state) =>
             AppTransitions.fadeForMain(state.pageKey, const HomeView()),
       ),
-
-      GoRoute(
-        path: EndPoints.calculatorView,
-        name: 'Calculator',
-        pageBuilder: (context, state) =>
-            AppTransitions.fadeForMain(state.pageKey, CalculatorView()),
-      ),
-
       GoRoute(
         path: EndPoints.contactUsView,
         name: 'Contact Us',
@@ -116,34 +104,6 @@ class AppRouter {
         name: 'SignIn',
         pageBuilder: (context, state) =>
             AppTransitions.fadeForAuth(state.pageKey, const SignInView()),
-      ),
-
-      GoRoute(
-        path: EndPoints.signUpView,
-        name: 'SignUp',
-        pageBuilder: (context, state) =>
-            AppTransitions.fadeForAuth(state.pageKey, const SignUpView()),
-      ),
-
-      GoRoute(
-        path: EndPoints.signUpVerifyView,
-        name: 'SignUpVerify',
-        pageBuilder: (context, state) {
-          final credential = state.extra as String;
-          return AppTransitions.smoothFadeWithScale(
-            state.pageKey,
-            SignUpVerifyView(credential: credential),
-          );
-        },
-      ),
-
-      GoRoute(
-        path: EndPoints.signUpDetailsView,
-        name: 'SignUpDetails',
-        pageBuilder: (context, state) => AppTransitions.smoothFadeWithScale(
-          state.pageKey,
-          const SignUpDetailsView(),
-        ),
       ),
 
       GoRoute(

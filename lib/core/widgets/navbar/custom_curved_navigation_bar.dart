@@ -17,7 +17,7 @@ class CustomCurvedNavigationBar extends StatefulWidget {
 
   const CustomCurvedNavigationBar({
     super.key,
-    this.currentIndex = 2,
+    this.currentIndex = 1, // تغيير من 2 إلى 1 (الصفحة الرئيسية)
     this.onTap,
     this.navigationKey,
   });
@@ -37,7 +37,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     super.initState();
     _currentIndex = _getIndexFromCurrentRoute();
     _loadUserData();
-    // الاستماع لتغييرات حالة المصادقة
     _authManager.authStateChangeNotifier.addListener(_onAuthStateChanged);
   }
 
@@ -53,13 +52,14 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
       return 2;
     }
 
-    return widget.currentIndex; // default fallback
+    // ✅ الحل: بدل ما نرجع widget.currentIndex، نرجع 1 (الصفحة الرئيسية) كـ fallback آمن
+    // لو الصفحة مش جزء من الـ navigation (زي صفحة التفاصيل)
+    return 1; // default safe fallback
   }
 
   @override
   void didUpdateWidget(CustomCurvedNavigationBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // تحديث الـ index بناءً على الـ route الحالي
     final newIndex = _getIndexFromCurrentRoute();
     if (_currentIndex != newIndex) {
       setState(() {
@@ -71,7 +71,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // تحديث الـ index كل ما الـ route يتغير
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         final newIndex = _getIndexFromCurrentRoute();
@@ -90,14 +89,12 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     super.dispose();
   }
 
-  /// يتم استدعاؤها عند تغيير حالة المصادقة
   void _onAuthStateChanged() {
     if (mounted) {
       _loadUserData();
     }
   }
 
-  /// تحميل بيانات المستخدم
   Future<void> _loadUserData() async {
     LoginedUserModel? user = await StorageServices.getUserData();
     if (mounted) {
@@ -107,7 +104,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     }
   }
 
-  /// الحصول على الـ route الحالي
   String _getCurrentRoute() {
     try {
       final router = GoRouter.of(context);
@@ -119,7 +115,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     }
   }
 
-  /// تحديد الـ route المطلوب بناءً على الـ index
   String? _getTargetRoute(int index) {
     switch (index) {
       case 0:
@@ -135,32 +130,25 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     }
   }
 
-  /// معالجة النقر على الـ navigation item
   void _handleTap(int index) {
-    // تحديث الـ index الحالي
     setState(() {
       _currentIndex = index;
     });
 
-    // استدعاء callback إذا كان موجود
     if (widget.onTap != null) {
       widget.onTap!(index);
     }
 
-    // التحقق من الـ route الحالي
     final currentRoute = _getCurrentRoute();
     final targetRoute = _getTargetRoute(index);
 
-    // لو على نفس الصفحة، لا تعمل navigation
     if (targetRoute != null && currentRoute == targetRoute) {
       return;
     }
 
-    // التنقل للصفحة المطلوبة
     _navigateToScreen(index);
   }
 
-  /// التنقل للصفحة المحددة
   void _navigateToScreen(int index) {
     if (!mounted) return;
 
@@ -169,7 +157,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     try {
       switch (index) {
         case 0:
-          // جدول الشحنات - يتطلب تسجيل دخول
           if (isUserLoggedIn) {
             router.push(EndPoints.shipmentsCalendarView);
           } else {
@@ -179,12 +166,10 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
           break;
 
         case 1:
-          // الصفحة الرئيسية - متاحة للجميع
           router.pushReplacement(EndPoints.homeView);
           break;
 
         case 2:
-          // اتصل بنا - متاح للجميع
           router.push(EndPoints.contactUsView);
           break;
       }
@@ -198,7 +183,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     }
   }
 
-  /// عرض رسالة تطلب تسجيل الدخول
   void _showLoginRequired(String featureName) {
     if (!mounted) return;
     CustomSnackBar.showWarning(
@@ -209,20 +193,11 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    // تحديث الـ index كل ما الـ widget يعمل rebuild
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        final newIndex = _getIndexFromCurrentRoute();
-        if (_currentIndex != newIndex) {
-          setState(() {
-            _currentIndex = newIndex;
-          });
-        }
-      }
-    });
+    // ✅ إضافة validation للـ index قبل بناء الـ widget
+    final safeIndex = _currentIndex.clamp(0, 2); // تأكد إن الـ index بين 0 و 2
 
     return CurvedNavigationBar(
-      index: _currentIndex,
+      index: safeIndex, // استخدام safeIndex بدل _currentIndex
       key: widget.navigationKey,
       color: Colors.white,
       backgroundColor: AppColors.primaryColor,
@@ -251,7 +226,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     );
   }
 
-  /// بناء عنصر الـ navigation
   Widget _buildNavigationItem({
     required String asset,
     required bool isSvg,
@@ -270,7 +244,6 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
       iconWidget = Image.asset(asset, height: height ?? 24, fit: BoxFit.cover);
     }
 
-    // إضافة Tooltip للـ accessibility
     return Tooltip(message: label, child: iconWidget);
   }
 }

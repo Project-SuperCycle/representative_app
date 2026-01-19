@@ -142,16 +142,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   ),
 
                   _buildDrawerItem(
-                    icon: Icons.calculate_rounded,
-                    title: 'حاسبة الشحنات',
-                    isActive: currentLocation == EndPoints.calculatorView,
-                    onTap: () {
-                      Navigator.pop(context);
-                      context.push(EndPoints.calculatorView);
-                    },
-                  ),
-
-                  _buildDrawerItem(
                     icon: Icons.notifications_rounded,
                     title: 'الإشعارات',
                     isActive: false,

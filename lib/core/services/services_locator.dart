@@ -10,7 +10,6 @@ import 'package:supercycle/features/representative_shipment_review/data/repos/re
 import 'package:supercycle/features/shipment_edit/data/repos/shipment_edit_repo_imp.dart';
 import 'package:supercycle/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
 import 'package:supercycle/features/sign_in/data/repos/signin_repo_imp.dart';
-import 'package:supercycle/features/sign_up/data/repos/signup_repo_imp.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -20,10 +19,6 @@ void setupServiceLocator() {
 
   getIt.registerSingleton<SignInRepoImp>(
     SignInRepoImp(apiServices: getIt.get<ApiServices>()),
-  );
-
-  getIt.registerSingleton<SignUpRepoImp>(
-    SignUpRepoImp(apiServices: getIt.get<ApiServices>()),
   );
 
   getIt.registerSingleton<SocialAuthRepoImp>(

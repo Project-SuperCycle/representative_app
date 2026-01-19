@@ -11,8 +11,8 @@ import 'package:supercycle/core/widgets/reset_pass/auth_header_title.dart';
 import 'package:supercycle/core/widgets/reset_pass/centered_container.dart';
 import 'package:supercycle/features/forget_password/data/cubits/forget_password_cubit.dart';
 import 'package:supercycle/features/forget_password/data/model/verify_reset_otp_model.dart';
-import 'package:supercycle/features/sign_up/presentation/widgets/alternate_action_link.dart';
-import 'package:supercycle/features/sign_up/presentation/widgets/filled_rounded_pin_put.dart';
+import 'package:supercycle/features/forget_password/presentation/widgets/alternate_action_link.dart';
+import 'package:supercycle/features/forget_password/presentation/widgets/filled_rounded_pin_put.dart';
 
 class VerifyResetOtpViewBody extends StatefulWidget {
   final String email;

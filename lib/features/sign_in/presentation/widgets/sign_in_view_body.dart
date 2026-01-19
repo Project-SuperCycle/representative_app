@@ -124,15 +124,6 @@ class _SignInViewBodyState extends State<SignInViewBody> {
         }
         if (state is SignInFailure) {
           CustomSnackBar.showError(context, state.message);
-
-          if (state.statusCode == 200) {
-            GoRouter.of(context).pushReplacement(EndPoints.signUpDetailsView);
-          } else if (state.statusCode == 403) {
-            GoRouter.of(context).pushReplacement(
-              EndPoints.signUpVerifyView,
-              extra: _controllers['email']!.text,
-            );
-          }
         }
       },
       builder: (context, state) {
@@ -188,23 +179,7 @@ class _SignInViewBodyState extends State<SignInViewBody> {
                                     title: S.of(context).signIn_button,
                                     onPress: handleSignIn,
                                   ),
-                            const SizedBox(height: 12),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                onPressed: () {
-                                  GoRouter.of(
-                                    context,
-                                  ).push(EndPoints.signUpView);
-                                },
-                                child: Text(
-                                  S.of(context).create_account,
-                                  style: AppStyles.styleMedium16(
-                                    context,
-                                  ).copyWith(color: AppColors.primaryColor),
-                                ),
-                              ),
-                            ),
+                            const SizedBox(height: 10),
                           ],
                         ),
                       ),

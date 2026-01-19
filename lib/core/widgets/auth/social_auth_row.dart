@@ -82,7 +82,7 @@ class SocialAuthRow extends StatelessWidget {
           );
 
           if (state.socialAuth.status == 201) {
-            GoRouter.of(context).push(EndPoints.signUpDetailsView);
+            GoRouter.of(context).push(EndPoints.signInView);
           } else if (state.socialAuth.status == 200) {
             GoRouter.of(context).pushReplacement(EndPoints.homeView);
           }
@@ -100,12 +100,12 @@ class SocialAuthRow extends StatelessWidget {
               onPressed: () => signInWithGoogle(context: context),
               icon: Image.asset(AppAssets.googleIcon, scale: 3.2),
             ),
-            SizedBox(width: 30),
-            IconButton(
-              style: IconButton.styleFrom(padding: EdgeInsets.all(2.0)),
-              onPressed: () => signInWithFacebook(context: context),
-              icon: Image.asset(AppAssets.facebookIcon, scale: 3.5),
-            ),
+            // SizedBox(width: 30),
+            // IconButton(
+            //   style: IconButton.styleFrom(padding: EdgeInsets.all(2.0)),
+            //   onPressed: () => signInWithFacebook(context: context),
+            //   icon: Image.asset(AppAssets.facebookIcon, scale: 3.5),
+            // ),
           ],
         );
       },

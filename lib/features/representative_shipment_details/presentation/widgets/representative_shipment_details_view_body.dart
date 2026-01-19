@@ -1,4 +1,3 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supercycle/core/constants.dart';
@@ -7,7 +6,6 @@ import 'package:supercycle/core/utils/app_colors.dart';
 import 'package:supercycle/core/utils/app_styles.dart';
 import 'package:supercycle/core/widgets/custom_button.dart';
 import 'package:supercycle/core/widgets/custom_text_field.dart';
-import 'package:supercycle/core/widgets/navbar/custom_curved_navigation_bar.dart';
 import 'package:supercycle/core/widgets/shipment/client_data_content.dart';
 import 'package:supercycle/core/widgets/shipment/expandable_section.dart';
 import 'package:supercycle/core/widgets/shipment/progress_widgets.dart';
@@ -40,8 +38,6 @@ class _RepresentativeShipmentDetailsViewBodyState
   bool isNotesDataExpanded = false;
   bool hasActionBeenTaken = false;
   bool showInspectionActions = false;
-  int _page = 3;
-  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String get _actionTakenKey => 'shipment_${widget.shipment.id}_action_taken';
@@ -70,12 +66,6 @@ class _RepresentativeShipmentDetailsViewBodyState
       showInspectionActions = false;
     });
     _saveActionState(true);
-  }
-
-  void _onNavigationTap(int index) {
-    setState(() {
-      _page = index;
-    });
   }
 
   bool _isPickupDateToday() {
@@ -234,11 +224,6 @@ class _RepresentativeShipmentDetailsViewBodyState
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: CustomCurvedNavigationBar(
-        currentIndex: _page,
-        navigationKey: _bottomNavigationKey,
-        onTap: _onNavigationTap,
       ),
     );
   }
@@ -461,7 +446,7 @@ class _RepresentativeShipmentDetailsViewBodyState
     final status = widget.shipment.status;
 
     // إذا الحالة 'approved' ولم يتم اتخاذ إجراء واليوم هو تاريخ الاستلام
-    if (status == 'approved' && !hasActionBeenTaken && _isPickupDateToday()) {
+    if (status == 'approved' && !hasActionBeenTaken) {
       // إذا لم يتم الضغط على زر "بدأ المعاينة"، اعرض الزر
       if (!showInspectionActions) {
         return CustomButton(onPress: _startInspection, title: 'بدأ المعاينة');
