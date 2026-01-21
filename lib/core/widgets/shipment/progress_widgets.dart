@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class ProgressBar extends StatelessWidget {
   final int completedSteps;
   final int totalSteps;
+  final Color color;
 
   const ProgressBar({
     super.key,
     required this.completedSteps,
+    this.color = const Color(0xFF4CAF50),
     this.totalSteps = 5, // العدد الافتراضي 4 نقاط
   });
 
@@ -28,11 +30,11 @@ class ProgressBar extends StatelessWidget {
       bool isCompleted = i < completedSteps;
 
       // إضافة النقطة
-      widgets.add(ProgressPoint(isCompleted: isCompleted));
+      widgets.add(ProgressPoint(isCompleted: isCompleted, mainColor: color));
 
       // إضافة الخط إذا لم تكن النقطة الأخيرة
       if (i < totalSteps - 1) {
-        widgets.add(ProgressLine(isCompleted: isCompleted));
+        widgets.add(ProgressLine(isCompleted: isCompleted, mainColor: color));
       }
     }
 
@@ -42,8 +44,13 @@ class ProgressBar extends StatelessWidget {
 
 class ProgressPoint extends StatelessWidget {
   final bool isCompleted;
+  final Color mainColor;
 
-  const ProgressPoint({super.key, required this.isCompleted});
+  const ProgressPoint({
+    super.key,
+    required this.isCompleted,
+    required this.mainColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +58,10 @@ class ProgressPoint extends StatelessWidget {
       width: 20,
       height: 20,
       decoration: BoxDecoration(
-        color: isCompleted ? const Color(0xFF3BC577) : Colors.white,
+        color: isCompleted ? mainColor : Colors.white,
         shape: BoxShape.circle,
         border: Border.all(
-          color: isCompleted ? const Color(0xFFAAEBBF) : Colors.grey.shade400,
+          color: isCompleted ? mainColor : Colors.grey.shade400,
           width: 2,
         ),
       ),
@@ -67,8 +74,13 @@ class ProgressPoint extends StatelessWidget {
 
 class ProgressLine extends StatelessWidget {
   final bool isCompleted;
+  final Color mainColor;
 
-  const ProgressLine({super.key, required this.isCompleted});
+  const ProgressLine({
+    super.key,
+    required this.isCompleted,
+    required this.mainColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +89,9 @@ class ProgressLine extends StatelessWidget {
         height: 5,
         margin: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
-          color: isCompleted ? const Color(0xFF4CAF50) : Colors.grey.shade300,
+          color: isCompleted ? mainColor : Colors.grey.shade300,
           border: Border.all(
-            color: isCompleted ? const Color(0xFFAAEBBF) : Colors.grey.shade400,
+            color: isCompleted ? mainColor : Colors.grey.shade400,
             width: 1,
           ),
           borderRadius: BorderRadius.circular(1.5),

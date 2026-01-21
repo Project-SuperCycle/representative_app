@@ -273,6 +273,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   Color _getStatusColor() {
     switch (widget.shipment.status) {
       case 'قيد المراجعة':
+      case 'بانتظار المعاينة':
         return Color(0xff1624A2);
       case 'تمت الموافقة':
         return Color(0xff3BC567);
@@ -284,6 +285,8 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
       case 'تم التسليم':
       case 'تسليم جزئي':
         return Color(0xff3BC567);
+      case 'تم الرفض':
+        return AppColors.failureColor;
       default:
         return Color(0xff1624A2);
     }

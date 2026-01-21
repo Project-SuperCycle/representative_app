@@ -129,6 +129,9 @@ class _RepresentativeShipmentDetailsViewBodyState
                                 ProgressBar(
                                   completedSteps: _getProgressSteps(),
                                   totalSteps: 6,
+                                  color: (widget.shipment.status == "rejected")
+                                      ? AppColors.failureColor
+                                      : const Color(0xFF4CAF50),
                                 ),
                                 const SizedBox(height: 12),
                                 RepresentativeShipmentDetailsHeader(
