@@ -143,6 +143,10 @@ class SignInRepoImp implements SignInRepo {
 
   /// حفظ بيانات المستخدم وتحديث حالة المصادقة
   Future<void> _saveUserData(LoginedUserModel user, String token) async {
+    if (user.role == "trader_contracted" ||
+        user.role == "trader_uncontracted") {
+      return;
+    }
     // 1. حفظ في Storage
     await StorageServices.storeData('user', user.toJson());
     await StorageServices.storeData('token', token);

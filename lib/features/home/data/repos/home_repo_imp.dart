@@ -67,7 +67,13 @@ class HomeRepoImp implements HomeRepo {
         final List data = response['data'];
         final shipments = data.map((e) => ShipmentModel.fromJson(e)).toList();
 
-        return _getTodayShipments(shipments);
+        final todayShipments = _getTodayShipments(shipments);
+
+        // Filter out rejected and cancelled shipments
+        return todayShipments.where((shipment) {
+          final status = shipment.status.toLowerCase();
+          return status != 'rejected' && status != 'cancelled';
+        }).toList();
       },
     );
   }

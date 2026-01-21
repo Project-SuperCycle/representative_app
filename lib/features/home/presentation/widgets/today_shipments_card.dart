@@ -26,30 +26,31 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
   void initState() {
     super.initState();
     getUserData();
-    _loadTodayShipments();
 
-    // عند فتح الـ widget، اعرض الداتا المخزنة لو موجودة
+    // ✅ الحل: فك التعليق عن استدعاء البيانات
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final cubit = context.read<TodayShipmentsCubit>();
+
+      // لو في cache، اعرضه
       if (cubit.cachedTodayShipments != null &&
           cubit.cachedTodayShipments!.isNotEmpty) {
-        // عمل emit للداتا المخزنة عشان الـ UI يعرضها
         cubit.emit(
           TodayShipmentsSuccess(shipments: cubit.cachedTodayShipments!),
         );
       }
-    });
-  }
 
-  void _loadTodayShipments() {
-    BlocProvider.of<TodayShipmentsCubit>(context).fetchInitialData();
+      // ✅ المهم: استدعاء البيانات من الـ API
+      cubit.fetchInitialData();
+    });
   }
 
   void getUserData() {
     StorageServices.getUserData().then((value) {
-      setState(() {
-        user = value!;
-      });
+      if (mounted && value != null) {
+        setState(() {
+          user = value;
+        });
+      }
     });
   }
 
@@ -82,23 +83,21 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
           ),
         ],
       ),
-      child: BlocConsumer<TodayShipmentsCubit, TodayShipmentsState>(
-        listener: (context, state) {
-          // TODO: implement listener
-        },
+      child: BlocBuilder<TodayShipmentsCubit, TodayShipmentsState>(
         builder: (context, state) {
           // لو في cache، اعرضه حتى لو الـ state لسه Initial
           final cubit = context.read<TodayShipmentsCubit>();
-          if (state is TodayShipmentsInitial &&
-              cubit.cachedTodayShipments != null &&
-              cubit.cachedTodayShipments!.isNotEmpty) {
-            return _buildShipmentsContent(cubit.cachedTodayShipments!);
-          }
 
           if (state is TodayShipmentsLoading) {
+            // لو في cached data، اعرضه مع loading indicator صغير
+            if (cubit.cachedTodayShipments != null &&
+                cubit.cachedTodayShipments!.isNotEmpty) {
+              return _buildShipmentsContent(cubit.cachedTodayShipments!);
+            }
+            // لو مفيش cache، اعرض loading
             return const Center(
               child: Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.all(40.0),
                 child: CustomLoadingIndicator(color: Colors.white),
               ),
             );
@@ -108,7 +107,14 @@ class _TodayShipmentsCardState extends State<TodayShipmentsCard> {
             return _buildShipmentsContent(state.shipments);
           }
 
-          return EmptyShipmentsCard();
+          if (state is TodayShipmentsInitial &&
+              cubit.cachedTodayShipments != null &&
+              cubit.cachedTodayShipments!.isNotEmpty) {
+            return _buildShipmentsContent(cubit.cachedTodayShipments!);
+          }
+
+          // لو مفيش شحنات
+          return const EmptyShipmentsCard();
         },
       ),
     );
@@ -348,22 +354,5 @@ class _ShipmentItem extends StatelessWidget {
     int displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
     String period = hour < 12 ? "صباحا" : "مساءا";
     return "$displayHour $period";
-  }
-}
-
-// Model
-class TodayShipment {
-  final String id;
-  final String time;
-  final String location;
-
-  TodayShipment({required this.id, required this.time, required this.location});
-
-  factory TodayShipment.fromJson(Map<String, dynamic> json) {
-    return TodayShipment(
-      id: json['id'],
-      time: json['scheduled_time'] ?? 'غير محدد',
-      location: json['pickup_address'] ?? 'غير محدد',
-    );
   }
 }

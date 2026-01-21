@@ -17,7 +17,7 @@ class CustomCurvedNavigationBar extends StatefulWidget {
 
   const CustomCurvedNavigationBar({
     super.key,
-    this.currentIndex = 1, // تغيير من 2 إلى 1 (الصفحة الرئيسية)
+    this.currentIndex = 1,
     this.onTap,
     this.navigationKey,
   });
@@ -40,10 +40,11 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
     _authManager.authStateChangeNotifier.addListener(_onAuthStateChanged);
   }
 
-  /// الحصول على الـ index من الـ route الحالي
+  /// الحصول على الـ index من الـ route الحالي مع التأكد من صحة القيمة
   int _getIndexFromCurrentRoute() {
     final currentRoute = _getCurrentRoute();
 
+    // ✅ تحديد الـ index بناءً على الـ route
     if (currentRoute.contains(EndPoints.homeView) || currentRoute == '/') {
       return 1;
     } else if (currentRoute.contains(EndPoints.shipmentsCalendarView)) {
@@ -52,9 +53,8 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
       return 2;
     }
 
-    // ✅ الحل: بدل ما نرجع widget.currentIndex، نرجع 1 (الصفحة الرئيسية) كـ fallback آمن
-    // لو الصفحة مش جزء من الـ navigation (زي صفحة التفاصيل)
-    return 1; // default safe fallback
+    // ✅ أي صفحة تانية (زي صفحة التفاصيل)، نرجع 1 كـ default
+    return 1;
   }
 
   @override
@@ -193,11 +193,11 @@ class _CustomCurvedNavigationBarState extends State<CustomCurvedNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ إضافة validation للـ index قبل بناء الـ widget
-    final safeIndex = _currentIndex.clamp(0, 2); // تأكد إن الـ index بين 0 و 2
+    // ✅ التأكد من أن الـ index في النطاق الصحيح (0-2) قبل إعطائه للـ CurvedNavigationBar
+    final safeIndex = _currentIndex.clamp(0, 2);
 
     return CurvedNavigationBar(
-      index: safeIndex, // استخدام safeIndex بدل _currentIndex
+      index: safeIndex,
       key: widget.navigationKey,
       color: Colors.white,
       backgroundColor: AppColors.primaryColor,
