@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/features/onboarding/presentation/widgets/fourth_onboarding_view_body.dart';
+import 'package:representative_app/features/onboarding/presentation/widgets/fourth_onboarding_view_body.dart';
 
 class FourthOnboardingView extends StatelessWidget {
   const FourthOnboardingView({super.key});

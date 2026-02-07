@@ -11,20 +11,35 @@ final class DeliverSegmentInitial extends DeliverSegmentState {
 
 // DELIVER SEGMENT
 final class DeliverSegmentLoading extends DeliverSegmentState {
+  final String segmentId; // ✅ Added
+  const DeliverSegmentLoading({required this.segmentId});
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [segmentId];
 }
 
 final class DeliverSegmentSuccess extends DeliverSegmentState {
   final String message;
-  const DeliverSegmentSuccess({required this.message});
+  final String segmentId; // ✅ Added
+
+  const DeliverSegmentSuccess({
+    required this.message,
+    required this.segmentId,
+  });
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [message, segmentId];
 }
 
 final class DeliverSegmentFailure extends DeliverSegmentState {
   final String errorMessage;
-  const DeliverSegmentFailure({required this.errorMessage});
+  final String segmentId; // ✅ Added
+
+  const DeliverSegmentFailure({
+    required this.errorMessage,
+    required this.segmentId,
+  });
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [errorMessage, segmentId];
 }

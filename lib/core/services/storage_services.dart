@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:supercycle/core/models/trader_branch_model.dart';
-import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
+import 'package:representative_app/core/models/trader_branch_model.dart';
+import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
 
 abstract class StorageServices {
   /// Create storage

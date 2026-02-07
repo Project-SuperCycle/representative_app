@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:supercycle/core/services/storage_services.dart';
-import 'package:supercycle/core/services/user_profile_services.dart';
+import 'package:representative_app/core/services/storage_services.dart';
+import 'package:representative_app/core/services/user_profile_services.dart';
 
 /// مدير مركزي لعمليات المصادقة وتسجيل الخروج
 class AuthManager {
@@ -31,13 +30,6 @@ class AuthManager {
         await GoogleSignIn().signOut();
       } catch (e) {
         debugPrint('Google sign out error: $e');
-      }
-
-      // 2. تسجيل الخروج من Facebook
-      try {
-        await FacebookAuth.instance.logOut();
-      } catch (e) {
-        debugPrint('Facebook sign out error: $e');
       }
 
       try {

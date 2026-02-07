@@ -11,20 +11,35 @@ final class FailSegmentInitial extends FailSegmentState {
 
 // FAIL SEGMENT
 final class FailSegmentLoading extends FailSegmentState {
+  final String segmentId; // ✅ Added
+  const FailSegmentLoading({required this.segmentId});
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [segmentId];
 }
 
 final class FailSegmentSuccess extends FailSegmentState {
   final String message;
-  const FailSegmentSuccess({required this.message});
+  final String segmentId; // ✅ Added
+
+  const FailSegmentSuccess({
+    required this.message,
+    required this.segmentId,
+  });
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [message, segmentId];
 }
 
 final class FailSegmentFailure extends FailSegmentState {
   final String errorMessage;
-  const FailSegmentFailure({required this.errorMessage});
+  final String segmentId; // ✅ Added
+
+  const FailSegmentFailure({
+    required this.errorMessage,
+    required this.segmentId,
+  });
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [errorMessage, segmentId];
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/models/shipment_trader_model.dart';
-import 'package:supercycle/core/services/storage_services.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
-import 'package:supercycle/generated/l10n.dart';
+import 'package:representative_app/core/models/shipment_trader_model.dart';
+import 'package:representative_app/core/services/storage_services.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
+import 'package:representative_app/generated/l10n.dart';
 
 class ClientDataContent extends StatefulWidget {
   final ShipmentTraderModel? trader;

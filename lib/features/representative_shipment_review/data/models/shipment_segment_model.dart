@@ -1,10 +1,10 @@
-import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/inspected_dosh_item_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/weight_report_model.dart';
+import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/inspected_dosh_item_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/weight_report_model.dart';
 
 class ShipmentSegmentModel {
   final String id;
-  final String? status;
+  String? status; // ✅ Remove final to make it mutable
   final List<DoshItemModel> items;
   final String? destName;
   final String? destAddress;
@@ -26,7 +26,6 @@ class ShipmentSegmentModel {
     this.weightReport,
     this.inspectedItems,
   });
-
   factory ShipmentSegmentModel.fromJson(Map<String, dynamic> json) {
     return ShipmentSegmentModel(
       id: json['_id'],

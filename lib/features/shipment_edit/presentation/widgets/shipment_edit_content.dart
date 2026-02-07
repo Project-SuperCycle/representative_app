@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
-import 'package:supercycle/core/models/shipment/unit.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/widgets/shipment/editable_product_card.dart';
+import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
+import 'package:representative_app/core/models/shipment/unit.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/widgets/shipment/editable_product_card.dart';
 
 class ShipmentEditContent extends StatefulWidget {
   final List<DoshItemModel> products;

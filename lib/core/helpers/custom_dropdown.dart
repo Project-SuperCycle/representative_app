@@ -1,7 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
 
 class CustomDropdown extends StatefulWidget {
   final List<String> options;

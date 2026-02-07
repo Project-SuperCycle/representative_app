@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/generated/l10n.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/generated/l10n.dart';
 
 class HorizontalLabeledDivider extends StatelessWidget {
   const HorizontalLabeledDivider({super.key});

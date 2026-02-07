@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle/core/services/user_profile_services.dart';
+import 'package:representative_app/core/services/user_profile_services.dart';
 
 part 'profile_state.dart';
 

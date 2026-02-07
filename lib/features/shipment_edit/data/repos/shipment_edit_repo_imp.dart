@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:supercycle/core/errors/failures.dart';
-import 'package:supercycle/core/helpers/error_handler.dart';
-import 'package:supercycle/core/services/api_endpoints.dart';
-import 'package:supercycle/core/services/api_services.dart';
-import 'package:supercycle/features/shipment_edit/data/repos/shipment_edit_repo.dart';
+import 'package:representative_app/core/errors/failures.dart';
+import 'package:representative_app/core/helpers/error_handler.dart';
+import 'package:representative_app/core/services/api_endpoints.dart';
+import 'package:representative_app/core/services/api_services.dart';
+import 'package:representative_app/features/shipment_edit/data/repos/shipment_edit_repo.dart';
 
 class ShipmentEditRepoImp implements ShipmentEditRepo {
   final ApiServices apiServices;

@@ -1,9 +1,9 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:supercycle/core/widgets/drawer/custom_drawer.dart';
-import 'package:supercycle/core/widgets/navbar/custom_curved_navigation_bar.dart';
-import 'package:supercycle/features/home/presentation/widgets/home_view_body.dart';
+import 'package:representative_app/core/widgets/drawer/custom_drawer.dart';
+import 'package:representative_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
+import 'package:representative_app/features/home/presentation/widgets/home_view_body.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

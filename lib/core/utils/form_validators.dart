@@ -1,4 +1,4 @@
-import 'package:supercycle/core/utils/contact_strings.dart';
+import 'package:representative_app/core/utils/contact_strings.dart';
 
 class FormValidators {
   // Private constructor to prevent instantiation

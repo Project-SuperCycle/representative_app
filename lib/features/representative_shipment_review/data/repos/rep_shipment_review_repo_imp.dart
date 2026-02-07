@@ -1,16 +1,17 @@
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:supercycle/core/errors/failures.dart';
-import 'package:supercycle/core/functions/shipment_manager.dart';
-import 'package:supercycle/core/helpers/error_handler.dart';
-import 'package:supercycle/core/services/api_endpoints.dart';
-import 'package:supercycle/core/services/api_services.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/deliver_segment_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/fail_segment_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/start_segment_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/weigh_segment_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/repos/rep_shipment_review_repo.dart';
+import 'package:logger/logger.dart';
+import 'package:representative_app/core/errors/failures.dart';
+import 'package:representative_app/core/functions/shipment_manager.dart';
+import 'package:representative_app/core/helpers/error_handler.dart';
+import 'package:representative_app/core/services/api_endpoints.dart';
+import 'package:representative_app/core/services/api_services.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/deliver_segment_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/fail_segment_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/start_segment_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/weigh_segment_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/repos/rep_shipment_review_repo.dart';
 
 class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
   final ApiServices apiServices;
@@ -58,7 +59,6 @@ class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
         if (response['message'] == null) {
           throw ServerFailure('Invalid response: Missing message', 422);
         }
-
         return response['message'];
       },
       errorContext: 'weigh shipment segment',
@@ -71,17 +71,30 @@ class RepShipmentReviewRepoImp implements RepShipmentReviewRepo {
   }) {
     return ErrorHandler.handleApiCall<String>(
       apiCall: () async {
+
         final formData = await _deliverFormData(deliverModel: deliverModel);
+        Map<String, dynamic> response = {};
+        Logger().d("REPO DELIVER");
+        Logger().w("formData: ${formData.fields}");
+        Logger().w("formData: ${formData.files}");
+        try{
+          response = await apiServices.postFormData(
+            endPoint: ApiEndpoints.deliverShipmentSegment
+                .replaceFirst('{shipmentId}', deliverModel.shipmentID)
+                .replaceFirst('{segmentId}', deliverModel.segmentID),
+            data: formData,
+          );
 
-        final response = await apiServices.postFormData(
-          endPoint: ApiEndpoints.deliverShipmentSegment
-              .replaceFirst('{shipmentId}', deliverModel.shipmentID)
-              .replaceFirst('{segmentId}', deliverModel.segmentID),
-          data: formData,
-        );
+          Logger().d("DONE REPO DELIVER");
+          Logger().w("response: $response");
 
-        if (response['message'] == null) {
-          throw ServerFailure('Invalid response: Missing message', 422);
+          if (response['message'] == null) {
+            throw ServerFailure('Invalid response: Missing message', 422);
+          }
+        }catch(error, trace){
+        Logger().e("ERROR IN DELIVER SEGMENT REPO $error");
+        Logger().w("TRACE: $trace");
+          rethrow;
         }
 
         return response['message'];

@@ -2,16 +2,16 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle/core/helpers/custom_snack_bar.dart';
-import 'package:supercycle/core/routes/end_points.dart';
-import 'package:supercycle/core/utils/app_assets.dart';
-import 'package:supercycle/core/widgets/custom_button.dart';
-import 'package:supercycle/core/widgets/custom_text_field.dart';
-import 'package:supercycle/core/widgets/reset_pass/auth_header_title.dart';
-import 'package:supercycle/core/widgets/reset_pass/centered_container.dart';
-import 'package:supercycle/features/forget_password/data/cubits/forget_password_cubit.dart';
+import 'package:representative_app/core/constants.dart';
+import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
+import 'package:representative_app/core/helpers/custom_snack_bar.dart';
+import 'package:representative_app/core/routes/end_points.dart';
+import 'package:representative_app/core/utils/app_assets.dart';
+import 'package:representative_app/core/widgets/custom_button.dart';
+import 'package:representative_app/core/widgets/custom_text_field.dart';
+import 'package:representative_app/core/widgets/reset_pass/auth_header_title.dart';
+import 'package:representative_app/core/widgets/reset_pass/centered_container.dart';
+import 'package:representative_app/features/forget_password/data/cubits/forget_password_cubit.dart';
 
 class ForgetPasswordViewBody extends StatelessWidget {
   ForgetPasswordViewBody({super.key});

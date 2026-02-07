@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
 
 class InputDecorations {
   static const focusColor = AppColors.primaryColor;

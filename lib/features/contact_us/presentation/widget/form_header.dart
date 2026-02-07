@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/utils/contact_strings.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/core/utils/contact_strings.dart';
 
 class FormHeader extends StatelessWidget {
   final bool isArabic;

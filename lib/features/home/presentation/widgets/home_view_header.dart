@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/features/home/presentation/widgets/home_header/home_header_nav_actions.dart';
-import 'package:supercycle/features/home/presentation/widgets/home_header/user_profile_welcome_card.dart';
+import 'package:representative_app/core/constants.dart';
+import 'package:representative_app/features/home/presentation/widgets/home_header/home_header_nav_actions.dart';
+import 'package:representative_app/features/home/presentation/widgets/home_header/user_profile_welcome_card.dart';
 
 class HomeViewHeader extends StatelessWidget {
   const HomeViewHeader({super.key, required this.onDrawerPressed});

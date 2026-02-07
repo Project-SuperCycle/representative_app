@@ -11,20 +11,35 @@ final class StartSegmentInitial extends StartSegmentState {
 
 // START SEGMENT
 final class StartSegmentLoading extends StartSegmentState {
+  final String segmentId; // ✅ Added
+  const StartSegmentLoading({required this.segmentId});
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [segmentId];
 }
 
 final class StartSegmentSuccess extends StartSegmentState {
   final String message;
-  const StartSegmentSuccess({required this.message});
+  final String segmentId; // ✅ Added
+
+  const StartSegmentSuccess({
+    required this.message,
+    required this.segmentId,
+  });
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [message, segmentId];
 }
 
 final class StartSegmentFailure extends StartSegmentState {
   final String errorMessage;
-  const StartSegmentFailure({required this.errorMessage});
+  final String segmentId; // ✅ Added
+
+  const StartSegmentFailure({
+    required this.errorMessage,
+    required this.segmentId,
+  });
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [errorMessage, segmentId];
 }

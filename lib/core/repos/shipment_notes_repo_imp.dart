@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:supercycle/core/errors/failures.dart';
-import 'package:supercycle/core/helpers/error_handler.dart';
-import 'package:supercycle/core/repos/shipment_notes_repo.dart';
-import 'package:supercycle/core/services/api_endpoints.dart';
-import 'package:supercycle/core/services/api_services.dart';
-import 'package:supercycle/core/models/create_notes_model.dart';
+import 'package:representative_app/core/errors/failures.dart';
+import 'package:representative_app/core/helpers/error_handler.dart';
+import 'package:representative_app/core/repos/shipment_notes_repo.dart';
+import 'package:representative_app/core/services/api_endpoints.dart';
+import 'package:representative_app/core/services/api_services.dart';
+import 'package:representative_app/core/models/create_notes_model.dart';
 
 class ShipmentNotesRepoImp implements ShipmentNotesRepo {
   final ApiServices apiServices;

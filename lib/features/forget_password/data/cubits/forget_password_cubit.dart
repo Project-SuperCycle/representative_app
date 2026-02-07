@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle/features/forget_password/data/model/reset_password_model.dart';
-import 'package:supercycle/features/forget_password/data/model/verify_reset_otp_model.dart';
-import 'package:supercycle/features/forget_password/data/repos/forget_password_repo_imp.dart';
+import 'package:representative_app/features/forget_password/data/model/reset_password_model.dart';
+import 'package:representative_app/features/forget_password/data/model/verify_reset_otp_model.dart';
+import 'package:representative_app/features/forget_password/data/repos/forget_password_repo_imp.dart';
 
 part 'forget_password_state.dart';
 

@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/weigh_segment_model.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/weigh_segment_model.dart';
 
 class SegmentWeightInfo extends StatefulWidget {
   final String imagePath;
@@ -153,7 +153,7 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.black.withAlpha(350),
+                color: Colors.black.withOpacity(0.7),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -255,7 +255,7 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.black.withAlpha(300),
+          color: Colors.black.withOpacity(0.6),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: Colors.white, size: 16),

@@ -1,24 +1,36 @@
 import 'package:dartz/dartz.dart';
-import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/errors/failures.dart';
-import 'package:supercycle/core/helpers/error_handler.dart';
-import 'package:supercycle/core/services/api_endpoints.dart';
-import 'package:supercycle/core/services/api_services.dart';
-import 'package:supercycle/core/services/auth_manager_services.dart';
-import 'package:supercycle/core/services/social_auth_services.dart';
-import 'package:supercycle/core/services/storage_services.dart';
-import 'package:supercycle/core/services/user_profile_services.dart';
-import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
-import 'package:supercycle/features/sign_in/data/models/signin_credentials_model.dart';
-import 'package:supercycle/features/sign_in/data/repos/signin_repo.dart';
+import 'package:logger/logger.dart';
+import 'package:representative_app/core/constants.dart';
+import 'package:representative_app/core/errors/failures.dart';
+import 'package:representative_app/core/helpers/error_handler.dart';
+import 'package:representative_app/core/models/social_auth_request_model.dart';
+import 'package:representative_app/core/models/social_auth_response_model.dart';
+import 'package:representative_app/core/services/api_endpoints.dart';
+import 'package:representative_app/core/services/api_services.dart';
+import 'package:representative_app/core/services/auth_manager_services.dart';
+import 'package:representative_app/core/services/social_auth_services.dart';
+import 'package:representative_app/core/services/storage_services.dart';
+import 'package:representative_app/core/services/user_profile_services.dart';
+import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
+import 'package:representative_app/features/sign_in/data/models/signin_credentials_model.dart';
+import 'package:representative_app/features/sign_in/data/repos/signin_repo.dart';
 
 class SignInRepoImp implements SignInRepo {
   final ApiServices apiServices;
   final AuthManager _authManager = AuthManager();
+  final Logger _logger = Logger();
+
+  // Trader roles للتحقق
+  static const Set<String> _traderRoles = {
+    'trader_contracted',
+    'trader_uncontracted',
+  };
 
   SignInRepoImp({required this.apiServices});
 
-  /// تسجيل الدخول بالبريد الإلكتروني وكلمة المرور
+  // ══════════════════════════════════════════════════════════
+  // تسجيل الدخول بالبريد الإلكتروني
+  // ══════════════════════════════════════════════════════════
   @override
   Future<Either<Failure, LoginedUserModel>> userSignin({
     required SigninCredentialsModel credentials,
@@ -29,36 +41,38 @@ class SignInRepoImp implements SignInRepo {
         data: credentials.toJson(),
       ),
       errorContext: 'email login',
-      responseParser: (response) {
-        var data = response['data'];
-        return LoginedUserModel.fromJson(data);
-      },
+      responseParser: (response) => LoginedUserModel.fromJson(response['data']),
       customErrorChecks: (response) {
-        var token = response['token'];
+        final token = response['token'];
+        final code = response['Code'];
 
-        // التحقق من حالة عدم التحقق من البريد
-        if (token == null && response['Code'] == kNotVerified) {
+        // عدم التحقق من البريد
+        if (token == null && code == kNotVerified) {
           return ServerFailure.fromResponse(403, response);
         }
 
-        // التحقق من حالة الملف غير المكتمل
-        if (token != null && response['Code'] == kProfileIncomplete) {
+        // الملف غير مكتمل
+        if (token != null && code == kProfileIncomplete) {
           return ServerFailure(response['message'], 200);
         }
 
         return null;
       },
-      onSuccess: (loginUser, response) async {
-        await _saveUserData(loginUser, response['token']);
+      onSuccess: (user, response) async {
+        await _saveUserData(user, response['token']);
       },
     );
   }
 
-  /// تسجيل الدخول عبر Google
+  // ══════════════════════════════════════════════════════════
+  // تسجيل الدخول بـ Google
+  // ══════════════════════════════════════════════════════════
   @override
   Future<Either<Failure, LoginedUserModel>> signInWithGoogle() async {
-    // 1. الحصول على access token من Google
-    final accessTokenResult = await ErrorHandler.simpleApiCall<String>(
+    _logger.i('Starting Google Sign In');
+
+    // الحصول على Google token
+    final idTokenResult = await ErrorHandler.simpleApiCall<String>(
       apiCall: () => SocialAuthService.signInWithGoogle(),
       errorContext: 'Google authentication',
       specificErrorMessages: {
@@ -67,92 +81,153 @@ class SignInRepoImp implements SignInRepo {
       errorMessage: 'حدث خطأ أثناء المصادقة مع Google',
     );
 
-    // إذا فشل الحصول على token من Google
-    if (accessTokenResult.isLeft()) {
-      return accessTokenResult.fold(
+    if (idTokenResult.isLeft()) {
+      return idTokenResult.fold(
         (failure) => left(failure),
         (_) => left(ServerFailure('Unexpected error', 520)),
       );
     }
 
-    // استخراج الـ token
-    final accessToken = accessTokenResult.getOrElse(() => '');
+    final idToken = idTokenResult.getOrElse(() => '');
 
-    // 2. إرسال الـ token للـ backend
+    // تسجيل الدخول بالـ backend
     return await ErrorHandler.handleApiResponse<LoginedUserModel>(
       apiCall: () => apiServices.post(
         endPoint: ApiEndpoints.socialLogin,
-        data: {'accessToken': accessToken},
+        data: {'idToken': idToken, 'provider': 'google'},
       ),
       errorContext: 'Google login',
-      responseParser: (response) {
-        var data = response['data'];
-        return LoginedUserModel.fromJson(data);
-      },
-      customErrorChecks: (response) {
-        // التحقق من البيانات الأساسية
-        return ErrorHandler.validateResponseData(response, ['data', 'token']);
-      },
-      onSuccess: (loginUser, response) async {
-        await _saveUserData(loginUser, response['token']);
+      responseParser: (response) => LoginedUserModel.fromJson(response['data']),
+      customErrorChecks: (response) =>
+          ErrorHandler.validateResponseData(response, ['data', 'token']),
+      onSuccess: (user, response) async {
+        await _saveUserData(user, response['token']);
       },
     );
   }
 
-  /// تسجيل الدخول عبر Facebook
+  // ══════════════════════════════════════════════════════════
+  // التسجيل عبر Social Auth
+  // ══════════════════════════════════════════════════════════
   @override
-  Future<Either<Failure, LoginedUserModel>> signInWithFacebook() async {
-    // 1. الحصول على access token من Facebook
-    final accessTokenResult = await ErrorHandler.simpleApiCall<String>(
-      apiCall: () => SocialAuthService.signInWithFacebook(),
-      errorContext: 'Facebook authentication',
-      errorMessage: 'حدث خطأ أثناء المصادقة مع Facebook',
-    );
-
-    // إذا فشل الحصول على token من Facebook
-    if (accessTokenResult.isLeft()) {
-      return accessTokenResult.fold(
-        (failure) => left(failure),
-        (_) => left(ServerFailure('Unexpected error', 520)),
-      );
-    }
-
-    // استخراج الـ token
-    final accessToken = accessTokenResult.getOrElse(() => '');
-
-    // 2. إرسال الـ token للـ backend
-    return await ErrorHandler.handleApiResponse<LoginedUserModel>(
+  Future<Either<Failure, SocialAuthResponseModel>> socialSignup({
+    required SocialAuthRequestModel credentials,
+  }) async {
+    return await ErrorHandler.handleApiResponse<SocialAuthResponseModel>(
       apiCall: () => apiServices.post(
         endPoint: ApiEndpoints.socialLogin,
-        data: {'accessToken': accessToken},
+        data: credentials.toJson(),
       ),
-      errorContext: 'Facebook login',
-      responseParser: (response) {
-        var data = response['data'];
-        return LoginedUserModel.fromJson(data);
-      },
-      customErrorChecks: (response) {
-        // التحقق من البيانات الأساسية
-        return ErrorHandler.validateResponseData(response, ['data', 'token']);
-      },
-      onSuccess: (loginUser, response) async {
-        await _saveUserData(loginUser, response['token']);
+      errorContext: 'Social signup',
+      responseParser: (response) => _buildSocialAuthResponse(response),
+      customErrorChecks: (response) => _validateSocialAuthResponse(response),
+      onSuccess: (socialAuth, response) async {
+        await _handleSocialAuthSuccess(socialAuth, response);
       },
     );
   }
 
-  /// حفظ بيانات المستخدم وتحديث حالة المصادقة
+  // ══════════════════════════════════════════════════════════
+  // Helper Methods
+  // ══════════════════════════════════════════════════════════
+
+  /// بناء Social Auth Response حسب الـ status
+  SocialAuthResponseModel _buildSocialAuthResponse(
+    Map<String, dynamic> response,
+  ) {
+    final status = response['status'];
+    final message = response['message'];
+    final token = response['token'];
+
+    if (status == 201) {
+      // حساب جديد - يحتاج استكمال بيانات
+      return SocialAuthResponseModel.fromJson({
+        'status': status,
+        'message': message,
+        'token': token,
+      });
+    } else if (status == 200) {
+      // حساب موجود - تسجيل دخول مباشر
+      return SocialAuthResponseModel.fromJson({
+        'status': status,
+        'message': message,
+        'token': token,
+        'user': response['data'],
+      });
+    } else {
+      _logger.w('⚠️ Unexpected status: $status');
+      return SocialAuthResponseModel.fromJson({
+        'status': status,
+        'message': message,
+      });
+    }
+  }
+
+  /// التحقق من صحة Social Auth Response
+  Failure? _validateSocialAuthResponse(Map<String, dynamic> response) {
+    final status = response['status'];
+
+    if (status == null) {
+      _logger.e('❌ Missing status in response');
+      return ServerFailure('Invalid response: Missing status', 422);
+    }
+
+    // للحالات الناجحة (200 أو 201) التحقق من token
+    if (status == 200 || status == 201) {
+      final token = response['token']?.toString();
+      if (token == null || token.isEmpty) {
+        _logger.e('❌ Missing token for successful status');
+        return ServerFailure('Invalid response: Missing token', 422);
+      }
+
+      // للحالة 200 التحقق من user data
+      if (status == 200 && response['data'] == null) {
+        _logger.e('❌ Missing user data for existing account');
+        return ServerFailure('Invalid response: Missing user data', 422);
+      }
+    }
+
+    return null;
+  }
+
+  /// معالجة نجاح Social Auth
+  Future<void> _handleSocialAuthSuccess(
+    SocialAuthResponseModel socialAuth,
+    Map<String, dynamic> response,
+  ) async {
+    final status = response['status'];
+
+    if (status == 201) {
+      // حساب جديد - حفظ token فقط
+      await StorageServices.storeData('token', socialAuth.token);
+    } else if (status == 200) {
+      // حساب موجود - حفظ كل البيانات
+      if (socialAuth.user != null) {
+        await _saveUserData(socialAuth.user!, socialAuth.token!);
+      } else {
+        _logger.w('⚠️ User data is null, saving token only');
+        await StorageServices.storeData('token', socialAuth.token);
+      }
+    } else {
+      _logger.w('⚠️ Unexpected status, no data saved: $status');
+    }
+  }
+
+  /// حفظ بيانات المستخدم
   Future<void> _saveUserData(LoginedUserModel user, String token) async {
-    if (user.role == "trader_contracted" ||
-        user.role == "trader_uncontracted") {
+    // منع حفظ بيانات الـ traders
+    if (_traderRoles.contains(user.role)) {
+      _logger.w('⚠️ Trader role detected, skipping save');
       return;
     }
-    // 1. حفظ في Storage
-    await StorageServices.storeData('user', user.toJson());
-    await StorageServices.storeData('token', token);
-    await UserProfileService.fetchAndStoreUserProfile();
 
-    // 2. تحديث حالة المصادقة في AuthManager
+    // حفظ البيانات
+    await Future.wait([
+      StorageServices.storeData('user', user.toJson()),
+      StorageServices.storeData('token', token),
+    ]);
+
+    await UserProfileService.fetchAndStoreUserProfile();
     await _authManager.onLoginSuccess();
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
 
 class NotificationsEmptyState extends StatelessWidget {
   const NotificationsEmptyState({super.key, required this.type});

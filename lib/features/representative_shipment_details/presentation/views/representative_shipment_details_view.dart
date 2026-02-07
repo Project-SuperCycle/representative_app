@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
-import 'package:supercycle/features/representative_shipment_details/presentation/widgets/representative_shipment_details_view_body.dart';
+import 'package:representative_app/core/models/shipment/single_shipment_model.dart';
+import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_details_view_body.dart';
 
 class RepresentativeShipmentDetailsView extends StatelessWidget {
   const RepresentativeShipmentDetailsView({super.key, required this.shipment});

@@ -117,13 +117,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "monthly": MessageLookupByLibrary.simpleMessage("Monthly"),
     "notes": MessageLookupByLibrary.simpleMessage("Notes"),
     "onboarding_1": MessageLookupByLibrary.simpleMessage(
-      "supercycle Number One",
+      "representative_app Number One",
     ),
     "onboarding_2": MessageLookupByLibrary.simpleMessage(
-      "supercycle Number One",
+      "representative_app Number One",
     ),
     "onboarding_3": MessageLookupByLibrary.simpleMessage(
-      "supercycle Number One",
+      "representative_app Number One",
     ),
     "or_register_via": MessageLookupByLibrary.simpleMessage("Or register via"),
     "otp_verify_button": MessageLookupByLibrary.simpleMessage("Verify"),
@@ -214,7 +214,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "You are not logined, please login to continue",
     ),
     "sign_in_alert_title": MessageLookupByLibrary.simpleMessage(
-      "Welcome to supercycle",
+      "Welcome to representative_app",
     ),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
     "start_date": MessageLookupByLibrary.simpleMessage(
@@ -223,7 +223,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "table_of_shipments": MessageLookupByLibrary.simpleMessage(
       "Table of Shipments",
     ),
-    "title": MessageLookupByLibrary.simpleMessage("supercycle"),
+    "title": MessageLookupByLibrary.simpleMessage("representative_app"),
     "trader_shipment_details": MessageLookupByLibrary.simpleMessage(
       "Shipment details",
     ),

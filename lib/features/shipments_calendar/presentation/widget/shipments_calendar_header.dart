@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/utils/calendar_utils.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/core/utils/calendar_utils.dart';
 
 class ShipmentsCalendarHeader extends StatelessWidget {
   final DateTime currentDate;

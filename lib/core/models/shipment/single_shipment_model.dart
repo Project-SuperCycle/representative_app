@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:supercycle/core/functions/shipment_manager.dart';
-import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
-import 'package:supercycle/core/models/shipment/representitive_model.dart';
-import 'package:supercycle/core/models/shipment_trader_model.dart';
-import 'package:supercycle/features/representative_shipment_details/data/models/rep_note_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
+import 'package:representative_app/core/functions/shipment_manager.dart';
+import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
+import 'package:representative_app/core/models/shipment/representitive_model.dart';
+import 'package:representative_app/core/models/shipment_trader_model.dart';
+import 'package:representative_app/features/representative_shipment_details/data/models/rep_note_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 
 class SingleShipmentModel {
   final String id;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:supercycle/core/utils/app_assets.dart' show AppAssets;
-import 'package:supercycle/core/utils/app_colors.dart' show AppColors;
-import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
-import 'package:supercycle/generated/l10n.dart' show S;
+import 'package:representative_app/core/utils/app_assets.dart' show AppAssets;
+import 'package:representative_app/core/utils/app_colors.dart' show AppColors;
+import 'package:representative_app/core/utils/app_styles.dart' show AppStyles;
+import 'package:representative_app/generated/l10n.dart' show S;
 
 class RoundedSearchField extends StatefulWidget {
   final ValueChanged<String> onChange;

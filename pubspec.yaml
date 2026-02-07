@@ -1,5 +1,5 @@
-name: supercycle
-description: "A new mobile application for dosh types recycle."
+name: representative_app
+description: "Representative mobile application for supercycle."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -73,7 +73,6 @@ dependencies:
   firebase_core: ^4.0.0
   firebase_auth: ^6.0.1
   google_sign_in: ^6.3.0
-  flutter_facebook_auth: ^7.1.2
   flutter_secure_storage: ^9.2.4
   path_provider: ^2.1.5
   hive: ^2.2.3
@@ -142,4 +141,14 @@ flutter_intl:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icons/app_icon.png"
+
+  # للأجهزة القديمة
+  image_path: "assets/icons/representative_launcher.png"
+
+  # للـ Adaptive Icon (Android 8.0+)
+  adaptive_icon_background: "#FAFAFA"  # لون الخلفية
+  adaptive_icon_foreground: "assets/icons/representative_launcher.png"  # الشعار الشفاف
+
+  # iOS
+  image_path_ios: "assets/icons/representative_launcher.png"
+  remove_alpha_ios: true

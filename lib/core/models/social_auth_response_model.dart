@@ -1,4 +1,4 @@
-import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
+import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
 
 class SocialAuthResponseModel {
   final int status;

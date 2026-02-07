@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/models/user_profile_model.dart';
-import 'package:supercycle/features/representative_main_profile/presentation/widgets/representative_profile_view_body.dart';
+import 'package:representative_app/core/models/user_profile_model.dart';
+import 'package:representative_app/features/representative_main_profile/presentation/widgets/representative_profile_view_body.dart';
 
 class RepresentativeProfileView extends StatelessWidget {
   final UserProfileModel userProfile;

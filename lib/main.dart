@@ -3,34 +3,34 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:supercycle/core/cubits/local_cubit/local_cubit.dart';
-import 'package:supercycle/core/cubits/social_auth/social_auth_cubit.dart';
-import 'package:supercycle/core/repos/social_auth_repo_imp.dart';
-import 'package:supercycle/core/routes/routes.dart';
-import 'package:supercycle/core/services/services_locator.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/forget_password/data/cubits/forget_password_cubit.dart';
-import 'package:supercycle/features/forget_password/data/repos/forget_password_repo_imp.dart';
-import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
-import 'package:supercycle/features/home/data/managers/profile_cubit/profile_cubit.dart';
-import 'package:supercycle/features/home/data/managers/shipments_cubit/today_shipments_cubit.dart';
-import 'package:supercycle/features/home/data/repos/home_repo_imp.dart';
-import 'package:supercycle/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_cubit.dart';
-import 'package:supercycle/features/representative_shipment_details/data/cubits/reject_shipment_cubit/reject_shipment_cubit.dart';
-import 'package:supercycle/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_cubit.dart';
-import 'package:supercycle/features/representative_shipment_details/data/repos/rep_shipment_details_repo_imp.dart';
-import 'package:supercycle/features/representative_shipment_review/data/cubits/deliver_segment_cubit/deliver_segment_cubit.dart';
-import 'package:supercycle/features/representative_shipment_review/data/cubits/fail_segment_cubit/fail_segment_cubit.dart';
-import 'package:supercycle/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
-import 'package:supercycle/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
-import 'package:supercycle/features/representative_shipment_review/data/repos/rep_shipment_review_repo_imp.dart';
-import 'package:supercycle/features/shipment_edit/data/cubits/shipment_edit_cubit.dart';
-import 'package:supercycle/features/shipment_edit/data/repos/shipment_edit_repo_imp.dart';
-import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
-import 'package:supercycle/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
-import 'package:supercycle/features/sign_in/data/cubits/sign-in-cubit/sign_in_cubit.dart';
-import 'package:supercycle/features/sign_in/data/repos/signin_repo_imp.dart';
-import 'package:supercycle/firebase_options.dart';
+import 'package:representative_app/core/cubits/add_notes_cubit/add_notes_cubit.dart';
+import 'package:representative_app/core/cubits/local_cubit/local_cubit.dart';
+import 'package:representative_app/core/repos/shipment_notes_repo_imp.dart';
+import 'package:representative_app/core/routes/routes.dart';
+import 'package:representative_app/core/services/services_locator.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/features/forget_password/data/cubits/forget_password_cubit.dart';
+import 'package:representative_app/features/forget_password/data/repos/forget_password_repo_imp.dart';
+import 'package:representative_app/features/home/data/managers/home_cubit/home_cubit.dart';
+import 'package:representative_app/features/home/data/managers/profile_cubit/profile_cubit.dart';
+import 'package:representative_app/features/home/data/managers/shipments_cubit/today_shipments_cubit.dart';
+import 'package:representative_app/features/home/data/repos/home_repo_imp.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_cubit.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/reject_shipment_cubit/reject_shipment_cubit.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_cubit.dart';
+import 'package:representative_app/features/representative_shipment_details/data/repos/rep_shipment_details_repo_imp.dart';
+import 'package:representative_app/features/representative_shipment_review/data/cubits/deliver_segment_cubit/deliver_segment_cubit.dart';
+import 'package:representative_app/features/representative_shipment_review/data/cubits/fail_segment_cubit/fail_segment_cubit.dart';
+import 'package:representative_app/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_cubit.dart';
+import 'package:representative_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
+import 'package:representative_app/features/representative_shipment_review/data/repos/rep_shipment_review_repo_imp.dart';
+import 'package:representative_app/features/shipment_edit/data/cubits/shipment_edit_cubit.dart';
+import 'package:representative_app/features/shipment_edit/data/repos/shipment_edit_repo_imp.dart';
+import 'package:representative_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
+import 'package:representative_app/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
+import 'package:representative_app/features/sign_in/data/cubits/sign-in-cubit/sign_in_cubit.dart';
+import 'package:representative_app/features/sign_in/data/repos/signin_repo_imp.dart';
+import 'package:representative_app/firebase_options.dart';
 import 'generated/l10n.dart';
 
 void main() async {
@@ -45,10 +45,7 @@ void main() async {
           create: (context) =>
               SignInCubit(signInRepo: getIt.get<SignInRepoImp>()),
         ),
-        BlocProvider(
-          create: (context) =>
-              SocialAuthCubit(socialAuthRepo: getIt.get<SocialAuthRepoImp>()),
-        ),
+
         BlocProvider(
           create: (context) => HomeCubit(homeRepo: getIt.get<HomeRepoImp>()),
         ),
@@ -109,6 +106,12 @@ void main() async {
         BlocProvider(
           create: (context) => ForgetPasswordCubit(
             forgetPasswordRepoImp: getIt.get<ForgetPasswordRepoImp>(),
+          ),
+        ),
+
+        BlocProvider(
+          create: (context) => AddNotesCubit(
+            shipmentNotesRepo:getIt.get<ShipmentNotesRepoImp>(),
           ),
         ),
 

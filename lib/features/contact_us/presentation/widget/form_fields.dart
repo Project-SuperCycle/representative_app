@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/contact_strings.dart';
-import 'package:supercycle/core/utils/form_validators.dart';
-import 'package:supercycle/core/widgets/custom_text_field.dart';
+import 'package:representative_app/core/utils/contact_strings.dart';
+import 'package:representative_app/core/utils/form_validators.dart';
+import 'package:representative_app/core/widgets/custom_text_field.dart';
 import '../controllers/form_controller.dart';
 import 'topic_dropdown.dart';
 

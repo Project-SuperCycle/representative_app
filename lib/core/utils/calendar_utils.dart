@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:supercycle/features/shipments_calendar/data/models/shipment_model.dart';
+import 'package:representative_app/features/shipments_calendar/data/models/shipment_model.dart';
 
 class CalendarUtils {
   static const List<String> arabicDayNames = [

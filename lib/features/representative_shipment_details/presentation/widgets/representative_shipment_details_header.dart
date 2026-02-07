@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:supercycle/core/helpers/custom_snack_bar.dart';
-import 'package:supercycle/core/utils/app_assets.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
-import 'package:supercycle/core/helpers/network_images_preview_dialog.dart';
+import 'package:representative_app/core/helpers/custom_snack_bar.dart';
+import 'package:representative_app/core/utils/app_assets.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/core/models/shipment/single_shipment_model.dart';
+import 'package:representative_app/core/helpers/network_images_preview_dialog.dart';
 
 class RepresentativeShipmentDetailsHeader extends StatelessWidget {
   final SingleShipmentModel shipment;
@@ -63,7 +64,7 @@ class RepresentativeShipmentDetailsHeader extends StatelessWidget {
                   shipment.statusDisplay.toUpperCase(),
                   style: AppStyles.styleSemiBold16(
                     context,
-                  ).copyWith(fontWeight: FontWeight.bold, color: Colors.blue),
+                  ).copyWith(fontWeight: FontWeight.bold, color: _getStatusColor()),
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -170,5 +171,27 @@ class RepresentativeShipmentDetailsHeader extends StatelessWidget {
     if (dateTime == null) return '--/--/---- --:--';
     final DateTime adjustedDateTime = dateTime.subtract(Duration(hours: 2));
     return DateFormat('dd/MM/yyyy HH:mm').format(adjustedDateTime);
+  }
+
+  Color _getStatusColor() {
+    switch (shipment.status) {
+      case 'قيد المراجعة':
+      case 'بانتظار المعاينة':
+        return Color(0xff1624A2);
+      case 'تمت الموافقة':
+        return Color(0xff3BC567);
+      case 'تمت المعاينة':
+      case 'في طريق التسليم':
+      case 'جار الاستلام':
+        return Color(0xffE04133);
+      case 'تم الاستلام':
+      case 'تم التسليم':
+      case 'تسليم جزئي':
+        return Color(0xff3BC567);
+      case 'تم الرفض':
+        return AppColors.failureColor;
+      default:
+        return Color(0xff1624A2);
+    }
   }
 }

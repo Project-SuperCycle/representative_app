@@ -1,8 +1,8 @@
-import 'package:supercycle/core/functions/shipment_manager.dart';
-import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
-import 'package:supercycle/core/models/shipment/representitive_model.dart';
-import 'package:supercycle/features/representative_shipment_details/data/models/rep_note_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/shipment_segment_model.dart';
+import 'package:representative_app/core/functions/shipment_manager.dart';
+import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
+import 'package:representative_app/core/models/shipment/representitive_model.dart';
+import 'package:representative_app/features/representative_shipment_details/data/models/rep_note_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 
 class RepSingleShipmentModel {
   final String id;

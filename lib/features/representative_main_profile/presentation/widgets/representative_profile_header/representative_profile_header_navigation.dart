@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/helpers/custom_back_button.dart';
-import 'package:supercycle/core/routes/end_points.dart';
-import 'package:supercycle/features/representative_main_profile/presentation/widgets/representative_profile_header/representative_profile_header_logo.dart';
+import 'package:representative_app/core/helpers/custom_back_button.dart';
+import 'package:representative_app/core/routes/end_points.dart';
+import 'package:representative_app/features/representative_main_profile/presentation/widgets/representative_profile_header/representative_profile_header_logo.dart';
 
 class RepresentativeProfileHeaderNavigation extends StatelessWidget {
   const RepresentativeProfileHeaderNavigation({super.key});

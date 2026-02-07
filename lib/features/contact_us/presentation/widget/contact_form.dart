@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/features/contact_us/presentation/widget/form_fields.dart';
-import 'package:supercycle/features/contact_us/presentation/widget/form_header.dart';
-import 'package:supercycle/features/contact_us/presentation/widget/merchant_question_widget.dart';
-import 'package:supercycle/features/contact_us/presentation/widget/submit_button.dart';
+import 'package:representative_app/features/contact_us/presentation/widget/form_fields.dart';
+import 'package:representative_app/features/contact_us/presentation/widget/form_header.dart';
+import 'package:representative_app/features/contact_us/presentation/widget/merchant_question_widget.dart';
+import 'package:representative_app/features/contact_us/presentation/widget/submit_button.dart';
 import '../controllers/form_controller.dart';
 
 class ContactForm extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
-import 'package:supercycle/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
+import 'package:representative_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
+import 'package:representative_app/features/shipments_calendar/data/repos/shipments_calendar_repo_imp.dart';
 
 class ShipmentsCalendarCubit extends Cubit<ShipmentsCalendarState> {
   final ShipmentsCalendarRepoImp shipmentsCalendarRepo;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/widgets/notes/shipment_notes_card.dart';
-import 'package:supercycle/core/widgets/shipment_add_note_sheet.dart';
-import 'package:supercycle/features/representative_shipment_details/data/models/rep_note_model.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/core/widgets/notes/shipment_notes_card.dart';
+import 'package:representative_app/core/widgets/shipment_add_note_sheet.dart';
+import 'package:representative_app/features/representative_shipment_details/data/models/rep_note_model.dart';
 
 class ShipmentDetailsNotes extends StatefulWidget {
   final List<ShipmentNoteModel> notes;

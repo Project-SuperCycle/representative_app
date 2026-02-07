@@ -32,8 +32,6 @@ class DefaultFirebaseOptions {
           'DefaultFirebaseOptions have not been configured for macos - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
-      case TargetPlatform.windows:
-        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -47,28 +45,22 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDwyjJgIOgY7LQjjjP2VIrQA-Zg3GQdPNA',
-    appId: '1:855015056699:android:46041f5a5b09d9acd5831e',
-    messagingSenderId: '855015056699',
-    projectId: 'supercycle-b07f1',
-    storageBucket: 'supercycle-b07f1.firebasestorage.app',
+    apiKey: 'AIzaSyCohML7S0HlipdugmKa9mMsNb0JG5AdFrU',
+    appId: '1:654473554359:android:dc74d3d040ba7a7f496032',
+    messagingSenderId: '654473554359',
+    projectId: 'supercycle-representative',
+    storageBucket: 'supercycle-representative.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDG_5oBp_J6f-U18miyfMHaeJazgVGSHH0',
-    appId: '1:855015056699:ios:44aea07da6acba97d5831e',
-    messagingSenderId: '855015056699',
-    projectId: 'supercycle-b07f1',
-    storageBucket: 'supercycle-b07f1.firebasestorage.app',
-    iosBundleId: 'com.example.supercycleApp',
+    apiKey: 'AIzaSyAHcLTnugiDjePiEYui4-cJQ41CqHkeTfw',
+    appId: '1:654473554359:ios:cdd2e0cf0143766b496032',
+    messagingSenderId: '654473554359',
+    projectId: 'supercycle-representative',
+    storageBucket: 'supercycle-representative.firebasestorage.app',
+    androidClientId: '654473554359-3fabl8kq1gcc4md43mt4u0acn9polrbi.apps.googleusercontent.com',
+    iosClientId: '654473554359-otdn0n5dp0lrllnbaj5qc99shdn2shog.apps.googleusercontent.com',
+    iosBundleId: 'com.supercycle.representative',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyB5V63HzMuZSizeKPnpLbWUOnSkNhCWsfA',
-    appId: '1:855015056699:web:250f27484e8cae98d5831e',
-    messagingSenderId: '855015056699',
-    projectId: 'supercycle-b07f1',
-    authDomain: 'supercycle-b07f1.firebaseapp.com',
-    storageBucket: 'supercycle-b07f1.firebasestorage.app',
-  );
 }

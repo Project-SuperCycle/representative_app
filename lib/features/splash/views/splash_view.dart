@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/routes/end_points.dart';
-import 'package:supercycle/core/services/storage_services.dart';
-import 'package:supercycle/core/utils/app_assets.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:representative_app/core/routes/end_points.dart';
+import 'package:representative_app/core/services/storage_services.dart';
+import 'package:representative_app/core/utils/app_assets.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});

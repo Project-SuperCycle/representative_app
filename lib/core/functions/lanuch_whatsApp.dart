@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/helpers/custom_snack_bar.dart';
+import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future<void> openWhatsApp({required BuildContext context}) async {

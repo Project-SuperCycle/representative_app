@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/features/onboarding/presentation/widgets/first_onboarding_view_body.dart'
+import 'package:representative_app/features/onboarding/presentation/widgets/first_onboarding_view_body.dart'
     show FirstOnboardingViewBody;
 
 class FirstOnboardingView extends StatelessWidget {

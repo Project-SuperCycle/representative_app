@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/models/notifications_model.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/home/presentation/widgets/notifications/notification_item.dart';
+import 'package:representative_app/core/models/notifications_model.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/features/home/presentation/widgets/notifications/notification_item.dart';
 
 class NotificationsOverlay {
   static OverlayEntry? _overlayEntry;

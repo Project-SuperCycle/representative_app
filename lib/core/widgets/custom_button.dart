@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/constants.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:representative_app/core/constants.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({

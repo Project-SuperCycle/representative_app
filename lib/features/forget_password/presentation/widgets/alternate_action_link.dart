@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
 
 class AlternateActionLink extends StatelessWidget {
   const AlternateActionLink({super.key});

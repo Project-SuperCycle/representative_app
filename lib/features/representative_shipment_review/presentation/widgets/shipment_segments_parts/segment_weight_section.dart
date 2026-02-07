@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle/core/helpers/custom_snack_bar.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
+import 'package:representative_app/core/helpers/custom_snack_bar.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
 import 'dart:io';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/representative_shipment_review/data/cubits/fail_segment_cubit/fail_segment_cubit.dart';
-import 'package:supercycle/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
-import 'package:supercycle/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_state.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/fail_segment_model.dart';
-import 'package:supercycle/features/representative_shipment_review/presentation/widgets/segment_fail_modal/segment_fail_modal.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/features/representative_shipment_review/data/cubits/fail_segment_cubit/fail_segment_cubit.dart';
+import 'package:representative_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_cubit.dart';
+import 'package:representative_app/features/representative_shipment_review/data/cubits/weigh_segment_cubit/weigh_segment_state.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/fail_segment_model.dart';
+import 'package:representative_app/features/representative_shipment_review/presentation/widgets/segment_fail_modal/segment_fail_modal.dart';
 
 class SegmentWeightSection extends StatefulWidget {
   final VoidCallback? onWeightedPressed;
@@ -48,7 +48,6 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
   @override
   void dispose() {
     widget.weightController.removeListener(_updateButtonState);
-    widget.weightController.dispose();
     super.dispose();
   }
 
@@ -79,8 +78,6 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
         BlocProvider.of<FailSegmentCubit>(
           context,
         ).failSegment(failModel: failModel);
-
-        CustomSnackBar.showWarning(context, 'تم تسجيل العطلة');
       },
     );
   }
@@ -91,7 +88,6 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
         context,
         'لا يمكن إضافة أكثر من ${widget.maxImages} صور',
       );
-
       return;
     }
 
@@ -249,7 +245,7 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
         });
 
         if (pickedFiles.length > remainingSlots) {
-          CustomSnackBar.showError(
+          CustomSnackBar.showWarning(
             context,
             'تم إضافة $remainingSlots صور فقط. الحد الأقصى ${widget.maxImages} صور',
           );
@@ -259,7 +255,11 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
         _updateButtonState();
       }
     } catch (e) {
-      CustomSnackBar.showError(context, 'حدث خطأ أثناء اختيار الصور: $e');
+
+      CustomSnackBar.showError(
+        context,
+        'حدث خطأ أثناء اختيار الصور: $e',
+      );
     }
   }
 
@@ -502,7 +502,7 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
               // Weight input field
               Row(
                 children: [
-                  Text('طن', style: AppStyles.styleSemiBold16(context)),
+                  Text('كجم', style: AppStyles.styleSemiBold16(context)),
                   const SizedBox(width: 20),
                   Expanded(
                     child: TextField(
@@ -540,17 +540,49 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
 
               // Upload button
               BlocConsumer<WeighSegmentCubit, WeighSegmentState>(
+                // ✅ CRITICAL: Only listen to THIS segment's states
+                listenWhen: (previous, current) {
+                  if (current is WeighSegmentLoading) {
+                    return current.segmentId == widget.segmentID;
+                  }
+                  if (current is WeighSegmentSuccess) {
+                    return current.segmentId == widget.segmentID;
+                  }
+                  if (current is WeighSegmentFailure) {
+                    return current.segmentId == widget.segmentID;
+                  }
+                  return false;
+                },
                 listener: (context, state) {
-                  // TODO: implement listener
-                  if (state is WeighSegmentSuccess) {
+                  if (state is WeighSegmentSuccess &&
+                      state.segmentId == widget.segmentID) {
                     CustomSnackBar.showSuccess(context, state.message);
                   }
-                  if (state is WeighSegmentFailure) {
-                    CustomSnackBar.showSuccess(context, state.errorMessage);
+                  if (state is WeighSegmentFailure &&
+                      state.segmentId == widget.segmentID) {
+                    CustomSnackBar.showError(context, state.errorMessage);
                   }
                 },
+                // ✅ CRITICAL: Only rebuild for THIS segment
+                buildWhen: (previous, current) {
+                  if (current is WeighSegmentLoading) {
+                    return current.segmentId == widget.segmentID;
+                  }
+                  if (current is WeighSegmentSuccess) {
+                    return current.segmentId == widget.segmentID;
+                  }
+                  if (current is WeighSegmentFailure) {
+                    return current.segmentId == widget.segmentID;
+                  }
+                  return false;
+                },
                 builder: (context, state) {
-                  if (state is WeighSegmentLoading) {
+                  // Check if loading is for THIS segment
+                  final isLoading =
+                      state is WeighSegmentLoading &&
+                      state.segmentId == widget.segmentID;
+
+                  if (isLoading) {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -563,6 +595,7 @@ class _SegmentWeightSectionState extends State<SegmentWeightSection> {
                       ],
                     );
                   }
+
                   return Row(
                     textDirection: TextDirection.rtl,
                     children: [

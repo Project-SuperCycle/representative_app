@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle/core/models/user_profile_model.dart';
-import 'package:supercycle/core/widgets/drawer/custom_drawer.dart';
-import 'package:supercycle/features/representative_main_profile/presentation/widgets/representative_profile_header/representative_profile_header_section.dart';
-import 'package:supercycle/features/representative_main_profile/presentation/widgets/representative_profile_info_card.dart';
-import 'package:supercycle/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
+import 'package:representative_app/core/models/user_profile_model.dart';
+import 'package:representative_app/core/widgets/drawer/custom_drawer.dart';
+import 'package:representative_app/features/representative_main_profile/presentation/widgets/representative_profile_header/representative_profile_header_section.dart';
+import 'package:representative_app/features/representative_main_profile/presentation/widgets/representative_profile_info_card.dart';
+import 'package:representative_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 
 class RepresentativeProfileViewBody extends StatefulWidget {
   final UserProfileModel userProfile;

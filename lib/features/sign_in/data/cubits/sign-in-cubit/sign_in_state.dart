@@ -1,4 +1,5 @@
-import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
+import 'package:representative_app/core/models/social_auth_response_model.dart';
+import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
 
 abstract class SignInState {}
 
@@ -21,4 +22,16 @@ class SignInFailure extends SignInState {
   final int statusCode;
 
   SignInFailure({required this.message, required this.statusCode});
+}
+
+class SocialAuthLoading extends SignInState {}
+
+class SocialAuthSuccess extends SignInState {
+  final SocialAuthResponseModel socialAuth;
+  SocialAuthSuccess({required this.socialAuth});
+}
+
+class SocialAuthFailure extends SignInState {
+  final String message;
+  SocialAuthFailure({required this.message});
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/constants.dart';
+import 'package:representative_app/core/constants.dart';
 import '../controllers/form_controller.dart';
 import 'agent_contact_info.dart';
 import 'contact_form.dart';

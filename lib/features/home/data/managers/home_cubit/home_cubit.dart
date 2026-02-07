@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle/features/home/data/models/dosh_data_model.dart';
-import 'package:supercycle/features/home/data/models/dosh_type_model.dart'
+import 'package:representative_app/features/home/data/models/dosh_data_model.dart';
+import 'package:representative_app/features/home/data/models/dosh_type_model.dart'
     show DoshTypeModel;
-import 'package:supercycle/features/home/data/models/type_history_model.dart';
-import 'package:supercycle/features/home/data/repos/home_repo_imp.dart';
+import 'package:representative_app/features/home/data/models/type_history_model.dart';
+import 'package:representative_app/features/home/data/repos/home_repo_imp.dart';
 
 part 'home_state.dart';
 

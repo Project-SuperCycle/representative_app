@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/features/forget_password/presentation/widgets/forget_password_view_body.dart';
+import 'package:representative_app/features/forget_password/presentation/widgets/forget_password_view_body.dart';
 
 class ForgetPasswordView extends StatelessWidget {
   const ForgetPasswordView({super.key});

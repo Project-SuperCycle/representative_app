@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' show BuildContext;
-import 'package:supercycle/generated/l10n.dart' show S;
+import 'package:representative_app/generated/l10n.dart' show S;
 
 abstract class AuthFunctions {
   static String checkInputType(BuildContext context, String input) {

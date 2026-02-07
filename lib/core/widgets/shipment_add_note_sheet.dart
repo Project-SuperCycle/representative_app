@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/cubits/add_notes_cubit/add_notes_cubit.dart';
-import 'package:supercycle/core/cubits/add_notes_cubit/add_notes_state.dart';
-import 'package:supercycle/core/helpers/custom_loading_indicator.dart';
-import 'package:supercycle/core/helpers/custom_snack_bar.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/models/create_notes_model.dart';
+import 'package:representative_app/core/cubits/add_notes_cubit/add_notes_cubit.dart';
+import 'package:representative_app/core/cubits/add_notes_cubit/add_notes_state.dart';
+import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
+import 'package:representative_app/core/helpers/custom_snack_bar.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/core/models/create_notes_model.dart';
 
 class ShipmentAddNoteSheet extends StatefulWidget {
   final String shipmentId;

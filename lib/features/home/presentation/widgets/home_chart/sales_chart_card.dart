@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/features/home/presentation/widgets/home_chart/sales_line_chart.dart'
+import 'package:representative_app/features/home/presentation/widgets/home_chart/sales_line_chart.dart'
     show SalesLineChart;
 
 class SalesChartCard extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_assets.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_assets.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
 
 class FloatingButton extends StatelessWidget {
   final bool isArabic;

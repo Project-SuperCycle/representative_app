@@ -1,8 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle/core/services/auth_manager_services.dart';
-import 'package:supercycle/features/sign_in/data/cubits/sign-in-cubit/sign_in_state.dart';
-import 'package:supercycle/features/sign_in/data/models/signin_credentials_model.dart';
-import 'package:supercycle/features/sign_in/data/repos/signin_repo_imp.dart';
+import 'package:representative_app/core/models/social_auth_request_model.dart';
+import 'package:representative_app/core/services/auth_manager_services.dart';
+import 'package:representative_app/features/sign_in/data/cubits/sign-in-cubit/sign_in_state.dart';
+import 'package:representative_app/features/sign_in/data/models/signin_credentials_model.dart';
+import 'package:representative_app/features/sign_in/data/repos/signin_repo_imp.dart';
 
 class SignInCubit extends Cubit<SignInState> {
   final SignInRepoImp signInRepo;
@@ -27,11 +28,7 @@ class SignInCubit extends Cubit<SignInState> {
           );
         },
         (user) async {
-          // 🎯 تحديث حالة المصادقة
-          // ملحوظة: الـ Repo بالفعل استدعى onLoginSuccess()
-          // لكن نضيفها هنا كـ safety measure
           await _authManager.onLoginSuccess();
-
           emit(SignInSuccess(user: user));
         },
       );
@@ -57,9 +54,7 @@ class SignInCubit extends Cubit<SignInState> {
           );
         },
         (user) async {
-          // 🎯 تحديث حالة المصادقة
           await _authManager.onLoginSuccess();
-
           emit(SignInSuccess(user: user));
         },
       );
@@ -73,36 +68,20 @@ class SignInCubit extends Cubit<SignInState> {
     }
   }
 
-  /// تسجيل الدخول عبر Facebook
-  Future<void> signInWithFacebook() async {
-    emit(SignInLoading());
-
+  Future<void> socialAuth(SocialAuthRequestModel credentials) async {
+    emit(SocialAuthLoading());
     try {
-      var result = await signInRepo.signInWithFacebook();
-
+      var result = await signInRepo.socialSignup(credentials: credentials);
       result.fold(
         (failure) {
-          emit(
-            SignInFailure(
-              message: failure.errMessage,
-              statusCode: failure.statusCode,
-            ),
-          );
+          emit(SocialAuthFailure(message: failure.errMessage));
         },
-        (user) async {
-          // 🎯 تحديث حالة المصادقة
-          await _authManager.onLoginSuccess();
-
-          emit(SignInSuccess(user: user));
+        (socialAuth) {
+          emit(SocialAuthSuccess(socialAuth: socialAuth));
         },
       );
     } catch (error) {
-      emit(
-        SignInFailure(
-          message: 'حدث خطأ أثناء تسجيل الدخول بـ Facebook',
-          statusCode: 520,
-        ),
-      );
+      emit(SocialAuthFailure(message: error.toString()));
     }
   }
 

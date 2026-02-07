@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:supercycle/core/cubits/local_cubit/local_cubit.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/generated/l10n.dart';
+import 'package:representative_app/core/cubits/local_cubit/local_cubit.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/generated/l10n.dart';
 
 import 'custom_dropdown.dart';
 

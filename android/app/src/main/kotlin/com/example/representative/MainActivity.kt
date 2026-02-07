@@ -1,4 +1,4 @@
-package com.example.supercycle
+package com.supercycle.representative
 
 import io.flutter.embedding.android.FlutterActivity
 

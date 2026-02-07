@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_assets.dart';
-import 'package:supercycle/features/contact_us/presentation/widget/contact_info_chip.dart';
+import 'package:representative_app/core/utils/app_assets.dart';
+import 'package:representative_app/features/contact_us/presentation/widget/contact_info_chip.dart';
 
 class AgentContactInfo extends StatelessWidget {
   final bool isArabic;

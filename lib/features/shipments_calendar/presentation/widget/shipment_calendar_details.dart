@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/helpers/shipments_calender_helper.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/utils/calendar_utils.dart';
-import 'package:supercycle/features/shipments_calendar/data/models/shipment_model.dart';
-import 'package:supercycle/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
+import 'package:representative_app/core/helpers/shipments_calender_helper.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/core/utils/calendar_utils.dart';
+import 'package:representative_app/features/shipments_calendar/data/models/shipment_model.dart';
+import 'package:representative_app/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
 
 class ShipmentsCalendarDetails extends StatelessWidget {
   final DateTime selectedDate;

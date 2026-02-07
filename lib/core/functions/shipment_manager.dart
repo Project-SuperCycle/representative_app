@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
-import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
-import 'package:supercycle/core/services/dosh_types_manager.dart';
-import 'package:supercycle/core/services/services_locator.dart';
+import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
+import 'package:representative_app/core/services/dosh_types_manager.dart';
+import 'package:representative_app/core/services/services_locator.dart';
 
 class ShipmentManager {
   static List<Map<String, dynamic>> createDoshItemsMap({

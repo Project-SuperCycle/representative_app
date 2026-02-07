@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:supercycle/core/helpers/custom_snack_bar.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:representative_app/core/helpers/custom_snack_bar.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 import 'dart:io';
 
@@ -15,8 +15,8 @@ class SegmentFailModal {
   }) {
     final primaryColor = AppColors.failureColor; // Orange color for issue
     final gradientColors = [
-      AppColors.failureColor.withAlpha(350),
       AppColors.failureColor.withAlpha(400),
+      AppColors.failureColor.withAlpha(450),
     ];
 
     WoltModalSheet.show<void>(
@@ -318,9 +318,9 @@ class _ModalContentState extends State<_ModalContent>
   }
 
   void _showSnackBar(String message, {bool isError = false}) {
-    isError
-        ? CustomSnackBar.showError(context, message)
-        : CustomSnackBar.showWarning(context, message);
+    isError == false
+        ? CustomSnackBar.showSuccess(context, message)
+        : CustomSnackBar.showError(context, message);
   }
 
   Future<void> _onSubmitTap() async {
@@ -441,7 +441,10 @@ class _ModalContentState extends State<_ModalContent>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: widget.primaryColor.withAlpha(150), width: 2),
+        border: Border.all(
+          color: widget.primaryColor.withAlpha(150),
+          width: 2,
+        ),
         boxShadow: [
           BoxShadow(
             color: widget.primaryColor.withAlpha(50),
@@ -569,7 +572,7 @@ class _ModalContentState extends State<_ModalContent>
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: Colors.black.withAlpha(350),
+                  color: Colors.black.withAlpha(400),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -586,7 +589,7 @@ class _ModalContentState extends State<_ModalContent>
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.black.withAlpha(350),
+                color: Colors.black.withAlpha(400),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(

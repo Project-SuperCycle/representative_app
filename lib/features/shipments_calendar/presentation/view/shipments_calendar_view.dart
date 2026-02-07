@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/widgets/navbar/custom_curved_navigation_bar.dart';
-import 'package:supercycle/features/shipments_calendar/presentation/widget/shipments_calendar_view_body.dart';
+import 'package:representative_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
+import 'package:representative_app/features/shipments_calendar/presentation/widget/shipments_calendar_view_body.dart';
 
 class ShipmentsCalendarView extends StatelessWidget {
   const ShipmentsCalendarView({super.key});

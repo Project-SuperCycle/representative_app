@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle/core/services/auth_manager_services.dart';
-import 'package:supercycle/core/services/storage_services.dart';
-import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
-import 'package:supercycle/features/home/presentation/widgets/home_chart/sales_chart_card.dart';
-import 'package:supercycle/features/home/presentation/widgets/home_view_header.dart';
-import 'package:supercycle/features/home/presentation/widgets/types_section/types_list_view.dart';
-import 'package:supercycle/features/home/presentation/widgets/types_section/types_section_header.dart';
-import 'package:supercycle/features/home/presentation/widgets/today_shipments_card.dart';
-import 'package:supercycle/features/sign_in/data/models/logined_user_model.dart';
+import 'package:representative_app/core/services/auth_manager_services.dart';
+import 'package:representative_app/core/services/storage_services.dart';
+import 'package:representative_app/features/home/data/managers/home_cubit/home_cubit.dart';
+import 'package:representative_app/features/home/presentation/widgets/home_chart/sales_chart_card.dart';
+import 'package:representative_app/features/home/presentation/widgets/home_view_header.dart';
+import 'package:representative_app/features/home/presentation/widgets/types_section/types_list_view.dart';
+import 'package:representative_app/features/home/presentation/widgets/types_section/types_section_header.dart';
+import 'package:representative_app/features/home/presentation/widgets/today_shipments_card.dart';
+import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
 
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key, required this.onDrawerPressed});

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_assets.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/home/data/models/dosh_type_model.dart';
-import 'package:supercycle/generated/l10n.dart';
+import 'package:representative_app/core/utils/app_assets.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/features/home/data/models/dosh_type_model.dart';
+import 'package:representative_app/generated/l10n.dart';
 
 class TypeCardItem extends StatefulWidget {
   final DoshTypeModel typeModel;

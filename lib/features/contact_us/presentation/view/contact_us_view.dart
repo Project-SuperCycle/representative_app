@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/widgets/navbar/custom_curved_navigation_bar.dart';
-import 'package:supercycle/features/contact_us/presentation/widget/contact_us_view_body.dart';
+import 'package:representative_app/core/widgets/navbar/custom_curved_navigation_bar.dart';
+import 'package:representative_app/features/contact_us/presentation/widget/contact_us_view_body.dart';
 
 class ContactUsView extends StatelessWidget {
   const ContactUsView({super.key});

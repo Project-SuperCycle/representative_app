@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:supercycle/core/errors/failures.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/deliver_segment_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/fail_segment_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/start_segment_model.dart';
-import 'package:supercycle/features/representative_shipment_review/data/models/weigh_segment_model.dart';
+import 'package:representative_app/core/errors/failures.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/deliver_segment_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/fail_segment_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/start_segment_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/weigh_segment_model.dart';
 
 abstract class RepShipmentReviewRepo {
   Future<Either<Failure, String>> startSegment({

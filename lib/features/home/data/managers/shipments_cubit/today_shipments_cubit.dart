@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supercycle/features/home/data/repos/home_repo_imp.dart';
-import 'package:supercycle/features/shipments_calendar/data/models/shipment_model.dart';
+import 'package:representative_app/features/home/data/repos/home_repo_imp.dart';
+import 'package:representative_app/features/shipments_calendar/data/models/shipment_model.dart';
 
 part 'today_shipments_state.dart';
 

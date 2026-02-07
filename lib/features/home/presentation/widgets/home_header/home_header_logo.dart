@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_assets.dart' show AppAssets;
+import 'package:representative_app/core/utils/app_assets.dart' show AppAssets;
 
 class HomeHeaderLogo extends StatelessWidget {
   const HomeHeaderLogo({super.key});

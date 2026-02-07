@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/core/utils/input_decorations.dart'
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/core/utils/input_decorations.dart'
     show InputDecorations;
 
 class CustomConfirmPassword extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:supercycle/core/models/trader_branch_model.dart';
-import 'package:supercycle/core/models/trader_contract_model.dart';
-import 'package:supercycle/core/models/trader_main_branch_model.dart';
+import 'package:representative_app/core/models/trader_branch_model.dart';
+import 'package:representative_app/core/models/trader_contract_model.dart';
+import 'package:representative_app/core/models/trader_main_branch_model.dart';
 
 class UserProfileModel {
   // Basic Info

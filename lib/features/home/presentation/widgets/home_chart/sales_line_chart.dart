@@ -2,15 +2,15 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
-import 'package:supercycle/core/helpers/custom_snack_bar.dart';
-import 'package:supercycle/core/services/dosh_types_manager.dart';
-import 'package:supercycle/core/services/services_locator.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/home/data/managers/home_cubit/home_cubit.dart';
-import 'package:supercycle/features/home/data/models/dosh_data_model.dart';
-import 'package:supercycle/features/home/data/models/type_history_model.dart';
-import 'package:supercycle/generated/l10n.dart';
+import 'package:representative_app/core/helpers/custom_snack_bar.dart';
+import 'package:representative_app/core/services/dosh_types_manager.dart';
+import 'package:representative_app/core/services/services_locator.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/features/home/data/managers/home_cubit/home_cubit.dart';
+import 'package:representative_app/features/home/data/models/dosh_data_model.dart';
+import 'package:representative_app/features/home/data/models/type_history_model.dart';
+import 'package:representative_app/generated/l10n.dart';
 
 // Data model for chart (wrapper around TypeHistoryModel)
 class ChartPriceData {

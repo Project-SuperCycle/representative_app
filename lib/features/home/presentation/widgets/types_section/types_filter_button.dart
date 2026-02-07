@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
+import 'package:representative_app/core/utils/app_styles.dart' show AppStyles;
 
 class TypesFilterButton extends StatelessWidget {
   const TypesFilterButton({

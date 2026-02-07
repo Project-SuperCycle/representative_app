@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/services/size_config.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
+import 'package:representative_app/core/services/size_config.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
 
 abstract class AppStyles {
   static const fontFamily = 'Cairo';

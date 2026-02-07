@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/generated/l10n.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/generated/l10n.dart';
 
 class SignInHeader extends StatelessWidget {
   const SignInHeader({super.key});

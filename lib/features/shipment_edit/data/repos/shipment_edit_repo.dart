@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:supercycle/core/errors/failures.dart';
+import 'package:representative_app/core/errors/failures.dart';
 
 abstract class ShipmentEditRepo {
   Future<Either<Failure, String>> editShipment({

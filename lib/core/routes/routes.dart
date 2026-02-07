@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/helpers/app_transitions.dart';
-import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
-import 'package:supercycle/core/models/user_profile_model.dart';
-import 'package:supercycle/core/routes/end_points.dart';
-import 'package:supercycle/features/contact_us/presentation/view/contact_us_view.dart';
-import 'package:supercycle/features/forget_password/presentation/views/forget_password_view.dart';
-import 'package:supercycle/features/forget_password/presentation/views/reset_password_view.dart';
-import 'package:supercycle/features/forget_password/presentation/views/verify_reset_otp_view.dart';
-import 'package:supercycle/features/home/presentation/views/home_view.dart';
-import 'package:supercycle/features/onboarding/presentation/views/first_onboarding_view.dart';
-import 'package:supercycle/features/onboarding/presentation/views/fourth_onboarding_view.dart';
-import 'package:supercycle/features/onboarding/presentation/views/second_onboarding_view.dart';
-import 'package:supercycle/features/onboarding/presentation/views/third_onboarding_view.dart';
-import 'package:supercycle/features/representative_main_profile/presentation/view/representative_profile_view.dart';
-import 'package:supercycle/features/representative_shipment_details/presentation/views/representative_shipment_details_view.dart';
-import 'package:supercycle/features/representative_shipment_review/presentation/views/representative_shipment_edit_view.dart';
-import 'package:supercycle/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
-import 'package:supercycle/features/shipment_edit/presentation/views/shipment_edit_view.dart';
-import 'package:supercycle/features/sign_in/presentation/views/sign_in_view.dart';
-import 'package:supercycle/features/splash/views/splash_view.dart';
-import 'package:supercycle/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
+import 'package:representative_app/core/helpers/app_transitions.dart';
+import 'package:representative_app/core/models/shipment/single_shipment_model.dart';
+import 'package:representative_app/core/models/user_profile_model.dart';
+import 'package:representative_app/core/routes/end_points.dart';
+import 'package:representative_app/features/contact_us/presentation/view/contact_us_view.dart';
+import 'package:representative_app/features/forget_password/presentation/views/forget_password_view.dart';
+import 'package:representative_app/features/forget_password/presentation/views/reset_password_view.dart';
+import 'package:representative_app/features/forget_password/presentation/views/verify_reset_otp_view.dart';
+import 'package:representative_app/features/home/presentation/views/home_view.dart';
+import 'package:representative_app/features/onboarding/presentation/views/first_onboarding_view.dart';
+import 'package:representative_app/features/onboarding/presentation/views/fourth_onboarding_view.dart';
+import 'package:representative_app/features/onboarding/presentation/views/second_onboarding_view.dart';
+import 'package:representative_app/features/onboarding/presentation/views/third_onboarding_view.dart';
+import 'package:representative_app/features/representative_main_profile/presentation/view/representative_profile_view.dart';
+import 'package:representative_app/features/representative_shipment_details/presentation/views/representative_shipment_details_view.dart';
+import 'package:representative_app/features/representative_shipment_review/presentation/views/representative_shipment_edit_view.dart';
+import 'package:representative_app/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
+import 'package:representative_app/features/shipment_edit/presentation/views/shipment_edit_view.dart';
+import 'package:representative_app/features/sign_in/presentation/views/sign_in_view.dart';
+import 'package:representative_app/features/splash/views/splash_view.dart';
+import 'package:representative_app/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(

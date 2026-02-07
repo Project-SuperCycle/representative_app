@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:supercycle/core/functions/shipment_manager.dart';
-import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
+import 'package:representative_app/core/functions/shipment_manager.dart';
+import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
 
 class EditShipmentModel {
   final String customPickupAddress;

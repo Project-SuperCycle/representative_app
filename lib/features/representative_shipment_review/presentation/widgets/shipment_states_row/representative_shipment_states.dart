@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/models/shipment/single_shipment_model.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/features/representative_shipment_review/presentation/widgets/shipment_states_row/shipment_state_info_row.dart';
+import 'package:logger/logger.dart';
+import 'package:representative_app/core/models/shipment/single_shipment_model.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/features/representative_shipment_review/presentation/widgets/shipment_states_row/shipment_state_info_row.dart';
 
 class RepresentativeShipmentStates extends StatefulWidget {
   final SingleShipmentModel shipment;
@@ -23,20 +24,53 @@ class _RepresentativeShipmentStatesState
   @override
   void initState() {
     super.initState();
+    _calculateStats();
+  }
+
+  // ✅ CRITICAL FIX: Recalculate when widget updates
+  @override
+  void didUpdateWidget(covariant RepresentativeShipmentStates oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // ✅ Recalculate stats whenever the widget rebuilds
+    _calculateStats();
+  }
+
+  // ✅ Extract calculation logic to reusable method
+  void _calculateStats() {
     setState(() {
       totalSegments = widget.shipment.segments.length;
+
       movedSegments = widget.shipment.segments
           .where(
             (segment) =>
-                segment.status == 'in_transit_to_scale' ||
-                segment.status == 'in_transit_to_destination',
-          )
+        segment.status == 'in_transit_to_scale' ||
+            segment.status == 'in_transit_to_destination',
+      )
           .length;
+
       deliveredSegments = widget.shipment.segments
           .where((segment) => segment.status == 'delivered')
           .length;
-      percentage = (deliveredSegments / totalSegments) * 100;
+
+      percentage = totalSegments > 0
+          ? (deliveredSegments / totalSegments) * 100
+          : 0;
     });
+
+    // Logging for debugging
+    Logger().i(
+      "Shipment Status: ${widget.shipment.status}",
+    );
+
+    for (var segment in widget.shipment.segments) {
+      Logger().d(
+        "Segment ${segment.id}: ${segment.status}",
+      );
+    }
+
+    Logger().i(
+      "Stats Updated - Total: $totalSegments, Moved: $movedSegments, Delivered: $deliveredSegments, Percentage: ${percentage.toStringAsFixed(1)}%",
+    );
   }
 
   @override

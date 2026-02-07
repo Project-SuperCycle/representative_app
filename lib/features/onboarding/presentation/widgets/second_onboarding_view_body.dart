@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supercycle/core/routes/end_points.dart';
-import 'package:supercycle/core/services/storage_services.dart';
-import 'package:supercycle/core/utils/app_assets.dart';
-import 'package:supercycle/core/utils/app_colors.dart' show AppColors;
-import 'package:supercycle/core/utils/app_styles.dart' show AppStyles;
-import 'package:supercycle/features/onboarding/presentation/widgets/partial_circle_border_painter.dart';
-import 'package:supercycle/generated/l10n.dart' show S;
+import 'package:representative_app/core/routes/end_points.dart';
+import 'package:representative_app/core/services/storage_services.dart';
+import 'package:representative_app/core/utils/app_assets.dart';
+import 'package:representative_app/core/utils/app_colors.dart' show AppColors;
+import 'package:representative_app/core/utils/app_styles.dart' show AppStyles;
+import 'package:representative_app/features/onboarding/presentation/widgets/partial_circle_border_painter.dart';
+import 'package:representative_app/generated/l10n.dart' show S;
 
 class SecondOnboardingViewBody extends StatelessWidget {
   const SecondOnboardingViewBody({super.key});

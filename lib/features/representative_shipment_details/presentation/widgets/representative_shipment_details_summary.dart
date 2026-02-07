@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
-import 'package:supercycle/core/services/dosh_types_manager.dart';
-import 'package:supercycle/core/services/services_locator.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
+import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
+import 'package:representative_app/core/services/dosh_types_manager.dart';
+import 'package:representative_app/core/services/services_locator.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
 
 class RepresentativeShipmentDetailsSummary extends StatelessWidget {
   const RepresentativeShipmentDetailsSummary({super.key, required this.items});

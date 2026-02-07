@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:supercycle/core/helpers/custom_dropdown.dart';
-import 'package:supercycle/core/models/shipment/dosh_item_model.dart';
-import 'package:supercycle/core/models/shipment/unit.dart';
-import 'package:supercycle/core/services/dosh_types_manager.dart';
-import 'package:supercycle/core/services/services_locator.dart';
-import 'package:supercycle/core/utils/app_colors.dart';
-import 'package:supercycle/core/utils/app_styles.dart';
-import 'package:supercycle/generated/l10n.dart';
+import 'package:representative_app/core/helpers/custom_dropdown.dart';
+import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
+import 'package:representative_app/core/models/shipment/unit.dart';
+import 'package:representative_app/core/services/dosh_types_manager.dart';
+import 'package:representative_app/core/services/services_locator.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/generated/l10n.dart';
 
 class EditableProductCard extends StatefulWidget {
   final DoshItemModel product;
