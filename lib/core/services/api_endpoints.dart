@@ -41,4 +41,7 @@ abstract class ApiEndpoints {
       '/representatives/shipments/{shipmentId}/segments/{segmentId}/deliver';
   static const String failShipmentSegment =
       '/representatives/shipments/{shipmentId}/segments/{segmentId}/fail';
+
+  // notifications
+  static const String registerDevice = '/auth/device-token';
 }

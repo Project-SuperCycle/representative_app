@@ -47,7 +47,7 @@ class _ShipmentSegmentStep2State extends State<ShipmentSegmentStep2> {
 
   void onWeightedPressed() {
     // Create the weight model
-     weighModel = WeighSegmentModel(
+    weighModel = WeighSegmentModel(
       shipmentID: widget.shipmentID,
       segmentID: widget.segment.id,
       images: images,

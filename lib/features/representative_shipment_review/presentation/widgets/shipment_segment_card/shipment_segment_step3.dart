@@ -96,7 +96,7 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
           context,
         ).failSegment(failModel: failModel);
 
-        },
+      },
     );
   }
 

@@ -7,6 +7,8 @@ import 'package:representative_app/core/cubits/add_notes_cubit/add_notes_cubit.d
 import 'package:representative_app/core/cubits/local_cubit/local_cubit.dart';
 import 'package:representative_app/core/repos/shipment_notes_repo_imp.dart';
 import 'package:representative_app/core/routes/routes.dart';
+import 'package:representative_app/core/services/notifications/local_notifications_service.dart';
+import 'package:representative_app/core/services/notifications/push_notifications_service.dart';
 import 'package:representative_app/core/services/services_locator.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/features/forget_password/data/cubits/forget_password_cubit.dart';
@@ -34,9 +36,10 @@ import 'package:representative_app/firebase_options.dart';
 import 'generated/l10n.dart';
 
 void main() async {
-  setupServiceLocator();
   WidgetsFlutterBinding.ensureInitialized();
+  setupServiceLocator();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await _initNonCriticalServices();
   runApp(
     MultiBlocProvider(
       providers: [
@@ -120,6 +123,16 @@ void main() async {
       child: const MyApp(),
     ),
   );
+}
+
+Future<void> _initNonCriticalServices() async {
+  try {
+    await PushNotificationsService.init();
+    await LocalNotificationsService.init();
+  } catch (e, s) {
+    debugPrint('❌ Services init failed: $e');
+    debugPrintStack(stackTrace: s);
+  }
 }
 
 class MyApp extends StatefulWidget {

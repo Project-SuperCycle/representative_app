@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:representative_app/core/models/social_auth_request_model.dart';
 import 'package:representative_app/core/services/auth_manager_services.dart';
 import 'package:representative_app/features/sign_in/data/cubits/sign-in-cubit/sign_in_state.dart';
 import 'package:representative_app/features/sign_in/data/models/signin_credentials_model.dart';
@@ -16,7 +15,7 @@ class SignInCubit extends Cubit<SignInState> {
     emit(SignInLoading());
 
     try {
-      var result = await signInRepo.userSignin(credentials: credentials);
+      var result = await signInRepo.userSignIn(credentials: credentials);
 
       result.fold(
         (failure) {
@@ -37,55 +36,7 @@ class SignInCubit extends Cubit<SignInState> {
     }
   }
 
-  /// تسجيل الدخول عبر Google
-  Future<void> signInWithGoogle() async {
-    emit(SignInLoading());
-
-    try {
-      var result = await signInRepo.signInWithGoogle();
-
-      result.fold(
-        (failure) {
-          emit(
-            SignInFailure(
-              message: failure.errMessage,
-              statusCode: failure.statusCode,
-            ),
-          );
-        },
-        (user) async {
-          await _authManager.onLoginSuccess();
-          emit(SignInSuccess(user: user));
-        },
-      );
-    } catch (error) {
-      emit(
-        SignInFailure(
-          message: 'حدث خطأ أثناء تسجيل الدخول بـ Google',
-          statusCode: 520,
-        ),
-      );
-    }
-  }
-
-  Future<void> socialAuth(SocialAuthRequestModel credentials) async {
-    emit(SocialAuthLoading());
-    try {
-      var result = await signInRepo.socialSignup(credentials: credentials);
-      result.fold(
-        (failure) {
-          emit(SocialAuthFailure(message: failure.errMessage));
-        },
-        (socialAuth) {
-          emit(SocialAuthSuccess(socialAuth: socialAuth));
-        },
-      );
-    } catch (error) {
-      emit(SocialAuthFailure(message: error.toString()));
-    }
-  }
-
-  /// إعادة تعيين الحالة
+    /// إعادة تعيين الحالة
   void resetState() {
     emit(SignInInitial());
   }
