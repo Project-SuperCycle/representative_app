@@ -31,13 +31,14 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
     super.dispose();
   }
 
+  // ✅ Get images from localWeightReport (File) or segment.weightReport (String)
   List<dynamic> get _images {
     // Priority: localWeightReport > segment.weightReport
     if (widget.localWeightReport != null) {
-      return widget.localWeightReport!.images;
+      return widget.localWeightReport!.images; // List<File>
     }
     if (widget.segment.weightReport != null) {
-      return widget.segment.weightReport!.images;
+      return widget.segment.weightReport!.images; // List<String>
     }
     return [];
   }
@@ -53,6 +54,11 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
   }
 
   bool get _hasImages => _images.isNotEmpty;
+
+  // ✅ Check if image is local file path or network URL
+  bool _isLocalFile(String path) {
+    return !path.startsWith('http://') && !path.startsWith('https://');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +159,7 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withAlpha(400),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -212,7 +218,7 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
   }
 
   Widget _buildImageItem(dynamic image) {
-    // Check if it's a File (local) or String (network URL)
+    // ✅ Check if it's a File (local) or String
     if (image is File) {
       return Image.file(
         image,
@@ -222,25 +228,38 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
         },
       );
     } else if (image is String) {
-      return Image.network(
-        image,
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                  : null,
-              color: AppColors.primaryColor,
-            ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return _buildErrorWidget();
-        },
-      );
+      // ✅ Check if it's a local file path or network URL
+      if (_isLocalFile(image)) {
+        // ✅ It's a local file path
+        return Image.file(
+          File(image),
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildErrorWidget();
+          },
+        );
+      } else {
+        // ✅ It's a network URL
+        return Image.network(
+          image,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                    loadingProgress.expectedTotalBytes!
+                    : null,
+                color: AppColors.primaryColor,
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return _buildErrorWidget();
+          },
+        );
+      }
     }
 
     return _buildErrorWidget();
@@ -255,7 +274,7 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.6),
+          color: Colors.black.withAlpha(300),
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: Colors.white, size: 16),
@@ -268,7 +287,7 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         _images.length,
-        (index) => AnimatedContainer(
+            (index) => AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           margin: const EdgeInsets.symmetric(horizontal: 4),
           width: _currentImageIndex == index ? 24 : 8,

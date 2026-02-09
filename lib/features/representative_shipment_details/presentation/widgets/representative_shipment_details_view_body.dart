@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:representative_app/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:representative_app/core/constants.dart';
 import 'package:representative_app/core/utils/app_assets.dart';
@@ -16,7 +17,6 @@ import 'package:representative_app/features/representative_shipment_details/pres
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_details_header.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_details_notes.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_notes_content.dart';
-import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_review_button.dart';
 
 class RepresentativeShipmentDetailsViewBody extends StatefulWidget {
   const RepresentativeShipmentDetailsViewBody({
@@ -32,6 +32,9 @@ class RepresentativeShipmentDetailsViewBody extends StatefulWidget {
 
 class _RepresentativeShipmentDetailsViewBodyState
     extends State<RepresentativeShipmentDetailsViewBody> {
+  // ✅ Local state للـ shipment
+  late SingleShipmentModel _currentShipment;
+
   bool isShipmentDetailsExpanded = false;
   bool isInspectedItemsExpanded = false;
   bool isClientDataExpanded = false;
@@ -40,11 +43,13 @@ class _RepresentativeShipmentDetailsViewBodyState
   bool showInspectionActions = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String get _actionTakenKey => 'shipment_${widget.shipment.id}_action_taken';
+  String get _actionTakenKey => 'shipment_${_currentShipment.id}_action_taken';
 
   @override
   void initState() {
     super.initState();
+    // ✅ Initialize من الـ widget
+    _currentShipment = widget.shipment;
     _loadActionState();
   }
 
@@ -69,7 +74,7 @@ class _RepresentativeShipmentDetailsViewBodyState
   }
 
   bool _isPickupDateToday() {
-    final pickupDate = widget.shipment.requestedPickupAt;
+    final pickupDate = _currentShipment.requestedPickupAt;
     final now = DateTime.now();
     return pickupDate.year == now.year &&
         pickupDate.month == now.month &&
@@ -80,6 +85,74 @@ class _RepresentativeShipmentDetailsViewBodyState
     setState(() {
       showInspectionActions = true;
     });
+  }
+
+  int _getProgressSteps() {
+    switch (_currentShipment.status) {
+      case 'approved':
+        return 1;
+      case 'pending_admin_review':
+        return 2;
+      case 'routed':
+        return 3;
+      case 'delivery_in_transit':
+        return 4;
+      case 'complete_weighted':
+        return 5;
+      case 'delivered':
+        return 6;
+      default:
+        return 0;
+    }
+  }
+
+  /// ✅ بناء الأزرار حسب الحالة
+  Widget _buildShipmentButtons() {
+    final status = _currentShipment.status;
+
+    if (status == 'approved' && !hasActionBeenTaken) {
+      if (!showInspectionActions) {
+        return CustomButton(onPress: _startInspection, title: 'بدأ المعاينة');
+      }
+      return RepresentativeShipmentActionsRow(
+        shipment: _currentShipment,
+        onActionTaken: _markActionAsTaken,
+      );
+    }
+
+    const reviewStatuses = [
+      'routed',
+      'delivery_in_transit',
+      'delivered',
+      'partially_delivered',
+      'complete_weighted',
+    ];
+
+    if (reviewStatuses.contains(status)) {
+      return CustomButton(
+        onPress: () async {
+          // ✅ Navigate وانتظر الـ result
+          final updatedShipment = await Navigator.push<SingleShipmentModel>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RepresentativeShipmentReviewView(
+                shipment: _currentShipment,
+              ),
+            ),
+          );
+
+          // ✅ لو رجع updated shipment، حدّث الـ state
+          if (updatedShipment != null && mounted) {
+            setState(() {
+              _currentShipment = updatedShipment;
+            });
+          }
+        },
+        title: 'مراجعة الشحنة',
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 
   @override
@@ -93,9 +166,7 @@ class _RepresentativeShipmentDetailsViewBodyState
         child: SafeArea(
           child: Column(
             children: [
-              // Header Section - ثابت في الأعلى
               _buildHeader(),
-              // المحتوى القابل للتمرير
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
@@ -121,7 +192,6 @@ class _RepresentativeShipmentDetailsViewBodyState
                       physics: const BouncingScrollPhysics(),
                       child: Column(
                         children: [
-                          // Header & Progress Bar
                           Padding(
                             padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
                             child: Column(
@@ -129,38 +199,35 @@ class _RepresentativeShipmentDetailsViewBodyState
                                 ProgressBar(
                                   completedSteps: _getProgressSteps(),
                                   totalSteps: 6,
-                                  color: (widget.shipment.status == "rejected")
+                                  color: (_currentShipment.status == "rejected")
                                       ? AppColors.failureColor
                                       : const Color(0xFF4CAF50),
                                 ),
                                 const SizedBox(height: 12),
                                 RepresentativeShipmentDetailsHeader(
-                                  shipment: widget.shipment,
+                                  shipment: _currentShipment,
                                 ),
                               ],
                             ),
                           ),
-                          // المحتوى الرئيسي
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 10),
-                                // تفاصيل الشحنة
                                 _buildExpandableCard(
                                   title: 'تفاصيل الشحنة',
                                   icon: AppAssets.boxPerspective,
                                   isExpanded: isShipmentDetailsExpanded,
                                   onTap: _toggleShipmentDetails,
                                   content: RepresentativeShipmentDetailsContent(
-                                    items: widget.shipment.items,
+                                    items: _currentShipment.items,
                                   ),
                                   maxHeight: 320,
                                 ),
                                 const SizedBox(height: 16),
-                                // الشحنة بعد المعاينة
-                                if (widget.shipment.inspectedItems.isNotEmpty)
+                                if (_currentShipment.inspectedItems.isNotEmpty)
                                   Column(
                                     children: [
                                       _buildExpandableCard(
@@ -169,50 +236,42 @@ class _RepresentativeShipmentDetailsViewBodyState
                                         isExpanded: isInspectedItemsExpanded,
                                         onTap: _toggleInspectedItems,
                                         content:
-                                            RepresentativeShipmentDetailsContent(
-                                              items: widget
-                                                  .shipment
-                                                  .inspectedItems,
-                                            ),
+                                        RepresentativeShipmentDetailsContent(
+                                          items: _currentShipment.inspectedItems,
+                                        ),
                                         maxHeight: 320,
                                       ),
                                       const SizedBox(height: 16),
                                     ],
                                   ),
-                                // بيانات جهة التعامل
                                 _buildExpandableCard(
                                   title: 'بيانات جهة التعامل',
                                   icon: AppAssets.entityCard,
                                   isExpanded: isClientDataExpanded,
                                   onTap: _toggleClientData,
                                   content: ClientDataContent(
-                                    trader: widget.shipment.trader,
+                                    trader: _currentShipment.trader,
                                   ),
                                   maxHeight: 320,
                                 ),
                                 const SizedBox(height: 20),
-                                // عنوان الاستلام
-                                (widget.shipment.customPickupAddress != null)
+                                (_currentShipment.customPickupAddress != null)
                                     ? _buildAddressSection()
                                     : _buildBranchSection(),
-
                                 const SizedBox(height: 20),
-                                // ملاحظات من التاجر / الاداره
                                 _buildExpandableCard(
                                   title: 'ملاحظات من التاجر / الاداره',
                                   icon: AppAssets.entityCard,
                                   isExpanded: isNotesDataExpanded,
                                   onTap: _toggleNotesData,
                                   content: RepresentativeShipmentNotesContent(
-                                    notes: widget.shipment.mainNotes,
+                                    notes: _currentShipment.mainNotes,
                                   ),
                                   maxHeight: 200,
                                 ),
                                 const SizedBox(height: 20),
-                                // ملاحظات المندوب
                                 _buildNotesCard(),
                                 const SizedBox(height: 25),
-                                // الأزرار
                                 _buildShipmentButtons(),
                                 const SizedBox(height: 30),
                               ],
@@ -291,7 +350,7 @@ class _RepresentativeShipmentDetailsViewBodyState
               Expanded(
                 child: CustomTextField(
                   label: "العنوان",
-                  hint: widget.shipment.customPickupAddress,
+                  hint: _currentShipment.customPickupAddress,
                   keyboardType: TextInputType.text,
                   icon: Icons.location_on_rounded,
                   isArabic: true,
@@ -309,9 +368,8 @@ class _RepresentativeShipmentDetailsViewBodyState
               const SizedBox(width: 4),
               Text(
                 "سيتم استلام الشحنة من هذا العنوان",
-                style: AppStyles.styleSemiBold12(
-                  context,
-                ).copyWith(color: AppColors.subTextColor),
+                style: AppStyles.styleSemiBold12(context)
+                    .copyWith(color: AppColors.subTextColor),
               ),
             ],
           ),
@@ -348,9 +406,8 @@ class _RepresentativeShipmentDetailsViewBodyState
               const SizedBox(width: 12),
               Text(
                 'الفرع',
-                style: AppStyles.styleSemiBold16(
-                  context,
-                ).copyWith(color: AppColors.mainTextColor),
+                style: AppStyles.styleSemiBold16(context)
+                    .copyWith(color: AppColors.mainTextColor),
               ),
             ],
           ),
@@ -383,17 +440,15 @@ class _RepresentativeShipmentDetailsViewBodyState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.shipment.branch?.branchName ?? '',
-                        style: AppStyles.styleSemiBold14(
-                          context,
-                        ).copyWith(color: Colors.grey.shade800),
+                        _currentShipment.branch?.branchName ?? '',
+                        style: AppStyles.styleSemiBold14(context)
+                            .copyWith(color: Colors.grey.shade800),
                       ),
                       SizedBox(height: 8),
                       Text(
-                        widget.shipment.branch?.address ?? '',
-                        style: AppStyles.styleSemiBold14(
-                          context,
-                        ).copyWith(color: Colors.grey.shade400),
+                        _currentShipment.branch?.address ?? '',
+                        style: AppStyles.styleSemiBold14(context)
+                            .copyWith(color: Colors.grey.shade400),
                       ),
                     ],
                   ),
@@ -421,59 +476,8 @@ class _RepresentativeShipmentDetailsViewBodyState
           ),
         ],
       ),
-      child: RepresentativeShipmentDetailsNotes(shipment: widget.shipment),
+      child: RepresentativeShipmentDetailsNotes(shipment: _currentShipment),
     );
-  }
-
-  int _getProgressSteps() {
-    switch (widget.shipment.status) {
-      case 'approved':
-        return 1;
-      case 'pending_admin_review':
-        return 2;
-      case 'routed':
-        return 3;
-      case 'delivery_in_transit':
-        return 4;
-      case 'complete_weighted':
-        return 5;
-      case 'delivered':
-        return 6;
-      default:
-        return 0;
-    }
-  }
-
-  /// بناء الأزرار حسب الحالة
-  Widget _buildShipmentButtons() {
-    final status = widget.shipment.status;
-
-    // إذا الحالة 'approved' ولم يتم اتخاذ إجراء واليوم هو تاريخ الاستلام
-    if (status == 'approved' && !hasActionBeenTaken) {
-      // إذا لم يتم الضغط على زر "بدأ المعاينة"، اعرض الزر
-      if (!showInspectionActions) {
-        return CustomButton(onPress: _startInspection, title: 'بدأ المعاينة');
-      }
-      // إذا تم الضغط على زر "بدأ المعاينة"، اعرض أزرار الإجراءات
-      return RepresentativeShipmentActionsRow(
-        shipment: widget.shipment,
-        onActionTaken: _markActionAsTaken,
-      );
-    }
-
-    // في الحالات الأخرى (routed, delivery_in_transit, delivered, إلخ)، اعرض زر "مراجعة الشحنة"
-    const reviewStatuses = [
-      'routed',
-      'delivery_in_transit',
-      'delivered',
-      'partially_delivered',
-      'complete_weighted',
-    ];
-    if (reviewStatuses.contains(status)) {
-      return RepresentativeShipmentReviewButton(shipment: widget.shipment);
-    }
-
-    return const SizedBox.shrink();
   }
 
   void _toggleShipmentDetails() {

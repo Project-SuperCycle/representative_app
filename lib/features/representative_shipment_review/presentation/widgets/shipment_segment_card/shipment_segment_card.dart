@@ -5,6 +5,7 @@ import 'package:representative_app/features/representative_shipment_review/data/
 import 'package:representative_app/features/representative_shipment_review/data/cubits/start_segment_cubit/start_segment_state.dart';
 import 'package:representative_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
 import 'package:representative_app/features/representative_shipment_review/data/models/weigh_segment_model.dart';
+import 'package:representative_app/features/representative_shipment_review/data/models/weight_report_model.dart'; // ✅ Import
 import 'package:representative_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step1.dart';
 import 'package:representative_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step2.dart';
 import 'package:representative_app/features/representative_shipment_review/presentation/widgets/shipment_segment_card/shipment_segment_step3.dart';
@@ -25,13 +26,13 @@ enum SegmentStep {
 class ShipmentSegmentCard extends StatefulWidget {
   final String shipmentID;
   final ShipmentSegmentModel segment;
-  final Function(String segmentId, String newStatus)? onSegmentStatusChanged;
+  final Function(ShipmentSegmentModel updatedSegment)? onSegmentUpdated;
 
   const ShipmentSegmentCard({
     super.key,
     required this.segment,
     required this.shipmentID,
-    this.onSegmentStatusChanged,
+    this.onSegmentUpdated,
   });
 
   @override
@@ -102,20 +103,28 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
       );
     });
 
-    // ✅ Notify parent about status change
-    widget.onSegmentStatusChanged?.call(segmentId, 'in_transit_to_scale');
+    // ✅ Notify parent with full segment
+    widget.onSegmentUpdated?.call(_currentSegment);
   }
 
   void onWeightedPressed(WeighSegmentModel model) {
     setState(() {
       _localWeightReport = model;
+
+      // ✅ تحويل WeighSegmentModel إلى WeightReportModel
+      final weightReport = WeightReportModel(
+        actualWeightKg: model.actualWeightKg,
+        images: model.images.map((file) => file.path).toList(), // ✅ File paths as strings
+      );
+
       _currentSegment = _currentSegment.copyWith(
         status: 'in_transit_to_destination',
+        weightReport: weightReport, // ✅ استخدم WeightReportModel
       );
     });
 
-    // ✅ Notify parent about status change
-    widget.onSegmentStatusChanged?.call(_currentSegment.id, 'in_transit_to_destination');
+    // ✅ Notify parent with full segment including weight report
+    widget.onSegmentUpdated?.call(_currentSegment);
   }
 
   void onDeliveredPressed() {
@@ -123,8 +132,8 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
       _currentSegment = _currentSegment.copyWith(status: 'delivered');
     });
 
-    // ✅ Notify parent about status change
-    widget.onSegmentStatusChanged?.call(_currentSegment.id, 'delivered');
+    // ✅ Notify parent with full segment
+    widget.onSegmentUpdated?.call(_currentSegment);
   }
 
   void onFailedPressed() {
@@ -132,8 +141,8 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
       _currentSegment = _currentSegment.copyWith(status: 'failed');
     });
 
-    // ✅ Notify parent about status change
-    widget.onSegmentStatusChanged?.call(_currentSegment.id, 'failed');
+    // ✅ Notify parent with full segment
+    widget.onSegmentUpdated?.call(_currentSegment);
   }
 
   @override
