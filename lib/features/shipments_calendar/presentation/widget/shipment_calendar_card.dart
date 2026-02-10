@@ -208,7 +208,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                             style: AppStyles.styleSemiBold14(context),
                           ),
                           Text(
-                            widget.shipment.status.toUpperCase(),
+                            widget.shipment.statusDisplay,
                             style: AppStyles.styleMedium14(context).copyWith(
                               color: _getStatusColor(),
                               fontWeight: FontWeight.bold,
@@ -271,7 +271,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   }
 
   Color _getStatusColor() {
-    switch (widget.shipment.status) {
+    switch (widget.shipment.statusDisplay) {
       case 'قيد المراجعة':
       case 'بانتظار المعاينة':
         return Color(0xff1624A2);

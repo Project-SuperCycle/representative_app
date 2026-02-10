@@ -3,7 +3,9 @@ class ShipmentModel {
   final String shipmentNumber;
   final String customPickupAddress;
   final DateTime requestedPickupAt;
+
   final String status;
+  final String statusDisplay;
   final num totalQuantityKg;
   final String type;
   final bool isExtra;
@@ -14,6 +16,7 @@ class ShipmentModel {
     required this.customPickupAddress,
     required this.requestedPickupAt,
     required this.status,
+    required this.statusDisplay,
     required this.totalQuantityKg,
     required this.type,
     required this.isExtra,
@@ -25,7 +28,8 @@ class ShipmentModel {
       shipmentNumber: json['shipmentNumber'] ?? "",
       customPickupAddress: json['customPickupAddress'] ?? json['address'] ?? "",
       requestedPickupAt: DateTime.parse(json['requestedPickupAt'] as String),
-      status: json['statusDisplay'] ?? "",
+      status: json['status'] ?? "",
+      statusDisplay: json['statusDisplay'] ?? "",
       totalQuantityKg: json['totalQuantityKg'] ?? json['actualQuantityKg'] ?? 0,
       type: json['type'] ?? "",
       isExtra: json['isExtra'] ?? false,
@@ -38,7 +42,8 @@ class ShipmentModel {
       'shipmentNumber': shipmentNumber,
       'customPickupAddress': customPickupAddress,
       'requestedPickupAt': requestedPickupAt.toIso8601String(),
-      'status': status,
+      'status' : status,
+      'statusDisplay': statusDisplay,
       'totalQuantityKg': totalQuantityKg,
       'type': type,
       'isExtra': isExtra,
@@ -47,7 +52,7 @@ class ShipmentModel {
 
   @override
   String toString() {
-    return 'ShipmentModel(id: $id, shipmentNumber: $shipmentNumber, customPickupAddress: $customPickupAddress, requestedPickupAt: $requestedPickupAt, status: $status, totalQuantityKg: $totalQuantityKg, type: $type, isExtra: $isExtra)';
+    return 'ShipmentModel(id: $id, shipmentNumber: $shipmentNumber, customPickupAddress: $customPickupAddress, requestedPickupAt: $requestedPickupAt, statusDisplay: $statusDisplay, totalQuantityKg: $totalQuantityKg, type: $type, isExtra: $isExtra)';
   }
 
   ShipmentModel copyWith({
@@ -56,6 +61,7 @@ class ShipmentModel {
     String? customPickupAddress,
     DateTime? requestedPickupAt,
     String? status,
+    String? statusDisplay,
     num? totalQuantityKg,
     String? type,
     bool? isExtra,
@@ -66,6 +72,7 @@ class ShipmentModel {
       customPickupAddress: customPickupAddress ?? this.customPickupAddress,
       requestedPickupAt: requestedPickupAt ?? this.requestedPickupAt,
       status: status ?? this.status,
+      statusDisplay: statusDisplay ?? this.statusDisplay,
       totalQuantityKg: totalQuantityKg ?? this.totalQuantityKg,
       type: type ?? this.type,
       isExtra: isExtra ?? this.isExtra,

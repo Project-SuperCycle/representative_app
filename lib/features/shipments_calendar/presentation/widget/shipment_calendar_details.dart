@@ -21,7 +21,7 @@ class ShipmentsCalendarDetails extends StatelessWidget {
   bool _areAllShipmentsDeliveredWithTime(List<ShipmentModel> shipments) {
     return shipments.isNotEmpty &&
         shipments.every((s) {
-          return s.status == "تم الاستلام";
+          return s.statusDisplay == "تم الاستلام";
         });
   }
 
