@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:representative_app/core/constants.dart';
+import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
 import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
 import 'package:representative_app/core/models/shipment/single_shipment_model.dart';
@@ -257,12 +259,18 @@ class _RepresentativeShipmentEditBodyState
                             }
                           },
                           builder: (context, state) {
-                            return CustomButton(
-                              onPress: () {
-                                _confirmProcess();
-                              },
-                              title: S.of(context).shipment_edit,
-                            );
+                            return (state is UpdateRepShipmentLoading)
+                                ? SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: CustomLoadingIndicator(),
+                                  )
+                                : CustomButton(
+                                    onPress: () {
+                                      _confirmProcess();
+                                    },
+                                    title: S.of(context).shipment_edit,
+                                  );
                           },
                         ),
                         // مساحة إضافية في النهاية
@@ -292,6 +300,7 @@ class _RepresentativeShipmentEditBodyState
   }
 
   void _confirmProcess() async {
+    Logger().w("_CONFIRMPROCESS");
     UpdateShipmentModel updateShipmentModel = UpdateShipmentModel(
       shipmentID: widget.shipment.id,
       rank: 4.0,
@@ -300,8 +309,19 @@ class _RepresentativeShipmentEditBodyState
       notes: notes.isEmpty ? widget.shipment.userNotes : notes.first,
     );
 
+    // تحويل الكميات: لو الوحدة "طن" اضرب في 1000
+    final adjustedItems = updateShipmentModel.updatedItems.map((item) {
+      if (item.unit == "طن") {
+        return item.copyWith(quantity: item.quantity * 1000);
+      }
+      return item;
+    }).toList();
+
+    // إنشاء نسخة جديدة من shipment بالـ items المعدلة
+    final adjustedModel = updateShipmentModel.copyWith(updatedItems: adjustedItems);
+
     BlocProvider.of<UpdateShipmentCubit>(
       context,
-    ).updateShipmet(updateModel: updateShipmentModel);
+    ).updateShipmet(updateModel: adjustedModel);
   }
 }
