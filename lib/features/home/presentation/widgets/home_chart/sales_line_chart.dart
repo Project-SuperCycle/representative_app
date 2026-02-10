@@ -32,18 +32,18 @@ class ChartPriceData {
     final monthNum = int.tryParse(parts[1]);
     if (monthNum == null || monthNum < 1 || monthNum > 12) return monthString;
     const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
+      'يناير',
+      'فبراير',
+      'مارس',
+      'إبريل',
+      'مايو',
+      'يونيو',
+      'يوليو',
+      'أغسطس',
+      'سبتمبر',
+      'أكتوبر',
+      'توفمبر',
+      'ديسمبر',
     ];
     return months[monthNum - 1];
   }

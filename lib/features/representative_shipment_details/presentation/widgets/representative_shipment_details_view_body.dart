@@ -32,7 +32,6 @@ class RepresentativeShipmentDetailsViewBody extends StatefulWidget {
 
 class _RepresentativeShipmentDetailsViewBodyState
     extends State<RepresentativeShipmentDetailsViewBody> {
-  // ✅ Local state للـ shipment
   late SingleShipmentModel _currentShipment;
 
   bool isShipmentDetailsExpanded = false;
@@ -41,6 +40,7 @@ class _RepresentativeShipmentDetailsViewBodyState
   bool isNotesDataExpanded = false;
   bool hasActionBeenTaken = false;
   bool showInspectionActions = false;
+  bool _isNavigatingToReview = false; // ✅ NEW: Track navigation state
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String get _actionTakenKey => 'shipment_${_currentShipment.id}_action_taken';
@@ -48,7 +48,6 @@ class _RepresentativeShipmentDetailsViewBodyState
   @override
   void initState() {
     super.initState();
-    // ✅ Initialize من الـ widget
     _currentShipment = widget.shipment;
     _loadActionState();
   }
@@ -106,7 +105,6 @@ class _RepresentativeShipmentDetailsViewBodyState
     }
   }
 
-  /// ✅ بناء الأزرار حسب الحالة
   Widget _buildShipmentButtons() {
     final status = _currentShipment.status;
 
@@ -130,29 +128,45 @@ class _RepresentativeShipmentDetailsViewBodyState
 
     if (reviewStatuses.contains(status)) {
       return CustomButton(
-        onPress: () async {
-          // ✅ Navigate وانتظر الـ result
-          final updatedShipment = await Navigator.push<SingleShipmentModel>(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RepresentativeShipmentReviewView(
-                shipment: _currentShipment,
-              ),
-            ),
-          );
-
-          // ✅ لو رجع updated shipment، حدّث الـ state
-          if (updatedShipment != null && mounted) {
-            setState(() {
-              _currentShipment = updatedShipment;
-            });
-          }
-        },
+        onPress: _isNavigatingToReview ? null : () => _navigateToReview(), // ✅ Prevent multiple taps
         title: 'مراجعة الشحنة',
       );
     }
 
     return const SizedBox.shrink();
+  }
+
+  // ✅ NEW: Separate navigation method with guard
+  Future<void> _navigateToReview() async {
+    if (_isNavigatingToReview) return; // ✅ Prevent double navigation
+
+    setState(() {
+      _isNavigatingToReview = true;
+    });
+
+    try {
+      final updatedShipment = await Navigator.push<SingleShipmentModel>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RepresentativeShipmentReviewView(
+            shipment: _currentShipment,
+          ),
+        ),
+      );
+
+      if (updatedShipment != null && mounted) {
+        setState(() {
+          _currentShipment = updatedShipment;
+        });
+      }
+    } finally {
+      // ✅ Always reset navigation state
+      if (mounted) {
+        setState(() {
+          _isNavigatingToReview = false;
+        });
+      }
+    }
   }
 
   @override

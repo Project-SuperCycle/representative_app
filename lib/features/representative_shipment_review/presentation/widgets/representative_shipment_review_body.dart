@@ -24,13 +24,12 @@ class _RepresentativeShipmentReviewBodyState
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ✅ Maintain segments state in parent
   late List<ShipmentSegmentModel> _segments;
+  bool _isReturning = false; // ✅ NEW: Prevent multiple pops
 
   @override
   void initState() {
     super.initState();
-    // ✅ Copy segments to local state
     _segments = List.from(widget.shipment.segments);
   }
 
@@ -40,7 +39,6 @@ class _RepresentativeShipmentReviewBodyState
     });
   }
 
-  // ✅ Update full segment (including weight report)
   void _updateSegment(ShipmentSegmentModel updatedSegment) {
     setState(() {
       final index = _segments.indexWhere((seg) => seg.id == updatedSegment.id);
@@ -50,30 +48,21 @@ class _RepresentativeShipmentReviewBodyState
     });
   }
 
-  // ✅ حساب الـ overall shipment status بناءً على الـ segments
   String _calculateShipmentStatus() {
     if (_segments.isEmpty) return widget.shipment.status;
 
-    // عدد الـ segments
     final totalSegments = _segments.length;
-
-    // عدد الـ delivered segments
     final deliveredCount = _segments.where((seg) => seg.status == 'delivered').length;
-
-    // عدد الـ failed segments
     final failedCount = _segments.where((seg) => seg.status == 'failed').length;
 
-    // لو كل الـ segments اتوصلوا
     if (deliveredCount == totalSegments) {
       return 'delivered';
     }
 
-    // لو في failed أو partially delivered
     if (failedCount > 0 || (deliveredCount > 0 && deliveredCount < totalSegments)) {
       return 'partially_delivered';
     }
 
-    // لو في أي segment في طريقه للوجهة النهائية
     final anyInTransitToDestination = _segments.any(
           (seg) => seg.status == 'in_transit_to_destination',
     );
@@ -81,7 +70,6 @@ class _RepresentativeShipmentReviewBodyState
       return 'delivery_in_transit';
     }
 
-    // لو في أي segment اتحرك للميزان
     final anyInTransitToScale = _segments.any(
           (seg) => seg.status == 'in_transit_to_scale',
     );
@@ -92,24 +80,29 @@ class _RepresentativeShipmentReviewBodyState
     return widget.shipment.status;
   }
 
-  // ✅ دالة للرجوع مع الـ updated data
   void _handleBackPressed() {
+    // ✅ Prevent multiple simultaneous pops
+    if (_isReturning) return;
+
+    setState(() {
+      _isReturning = true;
+    });
+
     final updatedShipment = widget.shipment.copyWith(
       segments: _segments,
       status: _calculateShipmentStatus(),
     );
 
-    // ✅ ارجع الـ updated shipment للشاشة اللي قبلها
     Navigator.pop(context, updatedShipment);
   }
 
   @override
   Widget build(BuildContext context) {
-    // ✅ استخدم PopScope مع onPopInvokedWithResult
     return PopScope(
-      canPop: false, // ✅ منع الـ default pop behavior
+      canPop: false,
       onPopInvokedWithResult: (bool didPop, dynamic result) {
-        if (!didPop) {
+        // ✅ Only handle if pop didn't happen yet
+        if (!didPop && !_isReturning) {
           _handleBackPressed();
         }
       },
@@ -121,7 +114,6 @@ class _RepresentativeShipmentReviewBodyState
           decoration: const BoxDecoration(gradient: kGradientBackground),
           child: CustomScrollView(
             slivers: [
-              // Header Section (Fixed)
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -129,7 +121,6 @@ class _RepresentativeShipmentReviewBodyState
                 ),
               ),
 
-              // White Container Content (Scrollable)
               SliverFillRemaining(
                 child: Container(
                   margin: const EdgeInsets.only(top: 20),
@@ -150,15 +141,12 @@ class _RepresentativeShipmentReviewBodyState
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Header
                               RepresentativeShipmentReviewHeader(
                                 shipment: widget.shipment,
                               ),
                               const SizedBox(height: 6),
 
-                              // ✅ Stats widget - will auto-update when _segments changes
                               RepresentativeShipmentStates(
-                                // ✅ Create new shipment object with updated segments
                                 shipment: widget.shipment.copyWith(
                                   segments: _segments,
                                 ),
@@ -168,15 +156,14 @@ class _RepresentativeShipmentReviewBodyState
                           ),
                         ),
 
-                        // ✅ Build cards from parent state
                         SliverList(
                           delegate: SliverChildBuilderDelegate(
                                 (context, index) {
                               return ShipmentSegmentCard(
-                                key: ValueKey(_segments[index].id), // ✅ Unique key per segment
+                                key: ValueKey(_segments[index].id),
                                 shipmentID: widget.shipment.id,
-                                segment: _segments[index], // ✅ From parent state
-                                onSegmentUpdated: _updateSegment, // ✅ New callback
+                                segment: _segments[index],
+                                onSegmentUpdated: _updateSegment,
                               );
                             },
                             childCount: _segments.length,

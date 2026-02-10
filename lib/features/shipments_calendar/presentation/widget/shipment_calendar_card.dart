@@ -23,6 +23,7 @@ class ShipmentsCalendarCard extends StatefulWidget {
 class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   String userRole = "";
   bool _isNavigating = false;
+  bool _hasNavigated = false; // ✅ NEW: Track if we already navigated
 
   @override
   void initState() {
@@ -40,7 +41,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   }
 
   void _showShipmentDetails(BuildContext context) {
-    if (_isNavigating) return;
+    if (_isNavigating || _hasNavigated) return; // ✅ Check both flags
 
     setState(() {
       _isNavigating = true;
@@ -56,27 +57,39 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   Widget build(BuildContext context) {
     return BlocListener<ShipmentsCalendarCubit, ShipmentsCalendarState>(
       listenWhen: (previous, current) {
-        return previous != current;
+        // ✅ CRITICAL: Only listen if we haven't navigated yet
+        return !_hasNavigated && previous != current;
       },
       listener: (context, state) {
-        if (state is GetShipmentSuccess && _isNavigating) {
+        if (state is GetShipmentSuccess && _isNavigating && !_hasNavigated) {
+          // ✅ Mark as navigated IMMEDIATELY before push
+          setState(() {
+            _hasNavigated = true;
+          });
+
           final targetRoute = EndPoints.representativeShipmentDetailsView;
 
-          // استخدم push مع then للرجوع
-          context.push(targetRoute, extra: state.shipment).then((_) {
-            // لما ترجع من الصفحة، reset الـ flag
+          context.push(targetRoute, extra: state.shipment).then((result) {
+            // ✅ Reset flags when returning
             if (mounted) {
               setState(() {
                 _isNavigating = false;
+                _hasNavigated = false;
               });
+
+              // ✅ OPTIONAL: Handle returned data if needed
+              // if (result != null) {
+              //   // Do something with updated shipment
+              // }
             }
           });
         }
 
-        if (state is GetShipmentFailure && _isNavigating) {
+        if (state is GetShipmentFailure && _isNavigating && !_hasNavigated) {
           if (mounted) {
             setState(() {
               _isNavigating = false;
+              _hasNavigated = false;
             });
 
             CustomSnackBar.showError(context, state.errorMessage);
@@ -170,13 +183,12 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                             ],
                           ),
                         ),
-
                         (widget.shipment.isExtra)
                             ? Image.asset(
-                                AppAssets.extraBox,
-                                width: 25,
-                                height: 25,
-                              )
+                          AppAssets.extraBox,
+                          width: 25,
+                          height: 25,
+                        )
                             : SizedBox.shrink(),
                       ],
                     ),
@@ -222,13 +234,13 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
               ),
               const SizedBox(height: 10),
               GestureDetector(
-                onTap: _isNavigating
+                onTap: (_isNavigating || _hasNavigated)
                     ? null
                     : () => _showShipmentDetails(context),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: BoxDecoration(
-                    color: _isNavigating
+                    color: (_isNavigating || _hasNavigated)
                         ? AppColors.primaryColor.withAlpha(300)
                         : AppColors.primaryColor,
                     borderRadius: const BorderRadius.only(
@@ -239,20 +251,20 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                   child: Center(
                     child: _isNavigating
                         ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
                         : Text(
-                            'إظهار التفاصيل',
-                            style: AppStyles.styleSemiBold14(context).copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                      'إظهار التفاصيل',
+                      style: AppStyles.styleSemiBold14(context).copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
