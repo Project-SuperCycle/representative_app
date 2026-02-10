@@ -15,7 +15,7 @@ abstract class HomeRepo {
 
   Future<Either<Failure, List<DoshDataModel>>> fetchTypesData();
 
-  Future<Either<Failure, List<ShipmentModel>>> fetchTodayShipmets({
+  Future<Either<Failure, List<ShipmentModel>>> fetchTodayShipments({
     required Map<String, dynamic> query,
   });
 }

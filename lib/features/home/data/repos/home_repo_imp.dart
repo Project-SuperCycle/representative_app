@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:logger/logger.dart';
 import 'package:representative_app/core/errors/failures.dart';
 import 'package:representative_app/core/helpers/error_handler.dart';
 import 'package:representative_app/core/services/api_endpoints.dart';
@@ -56,15 +57,15 @@ class HomeRepoImp implements HomeRepo {
   }
 
   @override
-  Future<Either<Failure, List<ShipmentModel>>> fetchTodayShipmets({
+  Future<Either<Failure, List<ShipmentModel>>> fetchTodayShipments({
     required Map<String, dynamic> query,
   }) {
     return ErrorHandler.handleApiResponse<List<ShipmentModel>>(
       apiCall: () =>
-          apiServices.get(endPoint: ApiEndpoints.getAllShipments, query: query),
+          apiServices.get(endPoint: ApiEndpoints.getRepShipments, query: query),
       errorContext: 'fetch today shipments',
       responseParser: (response) {
-        final List data = response['data'];
+        final List data = response['data']['data'];
         final shipments = data.map((e) => ShipmentModel.fromJson(e)).toList();
 
         final todayShipments = _getTodayShipments(shipments);
@@ -72,7 +73,8 @@ class HomeRepoImp implements HomeRepo {
         // Filter out rejected and cancelled shipments
         return todayShipments.where((shipment) {
           final status = shipment.status.toLowerCase();
-          return status != 'rejected' && status != 'cancelled';
+          Logger().d("status: $status");
+          return status != 'rejected' && status != 'cancelled' && status != 'delivered';
         }).toList();
       },
     );
