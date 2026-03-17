@@ -50,7 +50,7 @@ class SignInRepoImp implements SignInRepo {
       },
       onSuccess: (user, response) async {
         await _saveUserData(user, response['token']);
-        _registerDeviceToServer(); // non-blocking
+        // _registerDeviceToServer(); // non-blocking
       },
     );
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:representative_app/core/services/storage_services.dart';
 import 'package:representative_app/core/utils/app_assets.dart' show AppAssets;
 import 'package:representative_app/core/widgets/notifications/notifications_overlay.dart';
+import 'package:representative_app/features/notifications/data/cubits/get_notifications/get_notifications_cubit.dart';
 import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
 
 class HomeHeaderNavActions extends StatefulWidget {
@@ -41,6 +43,7 @@ class _HomeHeaderNavActionsState extends State<HomeHeaderNavActions> {
     if (widget.onNotificationPressed != null) {
       widget.onNotificationPressed!();
     } else {
+      BlocProvider.of<GetNotificationsCubit>(context).getNotifications();
       NotificationsOverlay.toggle(context);
     }
   }
@@ -53,8 +56,8 @@ class _HomeHeaderNavActionsState extends State<HomeHeaderNavActions> {
           : MainAxisAlignment.end,
       children: [
         _buildDrawerButton(),
-        // SizedBox(width: 15),
-        // if (isUserLoggedIn) _buildNotificationButton(),
+        SizedBox(width: 15),
+        if (isUserLoggedIn) _buildNotificationButton(),
       ],
     );
   }

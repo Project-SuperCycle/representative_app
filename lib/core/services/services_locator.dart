@@ -4,6 +4,7 @@ import 'package:representative_app/core/services/api_services.dart';
 import 'package:representative_app/core/services/dosh_types_manager.dart';
 import 'package:representative_app/features/forget_password/data/repos/forget_password_repo_imp.dart';
 import 'package:representative_app/features/home/data/repos/home_repo_imp.dart';
+import 'package:representative_app/features/notifications/data/repos/notifications_repo_imp.dart';
 import 'package:representative_app/features/representative_shipment_details/data/repos/rep_shipment_details_repo_imp.dart';
 import 'package:representative_app/features/representative_shipment_review/data/repos/rep_shipment_review_repo_imp.dart';
 import 'package:representative_app/features/shipment_edit/data/repos/shipment_edit_repo_imp.dart';
@@ -48,4 +49,7 @@ void setupServiceLocator() {
     ForgetPasswordRepoImp(apiServices: getIt.get<ApiServices>()),
   );
 
+  getIt.registerSingleton<NotificationsRepoImp>(
+    NotificationsRepoImp(apiServices: getIt.get<ApiServices>()),
+  );
 }

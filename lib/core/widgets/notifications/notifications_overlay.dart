@@ -1,8 +1,15 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:representative_app/core/models/notifications_model.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
-import 'package:representative_app/features/home/presentation/widgets/notifications/notification_item.dart';
+import 'package:representative_app/core/widgets/notifications/notification_item.dart';
+import 'package:representative_app/core/widgets/notifications/notifications_loading_indicator.dart';
+import 'package:representative_app/features/notifications/data/cubits/delete_notification/delete_notification_cubit.dart';
+import 'package:representative_app/features/notifications/data/cubits/get_notifications/get_notifications_cubit.dart';
+import 'package:representative_app/features/notifications/data/cubits/get_notifications/get_notifications_state.dart';
+import 'package:representative_app/features/notifications/data/cubits/read_notification/read_notification_cubit.dart';
 
 class NotificationsOverlay {
   static OverlayEntry? _overlayEntry;
@@ -50,31 +57,6 @@ class _NotificationsPanelState extends State<NotificationsPanel>
 
   int _selectedTabIndex = 0;
 
-  // TODO: استبدليها بداتا من الـ API
-  final List<NotificationModel> _allNotifications = [
-    NotificationModel(
-      id: '1',
-      title: 'شحنة جديدة',
-      message: 'تم إضافة شحنة جديدة #12345',
-      time: 'منذ ساعة',
-      isRead: false,
-    ),
-    NotificationModel(
-      id: '2',
-      title: 'تم التسليم',
-      message: 'تم تسليم الشحنة #12340 بنجاح',
-      time: 'منذ 3 ساعات',
-      isRead: true,
-    ),
-    NotificationModel(
-      id: '3',
-      title: 'تحديث مهم',
-      message: 'يرجى تحديث معلومات الحساب الخاص بك',
-      time: 'منذ 5 ساعات',
-      isRead: false,
-    ),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -107,37 +89,43 @@ class _NotificationsPanelState extends State<NotificationsPanel>
     NotificationsOverlay.hide();
   }
 
-  List<NotificationModel> get _filteredNotifications {
-    if (_selectedTabIndex == 0) return _allNotifications;
-    if (_selectedTabIndex == 1) {
-      return _allNotifications.where((n) => !n.isRead).toList();
-    }
-    return _allNotifications.where((n) => n.isRead).toList();
+  // دالة لفلترة الإشعارات غير المقروءة
+  List<NotificationModel> _getUnreadNotifications(
+    List<NotificationModel> allNotifications,
+  ) {
+    return allNotifications.where((n) => !n.isRead).toList();
+  }
+
+  // دالة لفلترة الإشعارات المقروءة
+  List<NotificationModel> _getReadNotifications(
+    List<NotificationModel> allNotifications,
+  ) {
+    return allNotifications.where((n) => n.isRead).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Stack(
-        children: [
-          // Backdrop مع Blur
-          GestureDetector(
-            onTap: _close,
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                child: Container(color: Colors.black.withAlpha(150)),
-              ),
+    return Stack(
+      children: [
+        // Backdrop مع Blur
+        GestureDetector(
+          onTap: _close,
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Container(color: Colors.black.withAlpha(150)),
             ),
           ),
+        ),
 
-          // الـ Panel نفسه
-          SlideTransition(
-            position: _slideAnimation,
-            child: Align(
-              alignment: Alignment.topCenter,
+        // الـ Panel نفسه
+        SlideTransition(
+          position: _slideAnimation,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Material(
+              color: Colors.transparent,
               child: Container(
                 margin: EdgeInsets.only(
                   top: MediaQuery.of(context).padding.top + 60,
@@ -159,23 +147,37 @@ class _NotificationsPanelState extends State<NotificationsPanel>
                     ),
                   ],
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildHeader(),
-                    _buildTabs(),
-                    Flexible(child: _buildContent()),
-                  ],
-                ),
+                child:
+                    BlocBuilder<GetNotificationsCubit, GetNotificationsState>(
+                      builder: (context, state) {
+                        final allNotifications =
+                            state is GetNotificationsSuccess
+                            ? state.notifications
+                            : <NotificationModel>[];
+
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildHeader(allNotifications),
+                            _buildTabs(),
+                            Flexible(
+                              child: _buildContent(state, allNotifications),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(List<NotificationModel> allNotifications) {
+    final unreadCount = _getUnreadNotifications(allNotifications).length;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -207,7 +209,7 @@ class _NotificationsPanelState extends State<NotificationsPanel>
               children: [
                 Text('الإشعارات', style: AppStyles.styleBold18(context)),
                 Text(
-                  '${_allNotifications.where((n) => !n.isRead).length} إشعار جديد',
+                  '$unreadCount إشعار جديد',
                   style: AppStyles.styleRegular12(
                     context,
                   ).copyWith(color: Colors.grey[600]),
@@ -264,68 +266,139 @@ class _NotificationsPanelState extends State<NotificationsPanel>
     );
   }
 
-  Widget _buildContent() {
-    if (_filteredNotifications.isEmpty) {
+  Widget _buildContent(
+    GetNotificationsState state,
+    List<NotificationModel> allNotifications,
+  ) {
+    // حالة التحميل
+    if (state is GetNotificationsLoading) {
+      return NotificationsLoadingIndicator();
+    }
+
+    // حالة الخطأ
+    if (state is GetNotificationsFailure) {
+      return Expanded(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
+                const SizedBox(height: 16),
+                Text(
+                  'حدث خطأ في تحميل الإشعارات',
+                  style: AppStyles.styleMedium14(
+                    context,
+                  ).copyWith(color: Colors.grey[600]),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // تحديد الإشعارات المراد عرضها حسب التاب المختار
+    List<NotificationModel> filteredNotifications;
+    if (_selectedTabIndex == 0) {
+      filteredNotifications = allNotifications;
+    } else if (_selectedTabIndex == 1) {
+      filteredNotifications = _getUnreadNotifications(allNotifications);
+    } else {
+      filteredNotifications = _getReadNotifications(allNotifications);
+    }
+
+    // عرض الإشعارات أو الحالة الفارغة
+    if (filteredNotifications.isEmpty) {
       return _buildEmptyState();
     }
 
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      shrinkWrap: true,
-      itemCount: _filteredNotifications.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 10),
-      itemBuilder: (context, index) {
-        return NotificationItem(
-          notification: _filteredNotifications[index],
-          onTap: () {
-            // TODO: Handle notification tap
-            _close();
-          },
-        );
-      },
+    return Expanded(
+      child: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        shrinkWrap: true,
+        itemCount: filteredNotifications.length,
+        separatorBuilder: (context, index) => const SizedBox(height: 10),
+        itemBuilder: (context, index) {
+          return NotificationItem(
+            onRead: () {
+              context.read<GetNotificationsCubit>().markAsRead(
+                filteredNotifications[index].id,
+              );
+
+              context.read<ReadNotificationCubit>().readNotification(
+                id: filteredNotifications[index].id,
+              );
+            },
+            onDelete: () {
+              context.read<GetNotificationsCubit>().removeNotification(
+                filteredNotifications[index].id,
+              );
+
+              context.read<DeleteNotificationCubit>().deleteNotification(
+                id: filteredNotifications[index].id,
+              );
+            },
+            notContext: context,
+            notification: filteredNotifications[index],
+            onTap: () {
+              _close();
+            },
+          );
+        },
+      ),
     );
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                shape: BoxShape.circle,
+    String emptyMessage;
+    if (_selectedTabIndex == 0) {
+      emptyMessage = 'لا يوجد إشعارات بعد';
+    } else if (_selectedTabIndex == 1) {
+      emptyMessage = 'لا توجد إشعارات غير مقروءة';
+    } else {
+      emptyMessage = 'لا توجد إشعارات مقروءة';
+    }
+
+    return Expanded(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.notifications_off_outlined,
+                  size: 48,
+                  color: Colors.grey[400],
+                ),
               ),
-              child: Icon(
-                Icons.notifications_off_outlined,
-                size: 48,
-                color: Colors.grey[400],
+              const SizedBox(height: 16),
+              Text(
+                emptyMessage,
+                style: AppStyles.styleMedium16(
+                  context,
+                ).copyWith(color: Colors.grey[600]),
+                textAlign: TextAlign.center,
               ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              _selectedTabIndex == 0
-                  ? 'لا يوجد إشعارات بعد'
-                  : _selectedTabIndex == 1
-                  ? 'لا توجد إشعارات غير مقروءة'
-                  : 'لا توجد إشعارات مقروءة',
-              style: AppStyles.styleMedium16(
-                context,
-              ).copyWith(color: Colors.grey[600]),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'سيتم إعلامك عند وصول إشعارات جديدة',
-              style: AppStyles.styleRegular12(
-                context,
-              ).copyWith(color: Colors.grey[400]),
-              textAlign: TextAlign.center,
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                'سيتم إعلامك عند وصول إشعارات جديدة',
+                style: AppStyles.styleRegular12(
+                  context,
+                ).copyWith(color: Colors.grey[400]),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

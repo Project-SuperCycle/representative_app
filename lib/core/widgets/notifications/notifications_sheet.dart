@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:representative_app/core/models/notifications_model.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
-import 'package:representative_app/features/home/presentation/widgets/notifications/notification_item.dart';
-import 'package:representative_app/features/home/presentation/widgets/notifications/notifications_empty_state.dart';
+import 'package:representative_app/core/widgets/notifications/notification_item.dart';
+import 'package:representative_app/core/widgets/notifications/notifications_empty_state.dart';
+import 'package:representative_app/features/notifications/data/cubits/delete_notification/delete_notification_cubit.dart';
+import 'package:representative_app/features/notifications/data/cubits/get_notifications/get_notifications_cubit.dart';
+import 'package:representative_app/features/notifications/data/cubits/read_notification/read_notification_cubit.dart';
 
 class NotificationsSheet extends StatefulWidget {
   const NotificationsSheet({super.key});
@@ -15,16 +19,7 @@ class _NotificationsSheetState extends State<NotificationsSheet>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // TODO: استبدليها بداتا من الـ API
-  final List<NotificationModel> _allNotifications = [
-    // NotificationModel(
-    //   id: '1',
-    //   title: 'شحنة جديدة',
-    //   message: 'تم إضافة شحنة جديدة #12345',
-    //   time: 'منذ ساعة',
-    //   isRead: false,
-    // ),
-  ];
+  final List<NotificationModel> _allNotifications = [];
 
   @override
   void initState() {
@@ -39,10 +34,10 @@ class _NotificationsSheetState extends State<NotificationsSheet>
   }
 
   List<NotificationModel> get _unreadNotifications =>
-      _allNotifications.where((n) => !n.seen).toList();
+      _allNotifications.where((n) => !n.isRead).toList();
 
   List<NotificationModel> get _readNotifications =>
-      _allNotifications.where((n) => n.seen).toList();
+      _allNotifications.where((n) => n.isRead).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +124,25 @@ class _NotificationsSheetState extends State<NotificationsSheet>
       itemBuilder: (context, index) {
         final notification = notifications[index];
         return NotificationItem(
+          onRead: () {
+            BlocProvider.of<GetNotificationsCubit>(
+              context,
+            ).markAsRead(notification.id);
+
+            BlocProvider.of<ReadNotificationCubit>(
+              context,
+            ).readNotification(id: notification.id);
+          },
+          onDelete: () {
+            BlocProvider.of<GetNotificationsCubit>(
+              context,
+            ).markAsRead(notification.id);
+
+            BlocProvider.of<DeleteNotificationCubit>(
+              context,
+            ).deleteNotification(id: notification.id);
+          },
+          notContext: context,
           notification: notification,
           onTap: () => _handleNotificationTap(notification),
         );

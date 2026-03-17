@@ -9,6 +9,7 @@ import 'package:representative_app/features/forget_password/presentation/views/f
 import 'package:representative_app/features/forget_password/presentation/views/reset_password_view.dart';
 import 'package:representative_app/features/forget_password/presentation/views/verify_reset_otp_view.dart';
 import 'package:representative_app/features/home/presentation/views/home_view.dart';
+import 'package:representative_app/features/notifications/presentation/views/notifications_view.dart';
 import 'package:representative_app/features/onboarding/presentation/views/first_onboarding_view.dart';
 import 'package:representative_app/features/onboarding/presentation/views/fourth_onboarding_view.dart';
 import 'package:representative_app/features/onboarding/presentation/views/second_onboarding_view.dart';
@@ -18,9 +19,9 @@ import 'package:representative_app/features/representative_shipment_details/pres
 import 'package:representative_app/features/representative_shipment_review/presentation/views/representative_shipment_edit_view.dart';
 import 'package:representative_app/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
 import 'package:representative_app/features/shipment_edit/presentation/views/shipment_edit_view.dart';
+import 'package:representative_app/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
 import 'package:representative_app/features/sign_in/presentation/views/sign_in_view.dart';
 import 'package:representative_app/features/splash/views/splash_view.dart';
-import 'package:representative_app/features/shipments_calendar/presentation/view/shipments_calendar_view.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -190,6 +191,16 @@ class AppRouter {
             shipment: state.extra as SingleShipmentModel,
           ),
         ),
+      ),
+
+      // ============================================================
+      // Notifications View - Main Style
+      // ============================================================
+      GoRoute(
+        path: EndPoints.notificationsView,
+        name: 'Notifications View',
+        pageBuilder: (context, state) =>
+            AppTransitions.fadeForMain(state.pageKey, NotificationsView()),
       ),
     ],
 

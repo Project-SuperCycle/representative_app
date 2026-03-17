@@ -15,10 +15,10 @@ class NotificationItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: notification.isRead ? Colors.white : const Color(0xFFF0FDF4),
+          color: notification.seen ? Colors.white : const Color(0xFFF0FDF4),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: notification.isRead
+            color: notification.seen
                 ? Colors.grey[200]!
                 : const Color(0xFF10B981).withAlpha(100),
             width: 1,
@@ -64,7 +64,7 @@ class NotificationItem extends StatelessWidget {
                 style: AppStyles.styleBold14(context),
               ),
             ),
-            if (!notification.isRead) _buildUnreadBadge(),
+            if (!notification.seen) _buildUnreadBadge(),
           ],
         ),
         const SizedBox(height: 4),

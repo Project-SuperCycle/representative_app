@@ -23,7 +23,6 @@ class ShipmentsCalendarCard extends StatefulWidget {
 class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   String userRole = "";
   bool _isNavigating = false;
-  bool _hasNavigated = false; // ✅ NEW: Track if we already navigated
 
   @override
   void initState() {
@@ -40,236 +39,235 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
     }
   }
 
-  void _showShipmentDetails(BuildContext context) {
-    if (_isNavigating || _hasNavigated) return; // ✅ Check both flags
+  // ✅ FIX: Navigate directly without BlocListener
+  Future<void> _showShipmentDetails(BuildContext context) async {
+    if (_isNavigating) return;
 
     setState(() {
       _isNavigating = true;
     });
 
-    BlocProvider.of<ShipmentsCalendarCubit>(context).getShipmentById(
-      shipmentId: widget.shipment.id,
-      type: widget.shipment.type,
-    );
+    try {
+      // Fetch shipment details
+      final cubit = context.read<ShipmentsCalendarCubit>();
+      cubit.getShipmentById(
+        shipmentId: widget.shipment.id,
+        type: widget.shipment.type,
+      );
+
+      // Wait for the state change
+      final subscription = cubit.stream.listen((state) {});
+
+      await for (final state in cubit.stream) {
+        if (state is GetShipmentSuccess) {
+          subscription.cancel();
+
+          if (!mounted) return;
+
+          // Navigate once with the shipment data
+          await context.push(
+            EndPoints.representativeShipmentDetailsView,
+            extra: state.shipment,
+          );
+
+          break;
+        } else if (state is GetShipmentFailure) {
+          subscription.cancel();
+
+          if (!mounted) return;
+
+          CustomSnackBar.showError(context, state.errorMessage);
+          break;
+        }
+      }
+    } catch (error) {
+      debugPrint('Error fetching shipment: $error');
+      if (mounted) {
+        CustomSnackBar.showError(context, 'حدث خطأ أثناء تحميل التفاصيل');
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isNavigating = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ShipmentsCalendarCubit, ShipmentsCalendarState>(
-      listenWhen: (previous, current) {
-        // ✅ CRITICAL: Only listen if we haven't navigated yet
-        return !_hasNavigated && previous != current;
-      },
-      listener: (context, state) {
-        if (state is GetShipmentSuccess && _isNavigating && !_hasNavigated) {
-          // ✅ Mark as navigated IMMEDIATELY before push
-          setState(() {
-            _hasNavigated = true;
-          });
-
-          final targetRoute = EndPoints.representativeShipmentDetailsView;
-
-          context.push(targetRoute, extra: state.shipment).then((result) {
-            // ✅ Reset flags when returning
-            if (mounted) {
-              setState(() {
-                _isNavigating = false;
-                _hasNavigated = false;
-              });
-
-              // ✅ OPTIONAL: Handle returned data if needed
-              // if (result != null) {
-              //   // Do something with updated shipment
-              // }
-            }
-          });
-        }
-
-        if (state is GetShipmentFailure && _isNavigating && !_hasNavigated) {
-          if (mounted) {
-            setState(() {
-              _isNavigating = false;
-              _hasNavigated = false;
-            });
-
-            CustomSnackBar.showError(context, state.errorMessage);
-          }
-        }
-      },
-      child: Card(
-        elevation: 1.5,
-        color: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.symmetric(vertical: 6),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Row(
-                              children: [
-                                Text(
-                                  'رقم الشحنة: ',
-                                  style: AppStyles.styleSemiBold16(context),
-                                ),
-                                Text(
-                                  widget.shipment.shipmentNumber,
-                                  style: AppStyles.styleMedium16(
-                                    context,
-                                  ).copyWith(color: AppColors.greenColor),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.green[100],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              _formatTimeToArabic(
-                                widget.shipment.requestedPickupAt,
-                              ),
-                              style: AppStyles.styleRegular14(
-                                context,
-                              ).copyWith(color: AppColors.greenColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Divider(
-                      color: Colors.grey.shade300,
-                      thickness: 1.5,
-                      indent: 10,
-                      endIndent: 10,
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
+    // ✅ REMOVED BlocListener - no more duplicate navigation
+    return Card(
+      elevation: 1.5,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Row(
                             children: [
                               Text(
-                                'الكمية: ',
-                                style: AppStyles.styleSemiBold14(context),
+                                'رقم الشحنة: ',
+                                style: AppStyles.styleSemiBold16(context),
                               ),
                               Text(
-                                widget.shipment.totalQuantityKg.toString(),
-                                style: AppStyles.styleMedium14(
+                                widget.shipment.shipmentNumber,
+                                style: AppStyles.styleMedium16(
                                   context,
-                                ).copyWith(color: AppColors.subTextColor),
+                                ).copyWith(color: AppColors.greenColor),
                               ),
                             ],
                           ),
                         ),
-                        (widget.shipment.isExtra)
-                            ? Image.asset(
-                          AppAssets.extraBox,
-                          width: 25,
-                          height: 25,
-                        )
-                            : SizedBox.shrink(),
+                        const SizedBox(width: 20),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green[100],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            _formatTimeToArabic(
+                              widget.shipment.requestedPickupAt,
+                            ),
+                            style: AppStyles.styleRegular14(
+                              context,
+                            ).copyWith(color: AppColors.greenColor),
+                          ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        children: [
-                          Text(
-                            'العنوان: ',
-                            style: AppStyles.styleSemiBold14(context),
-                          ),
-                          Text(
-                            widget.shipment.customPickupAddress,
-                            style: AppStyles.styleMedium14(
-                              context,
-                            ).copyWith(color: AppColors.subTextColor),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        children: [
-                          Text(
-                            'الحالة: ',
-                            style: AppStyles.styleSemiBold14(context),
-                          ),
-                          Text(
-                            widget.shipment.statusDisplay,
-                            style: AppStyles.styleMedium14(context).copyWith(
-                              color: _getStatusColor(),
-                              fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(height: 5),
+                  Divider(
+                    color: Colors.grey.shade300,
+                    thickness: 1.5,
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          children: [
+                            Text(
+                              'الكمية: ',
+                              style: AppStyles.styleSemiBold14(context),
                             ),
+                            Text(
+                              widget.shipment.totalQuantityKg.toString(),
+                              style: AppStyles.styleMedium14(
+                                context,
+                              ).copyWith(color: AppColors.subTextColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                      (widget.shipment.isExtra)
+                          ? Image.asset(
+                        AppAssets.extraBox,
+                        width: 25,
+                        height: 25,
+                      )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      children: [
+                        Text(
+                          'العنوان: ',
+                          style: AppStyles.styleSemiBold14(context),
+                        ),
+                        Text(
+                          widget.shipment.customPickupAddress,
+                          style: AppStyles.styleMedium14(
+                            context,
+                          ).copyWith(color: AppColors.subTextColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      children: [
+                        Text(
+                          'الحالة: ',
+                          style: AppStyles.styleSemiBold14(context),
+                        ),
+                        Text(
+                          widget.shipment.statusDisplay,
+                          style: AppStyles.styleMedium14(context).copyWith(
+                            color: _getStatusColor(),
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              GestureDetector(
-                onTap: (_isNavigating || _hasNavigated)
-                    ? null
-                    : () => _showShipmentDetails(context),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: (_isNavigating || _hasNavigated)
-                        ? AppColors.primaryColor.withAlpha(300)
-                        : AppColors.primaryColor,
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(12),
-                      bottomRight: Radius.circular(12),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Center(
-                    child: _isNavigating
-                        ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                        : Text(
-                      'إظهار التفاصيل',
-                      style: AppStyles.styleSemiBold14(context).copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: _isNavigating ? null : () => _showShipmentDetails(context),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: _isNavigating
+                      ? AppColors.primaryColor.withOpacity(0.7)
+                      : AppColors.primaryColor,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
+                ),
+                child: Center(
+                  child: _isNavigating
+                      ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                      : Text(
+                    'إظهار التفاصيل',
+                    style: AppStyles.styleSemiBold14(context).copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -286,21 +284,21 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
     switch (widget.shipment.statusDisplay) {
       case 'قيد المراجعة':
       case 'بانتظار المعاينة':
-        return Color(0xff1624A2);
+        return const Color(0xff1624A2);
       case 'تمت الموافقة':
-        return Color(0xff3BC567);
+        return const Color(0xff3BC567);
       case 'تمت المعاينة':
       case 'في طريق التسليم':
       case 'جار الاستلام':
-        return Color(0xffE04133);
+        return const Color(0xffE04133);
       case 'تم الاستلام':
       case 'تم التسليم':
       case 'تسليم جزئي':
-        return Color(0xff3BC567);
+        return const Color(0xff3BC567);
       case 'تم الرفض':
         return AppColors.failureColor;
       default:
-        return Color(0xff1624A2);
+        return const Color(0xff1624A2);
     }
   }
 }

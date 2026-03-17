@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/core/utils/app_styles.dart' show AppStyles;
-import 'package:representative_app/features/home/presentation/widgets/types_section/types_filter_buttons_list.dart';
 import 'package:representative_app/generated/l10n.dart' show S;
 
 class TypesSectionHeader extends StatefulWidget {
@@ -48,28 +46,28 @@ class _TypesSectionHeaderState extends State<TypesSectionHeader> {
                   ],
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isExpanded = !isExpanded;
-                    });
-                  },
-                  icon: AnimatedRotation(
-                    turns: isExpanded ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 300),
-                    child: Icon(
-                      Icons.filter_list,
-                      color: AppColors.primaryColor,
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ),
+              // Container(
+              //   decoration: BoxDecoration(
+              //     color: Colors.grey[100],
+              //     borderRadius: BorderRadius.circular(12),
+              //   ),
+              //   child: IconButton(
+              //     onPressed: () {
+              //       setState(() {
+              //         isExpanded = !isExpanded;
+              //       });
+              //     },
+              //     icon: AnimatedRotation(
+              //       turns: isExpanded ? 0.5 : 0,
+              //       duration: const Duration(milliseconds: 300),
+              //       child: Icon(
+              //         Icons.filter_list,
+              //         color: AppColors.primaryColor,
+              //         size: 24,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           // AnimatedSize(

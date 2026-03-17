@@ -44,4 +44,7 @@ abstract class ApiEndpoints {
 
   // notifications
   static const String registerDevice = '/auth/device-token';
+  static const String getNotifications = '/notifications';
+  static const String deleteNotification = '/notifications/{id}';
+  static const String readNotification = '/notifications/{id}/seen';
 }

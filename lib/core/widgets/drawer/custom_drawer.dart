@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:representative_app/core/routes/end_points.dart';
@@ -7,6 +8,7 @@ import 'package:representative_app/core/services/storage_services.dart';
 import 'package:representative_app/core/utils/app_assets.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/core/widgets/drawer/user_info_list_tile.dart';
+import 'package:representative_app/features/notifications/data/cubits/get_notifications/get_notifications_cubit.dart';
 import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -147,11 +149,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     isActive: false,
                     onTap: () {
                       Navigator.pop(context);
-
-                      CustomSnackBar.showSuccess(
+                      BlocProvider.of<GetNotificationsCubit>(
                         context,
-                        'صفحة الإشعارات قريباً',
-                      );
+                      ).getNotifications();
+                      GoRouter.of(context).push(EndPoints.notificationsView);
                     },
                   ),
 

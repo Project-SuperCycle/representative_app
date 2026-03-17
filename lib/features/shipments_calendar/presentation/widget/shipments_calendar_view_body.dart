@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:representative_app/core/constants.dart';
-import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
 import 'package:representative_app/core/services/storage_services.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/core/utils/calendar_utils.dart';
@@ -15,6 +14,8 @@ import 'package:representative_app/features/shipments_calendar/presentation/widg
 import 'package:representative_app/features/shipments_calendar/presentation/widget/shipments_calendar_header.dart';
 import 'package:representative_app/features/shipments_calendar/presentation/widget/shipments_calender_title.dart';
 import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
+
+import 'loading/shipments_calendar_grid_loading_indicator.dart';
 
 class ShipmentsCalendarViewBody extends StatefulWidget {
   const ShipmentsCalendarViewBody({super.key});
@@ -62,15 +63,9 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
 
     final query = {"from": fromDate, "to": toDate};
 
-    if (userRole == "representative") {
-      BlocProvider.of<ShipmentsCalendarCubit>(
-        context,
-      ).getAllRepShipments(query: query);
-    } else {
-      BlocProvider.of<ShipmentsCalendarCubit>(
-        context,
-      ).getAllShipments(query: query);
-    }
+    BlocProvider.of<ShipmentsCalendarCubit>(
+      context,
+    ).getAllRepShipments(query: query);
   }
 
   void _refreshShipments() {
@@ -167,9 +162,22 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
 
                 // Show loading or error or content
                 if (isLoading)
-                  const SizedBox(
-                    height: 400,
-                    child: Center(child: CustomLoadingIndicator()),
+                  Column(
+                    children: [
+                      ShipmentsCalendarHeader(
+                        currentDate: _currentDate,
+                        onPreviousMonth: _navigateToPreviousMonth,
+                        onNextMonth: _navigateToNextMonth,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        height: 320,
+                        child: ShipmentsCalendarGridLoadingIndicator(
+                          currentDate: _currentDate,
+                        ),
+                      ),
+                    ],
                   )
                 else if (errorMessage != null)
                   SizedBox(

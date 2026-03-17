@@ -40,7 +40,7 @@ class _RepresentativeShipmentDetailsViewBodyState
   bool isNotesDataExpanded = false;
   bool hasActionBeenTaken = false;
   bool showInspectionActions = false;
-  bool _isNavigatingToReview = false; // ✅ NEW: Track navigation state
+  bool _isNavigating = false; // ✅ Simplified: One flag is enough
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String get _actionTakenKey => 'shipment_${_currentShipment.id}_action_taken';
@@ -54,9 +54,11 @@ class _RepresentativeShipmentDetailsViewBodyState
 
   Future<void> _loadActionState() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      hasActionBeenTaken = prefs.getBool(_actionTakenKey) ?? false;
-    });
+    if (mounted) {
+      setState(() {
+        hasActionBeenTaken = prefs.getBool(_actionTakenKey) ?? false;
+      });
+    }
   }
 
   Future<void> _saveActionState(bool value) async {
@@ -128,7 +130,7 @@ class _RepresentativeShipmentDetailsViewBodyState
 
     if (reviewStatuses.contains(status)) {
       return CustomButton(
-        onPress: _isNavigatingToReview ? null : () => _navigateToReview(), // ✅ Prevent multiple taps
+        onPress: _isNavigating ? null : _navigateToReview,
         title: 'مراجعة الشحنة',
       );
     }
@@ -136,12 +138,12 @@ class _RepresentativeShipmentDetailsViewBodyState
     return const SizedBox.shrink();
   }
 
-  // ✅ NEW: Separate navigation method with guard
+  // ✅ OPTIMIZED: Cleaner navigation with proper error handling
   Future<void> _navigateToReview() async {
-    if (_isNavigatingToReview) return; // ✅ Prevent double navigation
+    if (_isNavigating) return;
 
     setState(() {
-      _isNavigatingToReview = true;
+      _isNavigating = true;
     });
 
     try {
@@ -154,16 +156,20 @@ class _RepresentativeShipmentDetailsViewBodyState
         ),
       );
 
-      if (updatedShipment != null && mounted) {
+      if (!mounted) return;
+
+      if (updatedShipment != null) {
         setState(() {
           _currentShipment = updatedShipment;
         });
       }
+    } catch (error) {
+      // ✅ Handle any navigation errors
+      debugPrint('Navigation error: $error');
     } finally {
-      // ✅ Always reset navigation state
       if (mounted) {
         setState(() {
-          _isNavigatingToReview = false;
+          _isNavigating = false;
         });
       }
     }
@@ -191,7 +197,7 @@ class _RepresentativeShipmentDetailsViewBodyState
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withAlpha(50),
+                        color: Colors.black.withOpacity(0.2),
                         blurRadius: 20,
                         offset: const Offset(0, -5),
                       ),
@@ -330,8 +336,8 @@ class _RepresentativeShipmentDetailsViewBodyState
         boxShadow: [
           BoxShadow(
             color: isExpanded
-                ? Colors.green.withAlpha(50)
-                : Colors.black.withAlpha(25),
+                ? Colors.green.withOpacity(0.2)
+                : Colors.black.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -352,7 +358,7 @@ class _RepresentativeShipmentDetailsViewBodyState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.green.shade50.withAlpha(150),
+        color: Colors.green.shade50.withOpacity(0.6),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.green.shade200, width: 1.5),
       ),
@@ -396,7 +402,7 @@ class _RepresentativeShipmentDetailsViewBodyState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.green.shade50.withAlpha(150),
+        color: Colors.green.shade50.withOpacity(0.6),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.green.shade200, width: 1.5),
       ),
@@ -458,7 +464,7 @@ class _RepresentativeShipmentDetailsViewBodyState
                         style: AppStyles.styleSemiBold14(context)
                             .copyWith(color: Colors.grey.shade800),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         _currentShipment.branch?.address ?? '',
                         style: AppStyles.styleSemiBold14(context)
@@ -484,7 +490,7 @@ class _RepresentativeShipmentDetailsViewBodyState
         border: Border.all(color: Colors.grey.shade200, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(25),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

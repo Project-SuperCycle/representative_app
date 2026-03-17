@@ -17,6 +17,10 @@ import 'package:representative_app/features/home/data/managers/home_cubit/home_c
 import 'package:representative_app/features/home/data/managers/profile_cubit/profile_cubit.dart';
 import 'package:representative_app/features/home/data/managers/shipments_cubit/today_shipments_cubit.dart';
 import 'package:representative_app/features/home/data/repos/home_repo_imp.dart';
+import 'package:representative_app/features/notifications/data/cubits/delete_notification/delete_notification_cubit.dart';
+import 'package:representative_app/features/notifications/data/cubits/get_notifications/get_notifications_cubit.dart';
+import 'package:representative_app/features/notifications/data/cubits/read_notification/read_notification_cubit.dart';
+import 'package:representative_app/features/notifications/data/repos/notifications_repo_imp.dart';
 import 'package:representative_app/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_cubit.dart';
 import 'package:representative_app/features/representative_shipment_details/data/cubits/reject_shipment_cubit/reject_shipment_cubit.dart';
 import 'package:representative_app/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_cubit.dart';
@@ -33,13 +37,14 @@ import 'package:representative_app/features/shipments_calendar/data/repos/shipme
 import 'package:representative_app/features/sign_in/data/cubits/sign-in-cubit/sign_in_cubit.dart';
 import 'package:representative_app/features/sign_in/data/repos/signin_repo_imp.dart';
 import 'package:representative_app/firebase_options.dart';
+
 import 'generated/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupServiceLocator();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await _initNonCriticalServices();
+  // await _initNonCriticalServices();
   runApp(
     MultiBlocProvider(
       providers: [
@@ -114,8 +119,23 @@ void main() async {
 
         BlocProvider(
           create: (context) => AddNotesCubit(
-            shipmentNotesRepo:getIt.get<ShipmentNotesRepoImp>(),
+            shipmentNotesRepo: getIt.get<ShipmentNotesRepoImp>(),
           ),
+        ),
+
+        BlocProvider(
+          create: (context) =>
+              GetNotificationsCubit(repo: getIt.get<NotificationsRepoImp>()),
+        ),
+
+        BlocProvider(
+          create: (context) =>
+              ReadNotificationCubit(repo: getIt.get<NotificationsRepoImp>()),
+        ),
+
+        BlocProvider(
+          create: (context) =>
+              DeleteNotificationCubit(repo: getIt.get<NotificationsRepoImp>()),
         ),
 
         BlocProvider(create: (context) => ProfileCubit()),

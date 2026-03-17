@@ -10,12 +10,15 @@ import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/features/home/data/managers/home_cubit/home_cubit.dart';
 import 'package:representative_app/features/home/data/models/dosh_data_model.dart';
 import 'package:representative_app/features/home/data/models/type_history_model.dart';
+import 'package:representative_app/features/home/presentation/widgets/home_chart/loading/dropdown_loading_indicator.dart';
+import 'package:representative_app/features/home/presentation/widgets/home_chart/loading/line_chart_loading_indicator.dart';
 import 'package:representative_app/generated/l10n.dart';
 
 // Data model for chart (wrapper around TypeHistoryModel)
 class ChartPriceData {
   final String month;
   final double price;
+
   const ChartPriceData({required this.month, required this.price});
 
   factory ChartPriceData.fromTypeHistory(TypeHistoryModel typeHistory) {
@@ -74,6 +77,11 @@ class _LineChart extends StatelessWidget {
   LineChartData get chartData {
     final max = _getMaxPrice();
     final min = _getMinPrice();
+
+    // ✅ قرّب الـ max و min لأقرب 0.5
+    final roundedMax = ((max * 1.1) * 2).ceil() / 2;
+    final roundedMin = ((min * 0.9) * 2).floor() / 2;
+
     return LineChartData(
       lineTouchData: _buildLineTouchData(),
       gridData: const FlGridData(show: false),
@@ -82,8 +90,9 @@ class _LineChart extends StatelessWidget {
       lineBarsData: [_buildLineChartBarData()],
       minX: 0,
       maxX: (priceData.length - 1).toDouble(),
-      maxY: max * 1.1,
-      minY: min * 0.9,
+      maxY: roundedMax,
+      // ✅
+      minY: roundedMin, // ✅
     );
   }
 
@@ -116,13 +125,14 @@ class _LineChart extends StatelessWidget {
   }
 
   SideTitles _buildLeftTitles() {
-    final max = _getMaxPrice();
-    final min = _getMinPrice();
     return SideTitles(
       showTitles: true,
-      interval: priceInterval ?? ((max - min) / 4),
+      interval: priceInterval ?? 1.0,
       reservedSize: 50,
       getTitlesWidget: (value, meta) {
+        final rounded = (value * 2).round() / 2;
+        if ((rounded - value).abs() > 0.01) return const SizedBox.shrink();
+
         const style = TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 14,
@@ -418,7 +428,7 @@ class SalesLineChartState extends State<SalesLineChart> {
           curr is FetchTypesDataLoading,
       builder: (context, state) {
         if (state is FetchTypesDataLoading) {
-          return _buildLoadingDropdown();
+          return DropdownLoadingIndicator();
         }
 
         final options = _doshData.isNotEmpty
@@ -490,26 +500,6 @@ class SalesLineChartState extends State<SalesLineChart> {
     );
   }
 
-  Widget _buildLoadingDropdown() {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.withAlpha(100)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Center(
-        child: SizedBox(
-          height: 20,
-          width: 20,
-          child: CircularProgressIndicator(
-            color: AppColors.primaryColor,
-            strokeWidth: 2,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildChart() {
     return BlocBuilder<HomeCubit, HomeState>(
       buildWhen: (prev, curr) =>
@@ -518,9 +508,7 @@ class SalesLineChartState extends State<SalesLineChart> {
           curr is FetchTypeHistoryLoading,
       builder: (context, state) {
         if (state is FetchTypeHistoryLoading) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColors.primaryColor),
-          );
+          return LineChartLoadingIndicator();
         }
 
         if (state is FetchTypeHistoryFailure) {
