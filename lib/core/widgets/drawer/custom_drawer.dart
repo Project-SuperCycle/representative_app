@@ -143,18 +143,19 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     },
                   ),
 
-                  _buildDrawerItem(
-                    icon: Icons.notifications_rounded,
-                    title: 'الإشعارات',
-                    isActive: false,
-                    onTap: () {
-                      Navigator.pop(context);
-                      BlocProvider.of<GetNotificationsCubit>(
-                        context,
-                      ).getNotifications();
-                      GoRouter.of(context).push(EndPoints.notificationsView);
-                    },
-                  ),
+                  if (user != null)
+                    _buildDrawerItem(
+                      icon: Icons.notifications_rounded,
+                      title: 'الإشعارات',
+                      isActive: false,
+                      onTap: () {
+                        Navigator.pop(context);
+                        BlocProvider.of<GetNotificationsCubit>(
+                          context,
+                        ).getNotifications();
+                        GoRouter.of(context).push(EndPoints.notificationsView);
+                      },
+                    ),
 
                   _buildDrawerItem(
                     icon: Icons.support_agent_rounded,

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
-import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:representative_app/core/models/notifications_model.dart';
 import 'package:representative_app/core/routes/end_points.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/features/notifications/data/cubits/read_notification/read_notification_cubit.dart';
 import 'package:representative_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
-import 'package:representative_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
 
 class NotificationItem extends StatefulWidget {
   const NotificationItem({
@@ -35,84 +32,56 @@ class _NotificationItemState extends State<NotificationItem> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ShipmentsCalendarCubit, ShipmentsCalendarState>(
-      listener: (context, state) {
-        if (state is GetShipmentSuccess &&
-            state.shipment.id == widget.notification.relatedEntityId) {
-          setState(() {
-            isLoading = false;
-          });
-          GoRouter.of(context).push(
-            EndPoints.representativeShipmentDetailsView,
-            extra: state.shipment,
-          );
-        } else if (state is GetShipmentFailure) {
-          setState(() {
-            isLoading = false;
-          });
-          CustomSnackBar.showError(context, state.errorMessage);
-        }
+    return GestureDetector(
+      onTap: () {
+        _handleRooting(notification: widget.notification, context: context);
+        widget.onTap;
       },
-      child: GestureDetector(
-        onTap: () =>
-            _handleRooting(notification: widget.notification, context: context),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: widget.notification.seen
+              ? Colors.white
+              : const Color(0xFFF0FDF4),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
             color: widget.notification.seen
-                ? Colors.white
-                : const Color(0xFFF0FDF4),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: widget.notification.seen
-                  ? Colors.grey[200]!
-                  : const Color(0xFF10B981).withAlpha(100),
+                ? Colors.grey[200]!
+                : const Color(0xFF10B981).withAlpha(100),
+          ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              children: [
+                _buildIcon(),
+                const SizedBox(height: 16),
+                _buildMenuIcon(context),
+              ],
             ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  _buildIcon(),
-                  const SizedBox(height: 16),
-                  _buildMenuIcon(context),
-                ],
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: _buildContent(context)),
-            ],
-          ),
+            const SizedBox(width: 12),
+            Expanded(child: _buildContent(context)),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildIcon() {
-    return isLoading
-        ? Container(
-            width: 40,
-            height: 40,
-            padding: EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: const Color(0xFF10B981).withAlpha(50),
-              shape: BoxShape.circle,
-            ),
-            child: CustomLoadingIndicator(),
-          )
-        : Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: const Color(0xFF10B981).withAlpha(50),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.notifications,
-              color: Color(0xFF10B981),
-              size: 20,
-            ),
-          );
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: const Color(0xFF10B981).withAlpha(50),
+        shape: BoxShape.circle,
+      ),
+      child: const Icon(
+        Icons.notifications,
+        color: Color(0xFF10B981),
+        size: 20,
+      ),
+    );
   }
 
   Widget _buildMenuIcon(BuildContext context) {
@@ -269,12 +238,9 @@ class _NotificationItemState extends State<NotificationItem> {
     switch (entityType) {
       case "shipment":
         {
-          setState(() {
-            isLoading = true;
-          });
-          BlocProvider.of<ShipmentsCalendarCubit>(
-            context,
-          ).getShipmentById(shipmentId: entityId, type: "type");
+          final cubit = context.read<ShipmentsCalendarCubit>();
+          cubit.getShipmentById(shipmentId: entityId, type: 'shipment');
+          GoRouter.of(context).push(EndPoints.shipmentPreDetailsView);
         }
         break;
     }

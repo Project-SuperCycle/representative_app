@@ -15,8 +15,13 @@ abstract class EndPoints {
   static const String resetPasswordView = '/resetPasswordView';
 
   static const String representativeProfileView = '/representativeProfileView';
+
+  static const String repPreProfileView = '/repPreProfileView';
+
   static const String editRepresentativeProfileView =
       '/editRepresentativeProfileView';
+
+  static const String shipmentPreDetailsView = '/shipmentPreDetailsView';
 
   static const String representativeShipmentDetailsView =
       '/representativeShipmentDetailsView';

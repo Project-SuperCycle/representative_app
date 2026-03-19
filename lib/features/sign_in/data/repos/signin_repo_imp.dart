@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
 import 'package:representative_app/core/constants.dart';
@@ -13,8 +15,8 @@ import 'package:representative_app/features/sign_in/data/models/logined_user_mod
 import 'package:representative_app/features/sign_in/data/models/signin_credentials_model.dart';
 import 'package:representative_app/features/sign_in/data/repos/signin_repo.dart';
 
-
 class SignInRepoImp implements SignInRepo {
+  /// تسجيل الدخول بالبريد الإلكتروني
   final ApiServices apiServices;
   final AuthManager _authManager = AuthManager();
   final Logger _logger = Logger();
@@ -50,7 +52,7 @@ class SignInRepoImp implements SignInRepo {
       },
       onSuccess: (user, response) async {
         await _saveUserData(user, response['token']);
-        // _registerDeviceToServer(); // non-blocking
+        unawaited(_registerDeviceToServer());
       },
     );
   }
@@ -72,28 +74,43 @@ class SignInRepoImp implements SignInRepo {
   Future<void> _registerDeviceToServer() async {
     try {
       final canRegister = await PushNotificationsService.canRegisterDevice();
-      if (!canRegister) return;
+      if (!canRegister) {
+        // ✅ Fix #3: log the reason instead of silently returning
+        _logger.w(
+          '⚠️ Device registration skipped: canRegisterDevice() = false',
+        );
+        return;
+      }
 
       final fcmData = await PushNotificationsService.getStoredFCMData();
-      if (fcmData == null) return;
+      if (fcmData == null) {
+        _logger.w('⚠️ Device registration skipped: FCM data is null');
+        return;
+      }
 
       final token = fcmData['token'];
       final platform = fcmData['platform'];
 
-      if (token == null || token.isEmpty || platform == null) return;
+      if (token == null || token.isEmpty || platform == null) {
+        _logger.w(
+          '⚠️ Device registration skipped: token or platform is missing',
+        );
+        return;
+      }
 
-      _logger.i('''
+      _logger.d('''
 ╔════════════════════════════════════════
-║ Registering Device
+║ Registering Device REPO
 ╠════════════════════════════════════════
 ║ Token: ${token.substring(0, token.length.clamp(0, 20))}...
 ║ Platform: $platform
+║ App: trader
 ╚════════════════════════════════════════
 ''');
 
       await apiServices.post(
         endPoint: ApiEndpoints.registerDevice,
-        data: {"token": token, "platform": platform, "app": "representative"},
+        data: {"token": token, "platform": platform, "app": "trader"},
       );
     } catch (e, stackTrace) {
       _logger.e(

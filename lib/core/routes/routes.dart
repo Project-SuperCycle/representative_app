@@ -15,7 +15,9 @@ import 'package:representative_app/features/onboarding/presentation/views/fourth
 import 'package:representative_app/features/onboarding/presentation/views/second_onboarding_view.dart';
 import 'package:representative_app/features/onboarding/presentation/views/third_onboarding_view.dart';
 import 'package:representative_app/features/representative_main_profile/presentation/view/representative_profile_view.dart';
+import 'package:representative_app/features/representative_main_profile/presentation/widgets/loading/representative_profile_loading_indicator.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/views/representative_shipment_details_view.dart';
+import 'package:representative_app/features/representative_shipment_details/presentation/widgets/loading/shipment_details_loading_indicator.dart';
 import 'package:representative_app/features/representative_shipment_review/presentation/views/representative_shipment_edit_view.dart';
 import 'package:representative_app/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
 import 'package:representative_app/features/shipment_edit/presentation/views/shipment_edit_view.dart';
@@ -166,6 +168,18 @@ class AppRouter {
       ),
 
       // ============================================================
+      // Pre Profile Views - Smooth Fade
+      // ============================================================
+      GoRoute(
+        path: EndPoints.repPreProfileView,
+        name: 'Representative Pre Profile',
+        pageBuilder: (context, state) => AppTransitions.smoothFade(
+          state.pageKey,
+          RepresentativeProfileLoadingIndicator(),
+        ),
+      ),
+
+      // ============================================================
       // Profile Views - Smooth Fade
       // ============================================================
       GoRoute(
@@ -176,6 +190,18 @@ class AppRouter {
           RepresentativeProfileView(
             userProfile: state.extra as UserProfileModel,
           ),
+        ),
+      ),
+
+      // ============================================================
+      // Shipment Details - Fade with Scale
+      // ============================================================
+      GoRoute(
+        path: EndPoints.shipmentPreDetailsView,
+        name: 'ShipmentPreDetailsView',
+        pageBuilder: (context, state) => AppTransitions.fadeForDetails(
+          state.pageKey,
+          ShipmentDetailsLoadingIndicator(),
         ),
       ),
 

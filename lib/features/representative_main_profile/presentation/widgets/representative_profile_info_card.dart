@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:representative_app/core/services/storage_services.dart';
 import 'package:representative_app/core/utils/app_assets.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/features/representative_main_profile/presentation/widgets/loading/shipments_history_loading_indicator.dart';
 import 'package:representative_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
 import 'package:representative_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
 import 'package:representative_app/features/shipments_calendar/data/models/shipment_model.dart';
 import 'package:representative_app/features/shipments_calendar/presentation/widget/shipment_calendar_card.dart';
 
 class RepresentativeProfileInfoCard extends StatefulWidget {
-  final int currentPage;
-  final Function(int) onPageChanged;
-
-  const RepresentativeProfileInfoCard({
-    super.key,
-    required this.currentPage,
-    required this.onPageChanged,
-  });
+  const RepresentativeProfileInfoCard({super.key});
 
   @override
   State<RepresentativeProfileInfoCard> createState() =>
@@ -29,6 +22,7 @@ class RepresentativeProfileInfoCard extends StatefulWidget {
 class _RepresentativeProfileInfoCardState
     extends State<RepresentativeProfileInfoCard> {
   List<ShipmentModel> shipments = [];
+  int currentPage = 1;
   bool hasMoreData = true;
   bool isLoadingMore = false;
   int totalPages = 1;
@@ -37,31 +31,38 @@ class _RepresentativeProfileInfoCardState
   void initState() {
     super.initState();
     _getTotalPages();
+    _fetchShipments(currentPage);
+  }
+
+  void _fetchShipments(int page) {
+    BlocProvider.of<ShipmentsCalendarCubit>(
+      context,
+    ).getShipmentsHistory(page: page);
+  }
+
+  void _getTotalPages() async {
+    totalPages = await StorageServices.readData("totalShipmentsHistoryPages");
+    setState(() {});
   }
 
   void _loadNextPage() {
-    if (!isLoadingMore && widget.currentPage < totalPages) {
+    if (!isLoadingMore && hasMoreData) {
       setState(() {
         isLoadingMore = true;
+        currentPage++;
       });
-      widget.onPageChanged(widget.currentPage + 1);
+      _fetchShipments(currentPage);
     }
   }
 
   void _loadPreviousPage() {
-    if (widget.currentPage > 1 && !isLoadingMore) {
+    if (currentPage > 1 && !isLoadingMore) {
       setState(() {
         isLoadingMore = true;
+        currentPage--;
       });
-      widget.onPageChanged(widget.currentPage - 1);
+      _fetchShipments(currentPage);
     }
-  }
-
-  void _getTotalPages() async {
-    final pages = await StorageServices.readData("totalShipmentsHistoryPages");
-    setState(() {
-      totalPages = pages ?? 1;
-    });
   }
 
   @override
@@ -82,43 +83,39 @@ class _RepresentativeProfileInfoCardState
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withAlpha(25),
+                color: Colors.black.withAlpha(25),
                 blurRadius: 10,
-                offset: const Offset(0, 4),
+                spreadRadius: 2,
               ),
             ],
           ),
-          child: BlocConsumer<ShipmentsCalendarCubit, ShipmentsCalendarState>(
-            listener: (context, state) {
-              if (state is GetAllShipmentsSuccess) {
-                setState(() {
-                  shipments = state.shipments;
-                  isLoadingMore = false;
-                  hasMoreData = widget.currentPage < totalPages;
-                });
-              }
-              if (state is GetAllShipmentsFailure) {
-                setState(() {
-                  isLoadingMore = false;
-                });
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: BlocConsumer<ShipmentsCalendarCubit, ShipmentsCalendarState>(
+              listener: (context, state) {
+                if (state is GetAllShipmentsSuccess) {
+                  setState(() {
+                    shipments = state.shipments;
+                    isLoadingMore = false;
+                    // لو الشحنات أقل من 10، معناها مفيش صفحات تانية
+                    hasMoreData = state.shipments.length >= 10;
+                  });
+                }
+                if (state is GetAllShipmentsFailure) {
+                  setState(() {
+                    isLoadingMore = false;
+                  });
 
-                CustomSnackBar.showError(context, state.errorMessage);
-              }
-            },
-            builder: (context, state) {
-              if (state is GetAllShipmentsLoading && shipments.isEmpty) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: CustomLoadingIndicator(),
-                  ),
-                );
-              }
+                  CustomSnackBar.showError(context, state.errorMessage);
+                }
+              },
+              builder: (context, state) {
+                if (state is GetAllShipmentsLoading) {
+                  return const ShipmentsHistoryLoadingIndicator();
+                }
 
-              if (shipments.isNotEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
+                if (shipments.isNotEmpty) {
+                  return Column(
                     children: [
                       ListView.builder(
                         shrinkWrap: true,
@@ -142,8 +139,7 @@ class _RepresentativeProfileInfoCardState
                           children: [
                             // Previous Button
                             IconButton(
-                              onPressed:
-                                  widget.currentPage > 1 && !isLoadingMore
+                              onPressed: currentPage > 1 && !isLoadingMore
                                   ? _loadPreviousPage
                                   : null,
                               style: ElevatedButton.styleFrom(
@@ -154,7 +150,7 @@ class _RepresentativeProfileInfoCardState
                                 minimumSize: const Size(30, 30),
                                 maximumSize: const Size(30, 30),
                               ),
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.arrow_back_ios_new_rounded,
                                 size: 20,
                               ),
@@ -162,7 +158,7 @@ class _RepresentativeProfileInfoCardState
 
                             const SizedBox(width: 16),
 
-                            // Page Number with Total Pages
+                            // Page Number
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 12,
@@ -174,7 +170,7 @@ class _RepresentativeProfileInfoCardState
                               ),
                               child: Center(
                                 child: Text(
-                                  '${widget.currentPage} / $totalPages',
+                                  '$currentPage',
                                   style: AppStyles.styleSemiBold16(context),
                                 ),
                               ),
@@ -184,9 +180,7 @@ class _RepresentativeProfileInfoCardState
 
                             // Next Button
                             IconButton(
-                              onPressed:
-                                  widget.currentPage < totalPages &&
-                                      !isLoadingMore
+                              onPressed: hasMoreData && !isLoadingMore
                                   ? _loadNextPage
                                   : null,
                               style: ElevatedButton.styleFrom(
@@ -197,7 +191,7 @@ class _RepresentativeProfileInfoCardState
                                 minimumSize: const Size(30, 30),
                                 maximumSize: const Size(30, 30),
                               ),
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 size: 20,
                               ),
@@ -205,45 +199,35 @@ class _RepresentativeProfileInfoCardState
                           ],
                         ),
                       ),
-
-                      // Loading Indicator when loading more
-                      if (isLoadingMore)
-                        const Padding(
-                          padding: EdgeInsets.all(16),
-                          child: CustomLoadingIndicator(),
-                        ),
                     ],
+                  );
+                }
+
+                // Empty state
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        SvgPicture.asset(
+                          AppAssets.boxIcon,
+                          height: 100,
+                          colorFilter: ColorFilter.mode(
+                            Colors.black.withAlpha(150),
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'لا يوجد معاملات',
+                          style: AppStyles.styleSemiBold22(context),
+                        ),
+                      ],
+                    ),
                   ),
                 );
-              }
-
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      SvgPicture.asset(
-                        AppAssets.boxIcon,
-                        height: 100,
-                        colorFilter: ColorFilter.mode(
-                          Colors.black.withAlpha(150),
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'لا يوجد معاملات',
-                        style: AppStyles.styleSemiBold22(context),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-            buildWhen: (previous, current) =>
-                current is GetAllShipmentsLoading ||
-                current is GetAllShipmentsSuccess ||
-                current is GetAllShipmentsFailure,
+              },
+            ),
           ),
         ),
       ],

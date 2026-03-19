@@ -1,20 +1,22 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
+import 'package:representative_app/core/utils/app_assets.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 StreamController<NotificationResponse> notificationStreamController =
-    StreamController<NotificationResponse>();
+    StreamController<NotificationResponse>.broadcast();
 
 /// 🔥 MUST be top-level + annotated
 @pragma('vm:entry-point')
 void onTapNotification(NotificationResponse notificationResponse) {
   notificationStreamController.add(notificationResponse);
-  Logger().w("Background notification tapped: ${notificationResponse.payload}");
+  Logger().w("Notification tapped: ${notificationResponse.payload}");
 }
 
 class LocalNotificationsService {
@@ -32,45 +34,65 @@ class LocalNotificationsService {
     );
   }
 
-  /// 🔹 Show a basic notification
+  /// 🔹 Show a basic notification with payload
   static void showBasicNotification({required RemoteMessage message}) async {
-    const NotificationDetails details = NotificationDetails(
+    // Extract notification data
+    Map<String, dynamic> notificationData = {
+      'relatedEntity': message.data['relatedEntity'] ?? '',
+      'relatedEntityId': message.data['relatedEntityId'] ?? '',
+      'type': message.data['type'] ?? '',
+      ...message.data, // Include all other data
+    };
+
+    // Convert to JSON string for payload
+    String payload = jsonEncode(notificationData);
+
+    NotificationDetails details = NotificationDetails(
       android: AndroidNotificationDetails(
         "id_1",
         "basic_notifications",
         importance: Importance.max,
         priority: Priority.high,
+        icon: AppAssets.logoIcon,
       ),
       iOS: DarwinNotificationDetails(),
     );
 
     await flutterLocalNotificationsPlugin.show(
-      id: 0,
+      id: message.hashCode,
+      // Unique ID for each notification
       title: message.notification?.title,
       body: message.notification?.body,
       notificationDetails: details,
+      payload: payload, // ✅ Pass the payload here
     );
   }
 
-  static void showRepeatedNotification() async {
-    const NotificationDetails details = NotificationDetails(
-      android: AndroidNotificationDetails(
-        "id_2",
-        "basic_notifications",
-        importance: Importance.max,
-        priority: Priority.high,
-      ),
-      iOS: DarwinNotificationDetails(),
-    );
+  /// 🔹 Parse notification payload
+  static Map<String, dynamic>? parsePayload(String? payload) {
+    if (payload == null || payload.isEmpty) {
+      Logger().w("No payload found in notification");
+      return null;
+    }
 
-    await flutterLocalNotificationsPlugin.periodicallyShow(
-      id: 1,
-      title: "REPEATED NOTI",
-      body: "NOTI BODY",
-      repeatInterval: RepeatInterval.everyMinute,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      notificationDetails: details,
-    );
+    try {
+      Map<String, dynamic> data = jsonDecode(payload);
+
+      return data;
+    } catch (e) {
+      Logger().e("Error parsing notification payload: $e");
+      return null;
+    }
+  }
+
+  static String _formatDataPayload(Map<String, dynamic> data) {
+    if (data.isEmpty) return '║ (Empty)';
+
+    StringBuffer buffer = StringBuffer();
+    data.forEach((key, value) {
+      buffer.writeln('║ $key: $value');
+    });
+    return buffer.toString().trimRight();
   }
 
   static void cancelNotification({required int id}) async {

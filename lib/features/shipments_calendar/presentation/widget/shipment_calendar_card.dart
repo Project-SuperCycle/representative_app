@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:representative_app/core/routes/end_points.dart';
 import 'package:representative_app/core/services/storage_services.dart';
 import 'package:representative_app/core/utils/app_assets.dart';
 import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
-import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
 import 'package:representative_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_cubit.dart';
-import 'package:representative_app/features/shipments_calendar/data/cubits/shipments_calendar_cubit/shipments_calendar_state.dart';
 import 'package:representative_app/features/shipments_calendar/data/models/shipment_model.dart';
+import 'package:representative_app/features/sign_in/data/models/logined_user_model.dart';
 
 class ShipmentsCalendarCard extends StatefulWidget {
   final ShipmentModel shipment;
+
   const ShipmentsCalendarCard({super.key, required this.shipment});
 
   @override
@@ -41,57 +40,12 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
 
   // ✅ FIX: Navigate directly without BlocListener
   Future<void> _showShipmentDetails(BuildContext context) async {
-    if (_isNavigating) return;
-
-    setState(() {
-      _isNavigating = true;
-    });
-
-    try {
-      // Fetch shipment details
-      final cubit = context.read<ShipmentsCalendarCubit>();
-      cubit.getShipmentById(
-        shipmentId: widget.shipment.id,
-        type: widget.shipment.type,
-      );
-
-      // Wait for the state change
-      final subscription = cubit.stream.listen((state) {});
-
-      await for (final state in cubit.stream) {
-        if (state is GetShipmentSuccess) {
-          subscription.cancel();
-
-          if (!mounted) return;
-
-          // Navigate once with the shipment data
-          await context.push(
-            EndPoints.representativeShipmentDetailsView,
-            extra: state.shipment,
-          );
-
-          break;
-        } else if (state is GetShipmentFailure) {
-          subscription.cancel();
-
-          if (!mounted) return;
-
-          CustomSnackBar.showError(context, state.errorMessage);
-          break;
-        }
-      }
-    } catch (error) {
-      debugPrint('Error fetching shipment: $error');
-      if (mounted) {
-        CustomSnackBar.showError(context, 'حدث خطأ أثناء تحميل التفاصيل');
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isNavigating = false;
-        });
-      }
-    }
+    final cubit = context.read<ShipmentsCalendarCubit>();
+    cubit.getShipmentById(
+      shipmentId: widget.shipment.id,
+      type: widget.shipment.type,
+    );
+    GoRouter.of(context).push(EndPoints.shipmentPreDetailsView);
   }
 
   @override
@@ -184,12 +138,13 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                           ],
                         ),
                       ),
-                      (widget.shipment.isExtra)
+                      (widget.shipment.isExtra &&
+                              userRole == "trader_contracted")
                           ? Image.asset(
-                        AppAssets.extraBox,
-                        width: 25,
-                        height: 25,
-                      )
+                              AppAssets.extraBox,
+                              width: 25,
+                              height: 25,
+                            )
                           : const SizedBox.shrink(),
                     ],
                   ),
@@ -240,7 +195,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
                   color: _isNavigating
-                      ? AppColors.primaryColor.withOpacity(0.7)
+                      ? AppColors.primaryColor.withValues(alpha: 0.7)
                       : AppColors.primaryColor,
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(12),
@@ -248,16 +203,7 @@ class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
                   ),
                 ),
                 child: Center(
-                  child: _isNavigating
-                      ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )
-                      : Text(
+                  child: Text(
                     'إظهار التفاصيل',
                     style: AppStyles.styleSemiBold14(context).copyWith(
                       color: Colors.white,

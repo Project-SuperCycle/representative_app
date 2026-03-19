@@ -344,6 +344,13 @@ class _NotificationsPanelState extends State<NotificationsPanel>
             notContext: context,
             notification: filteredNotifications[index],
             onTap: () {
+              context.read<GetNotificationsCubit>().markAsRead(
+                filteredNotifications[index].id,
+              );
+
+              context.read<ReadNotificationCubit>().readNotification(
+                id: filteredNotifications[index].id,
+              );
               _close();
             },
           );

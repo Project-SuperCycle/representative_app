@@ -48,15 +48,7 @@ class _RepresentativeProfileViewBodyState
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  RepresentativeProfileInfoCard(
-                    currentPage: currentPage,
-                    onPageChanged: (newPage) {
-                      setState(() {
-                        currentPage = newPage;
-                      });
-                      _fetchShipments(newPage);
-                    },
-                  ),
+                  RepresentativeProfileInfoCard(),
                   const SizedBox(height: 40),
                 ],
               ),

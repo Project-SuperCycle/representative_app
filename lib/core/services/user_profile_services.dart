@@ -94,7 +94,7 @@ class UserProfileService {
       };
 
       if (route != null && context.mounted) {
-        GoRouter.of(context).push(route, extra: fetchedUser);
+        GoRouter.of(context).pushReplacement(route, extra: fetchedUser);
       }
     } catch (e) {
       if (context.mounted) {
@@ -134,7 +134,7 @@ class UserProfileService {
       };
 
       if (route != null && context.mounted) {
-        GoRouter.of(context).push(route, extra: fetchedUser);
+        GoRouter.of(context).pushReplacement(route, extra: fetchedUser);
       } else if (context.mounted) {
         CustomSnackBar.showWarning(context, 'Profile type not supported');
       }
