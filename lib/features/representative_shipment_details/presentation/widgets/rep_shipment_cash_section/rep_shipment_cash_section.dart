@@ -1,27 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
+import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/confirm_cash/confirm_cash_cubit.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/confirm_cash/confirm_cash_state.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/get_meal_shipments/get_meal_shipments_cubit.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/get_meal_shipments/get_meal_shipments_state.dart';
+import 'package:representative_app/features/representative_shipment_details/data/models/shipment_cash_item.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/rep_shipment_cash_section/confirm_button.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/rep_shipment_cash_section/shipment_tile.dart';
+import 'package:representative_app/features/representative_shipment_details/presentation/widgets/rep_shipment_cash_section/shipment_tile_loading.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/rep_shipment_cash_section/total_row.dart';
-
-// ─── Data Model ──────────────────────────────────────────────────────────────
-
-class ShipmentCashItem {
-  final String shipmentNumber;
-  final double amount;
-  bool isSelected;
-
-  ShipmentCashItem({
-    required this.shipmentNumber,
-    required this.amount,
-    this.isSelected = false,
-  });
-}
-
-// ─── Cash Collection Section Widget ──────────────────────────────────────────
 
 class CashCollectionSection extends StatefulWidget {
   final void Function(List<ShipmentCashItem> selected, File? receipt)?
@@ -40,14 +33,6 @@ class _CashCollectionSectionState extends State<CashCollectionSection>
   late AnimationController _pulseController;
   late Animation<double> _pulseAnim;
 
-  final shipments = [
-    ShipmentCashItem(shipmentNumber: 'SC-20260424-00001', amount: 350.00),
-    ShipmentCashItem(shipmentNumber: 'SC-20260424-00002', amount: 120.50),
-    ShipmentCashItem(shipmentNumber: 'SC-20260424-00003', amount: 875.00),
-    ShipmentCashItem(shipmentNumber: 'SC-20260424-00004', amount: 200.00),
-  ];
-
-  // ── Design tokens (matching screenshot palette) ──────────────────────────
   static const _green = Color(0xFF2DBD6A);
   static const _greenLight = Color(0xFFE8F9F0);
   static const _greenBorder = Color(0xFF2DBD6A);
@@ -73,11 +58,17 @@ class _CashCollectionSectionState extends State<CashCollectionSection>
     super.dispose();
   }
 
-  double get _totalSelected => shipments
+  List<ShipmentCashItem> get _currentShipments {
+    final state = context.read<GetMealShipmentsCubit>().state;
+    if (state is GetMealShipmentsSuccess) return state.shipments;
+    return [];
+  }
+
+  double get _totalSelected => _currentShipments
       .where((s) => s.isSelected)
       .fold(0.0, (sum, s) => sum + s.amount);
 
-  bool get _hasSelection => shipments.any((s) => s.isSelected);
+  bool get _hasSelection => _currentShipments.any((s) => s.isSelected);
 
   Future<void> _pickImage(ImageSource source) async {
     final picked = await _picker.pickImage(source: source, imageQuality: 85);
@@ -170,68 +161,105 @@ class _CashCollectionSectionState extends State<CashCollectionSection>
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: Colors.transparent),
+      decoration: const BoxDecoration(color: Colors.transparent),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Shipments List ───────────────────────────────────────────────
           _buildShipmentsList(),
-
           Divider(
             height: 1,
             color: AppColors.primaryColor.withValues(alpha: 0.25),
             indent: 30,
             endIndent: 30,
           ),
-
-          // ── Total Row ────────────────────────────────────────────────────
           TotalRow(hasSelection: _hasSelection, totalSelected: _totalSelected),
-
           Divider(
             height: 1,
             color: AppColors.primaryColor.withValues(alpha: 0.25),
             indent: 30,
             endIndent: 30,
           ),
-
-          // ── Receipt Upload ───────────────────────────────────────────────
           _buildReceiptUpload(),
+          BlocConsumer<ConfirmCashCubit, ConfirmCashState>(
+            listener: (context, state) {
+              if (state is ConfirmCashFailure) {
+                CustomSnackBar.showError(context, state.errorMessage);
+              }
 
-          // ── Confirm Button ───────────────────────────────────────────────
-          ConfirmButton(
-            pulseController: _pulseController,
-            pulseAnim: _pulseAnim,
-            enabled: _hasSelection,
-            shipments: shipments,
-            receiptImage: _receiptImage,
-            totalSelected: _totalSelected,
-            onConfirm: widget.onConfirm,
+              if (state is ConfirmCashSuccess) {
+                CustomSnackBar.showInfo(context, 'تم تأكيد الدفع');
+              }
+            },
+            builder: (context, state) {
+              if (state is ConfirmCashLoading) {
+                Center(
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CustomLoadingIndicator(
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                );
+              }
+              return ConfirmButton(
+                pulseController: _pulseController,
+                pulseAnim: _pulseAnim,
+                enabled: _hasSelection,
+                shipments: _currentShipments,
+                receiptImage: _receiptImage,
+                totalSelected: _totalSelected,
+                onConfirm: widget.onConfirm,
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  // ── Shipments List ──────────────────────────────────────────────────────────
   Widget _buildShipmentsList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      itemCount: shipments.length,
-      itemBuilder: (context, index) {
-        final item = shipments[index];
-        return ShipmentTile(
-          item: item,
-          green: _green,
-          greenLight: _greenLight,
-          onChanged: (val) => setState(() => item.isSelected = val ?? false),
-        );
+    return BlocConsumer<GetMealShipmentsCubit, GetMealShipmentsState>(
+      listener: (context, state) {
+        if (state is GetMealShipmentsFailure) {
+          CustomSnackBar.showError(context, state.errorMessage);
+        }
+      },
+      builder: (context, state) {
+        if (state is GetMealShipmentsLoading) {
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            itemCount: 4,
+            itemBuilder: (_, __) => const ShipmentTileLoading(),
+          );
+        }
+
+        if (state is GetMealShipmentsSuccess) {
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            itemCount: state.shipments.length,
+            itemBuilder: (_, index) {
+              final item = state.shipments[index];
+              return ShipmentTile(
+                item: item,
+                green: _green,
+                greenLight: _greenLight,
+                onChanged: (val) =>
+                    setState(() => item.isSelected = val ?? false),
+              );
+            },
+          );
+        }
+
+        return const SizedBox.shrink();
       },
     );
   }
 
-  // ── Receipt Upload ──────────────────────────────────────────────────────────
   Widget _buildReceiptUpload() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 6, 12, 4),

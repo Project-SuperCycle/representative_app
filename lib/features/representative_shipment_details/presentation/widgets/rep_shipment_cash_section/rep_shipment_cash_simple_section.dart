@@ -1,8 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
 import 'package:representative_app/core/utils/app_colors.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/confirm_cash/confirm_cash_cubit.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/confirm_cash/confirm_cash_state.dart';
 
 class CashCollectionSimpleSection extends StatefulWidget {
   final num totalAmount;
@@ -343,62 +347,82 @@ class _CashCollectionSimpleSectionState
   Widget _buildConfirmButton() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 14),
-      child: AnimatedBuilder(
-        animation: _pulseAnim,
-        builder: (_, child) =>
-            Transform.scale(scale: _pulseAnim.value, child: child),
-        child: SizedBox(
-          width: double.infinity,
-          height: 52,
-          child: ElevatedButton(
-            onPressed: () => widget.onConfirm?.call(_receiptImage),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _green,
-              foregroundColor: _white,
-              elevation: 4,
-              shadowColor: _green.withOpacity(0.4),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+      child: BlocConsumer<ConfirmCashCubit, ConfirmCashState>(
+        listener: (context, state) {
+          // TODO: implement listener
+        },
+        builder: (context, state) {
+          if (state is ConfirmCashLoading) {
+            Center(
+              child: SizedBox(
+                width: 50,
+                height: 50,
+                child: CustomLoadingIndicator(color: AppColors.primaryColor),
               ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.check_circle_rounded, size: 20, color: _white),
-                const SizedBox(width: 8),
-                const Text(
-                  'تأكيد التحصيل',
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: _white,
+            );
+          }
+          return AnimatedBuilder(
+            animation: _pulseAnim,
+            builder: (_, child) =>
+                Transform.scale(scale: _pulseAnim.value, child: child),
+            child: SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                onPressed: () => widget.onConfirm?.call(_receiptImage),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _green,
+                  foregroundColor: _white,
+                  elevation: 4,
+                  shadowColor: _green.withOpacity(0.4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                const SizedBox(width: 10),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    '${widget.totalAmount.toStringAsFixed(2)} ج.م',
-                    style: const TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.check_circle_rounded,
+                      size: 20,
                       color: _white,
                     ),
-                  ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'تأكيد التحصيل',
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: _white,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '${widget.totalAmount.toStringAsFixed(2)} ج.م',
+                        style: const TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: _white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

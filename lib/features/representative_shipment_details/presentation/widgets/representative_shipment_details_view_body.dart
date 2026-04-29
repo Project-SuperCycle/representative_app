@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:representative_app/core/constants.dart';
+import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:representative_app/core/models/shipment/single_shipment_model.dart';
 import 'package:representative_app/core/utils/app_assets.dart';
 import 'package:representative_app/core/utils/app_colors.dart';
@@ -9,6 +12,9 @@ import 'package:representative_app/core/widgets/custom_text_field.dart';
 import 'package:representative_app/core/widgets/shipment/client_data_content.dart';
 import 'package:representative_app/core/widgets/shipment/progress_widgets.dart';
 import 'package:representative_app/core/widgets/shipment/shipment_logo.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/confirm_cash/confirm_cash_cubit.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/confirm_cash/confirm_cash_state.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/get_meal_shipments/get_meal_shipments_cubit.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/expandable_card/expandable_card.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/rep_shipment_cash_section/rep_shipment_cash_section.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/rep_shipment_cash_section/rep_shipment_cash_simple_section.dart';
@@ -54,6 +60,22 @@ class _RepresentativeShipmentDetailsViewBodyState
     super.initState();
     _currentShipment = widget.shipment;
     _loadActionState();
+    _loadMealShipments();
+  }
+
+  void _loadMealShipments() {
+    if (widget.shipment.financeSnapshot == null) {
+      Logger().w('NULL');
+      return;
+    }
+    if (widget.shipment.financeSnapshot!.type == 'meal' &&
+        widget.shipment.financeSnapshot!.method == 'cash') {
+      Logger().w('MEAL');
+
+      BlocProvider.of<GetMealShipmentsCubit>(
+        context,
+      ).getMealShipments(shipmentId: _currentShipment.id);
+    }
   }
 
   Future<void> _loadActionState() async {
@@ -276,74 +298,110 @@ class _RepresentativeShipmentDetailsViewBodyState
                                   ),
 
                                 if (showCashCollection && !_cashCollectionDone)
-                                  Column(
-                                    key: const ValueKey(
-                                      'cash_collection_section',
-                                    ), // ✅ أضف key
-                                    children: [
-                                      (_currentShipment.financeSnapshot!.type ==
-                                              'meal')
-                                          ? ExpandableCard(
-                                              key: const ValueKey(
-                                                'cash_full',
-                                              ), // ✅
-                                              title: 'تحصيل النقدية',
-                                              icon: AppAssets.boxPerspective,
-                                              isExpanded:
-                                                  isCashCollectionExpanded,
-                                              onTap: _toggleCachCollection,
-                                              content: CashCollectionSection(
-                                                onConfirm: (selected, receipt) {
-                                                  final total = selected.fold(
-                                                    0.0,
-                                                    (s, e) => s + e.amount,
-                                                  );
-                                                  debugPrint(
-                                                    '✅ onConfirm called',
-                                                  ); // تأكد إنه بيتكال
-                                                  setState(() {
-                                                    _cashCollectionDone = true;
-                                                  });
-                                                },
-                                              ),
-                                              maxHeight: 320,
-                                            )
-                                          : (_currentShipment
-                                                    .financeSnapshot!
-                                                    .type ==
-                                                'external')
-                                          ? ExpandableCard(
-                                              key: const ValueKey(
-                                                'cash_simple',
-                                              ), // ✅
-                                              title: 'تحصيل النقدية',
-                                              icon: AppAssets.boxPerspective,
-                                              isExpanded:
-                                                  isCashCollectionExpanded,
-                                              onTap: _toggleCachCollection,
-                                              content:
-                                                  CashCollectionSimpleSection(
+                                  BlocConsumer<
+                                    ConfirmCashCubit,
+                                    ConfirmCashState
+                                  >(
+                                    listener: (context, state) {
+                                      // TODO: implement listener
+                                      if (state is ConfirmCashSuccess) {
+                                        setState(() {
+                                          _cashCollectionDone = true;
+                                        });
+                                      }
+                                    },
+                                    builder: (context, state) {
+                                      return Column(
+                                        key: const ValueKey(
+                                          'cash_collection_section',
+                                        ), // ✅ أضف key
+                                        children: [
+                                          (_currentShipment
+                                                      .financeSnapshot!
+                                                      .type ==
+                                                  'meal')
+                                              ? ExpandableCard(
+                                                  key: const ValueKey(
+                                                    'cash_full',
+                                                  ), // ✅
+                                                  title: 'تحصيل النقدية',
+                                                  icon:
+                                                      AppAssets.boxPerspective,
+                                                  isExpanded:
+                                                      isCashCollectionExpanded,
+                                                  onTap: _toggleCachCollection,
+                                                  content: CashCollectionSection(
+                                                    onConfirm: (selected, receipt) {
+                                                      if (receipt == null) {
+                                                        CustomSnackBar.showWarning(
+                                                          context,
+                                                          "من فضلك حمل صورة الوصل",
+                                                        );
+                                                        return;
+                                                      }
+                                                      List<String>
+                                                      ids = selected
+                                                          .map(
+                                                            (e) => e.shipmentId,
+                                                          )
+                                                          .toList();
+                                                      BlocProvider.of<
+                                                            ConfirmCashCubit
+                                                          >(context)
+                                                          .confirmMealCash(
+                                                            shipments: ids,
+                                                            image: receipt,
+                                                          );
+                                                    },
+                                                  ),
+                                                  maxHeight: 320,
+                                                )
+                                              : (_currentShipment
+                                                        .financeSnapshot!
+                                                        .type ==
+                                                    'external')
+                                              ? ExpandableCard(
+                                                  key: const ValueKey(
+                                                    'cash_simple',
+                                                  ), // ✅
+                                                  title: 'تحصيل النقدية',
+                                                  icon:
+                                                      AppAssets.boxPerspective,
+                                                  isExpanded:
+                                                      isCashCollectionExpanded,
+                                                  onTap: _toggleCachCollection,
+                                                  content: CashCollectionSimpleSection(
                                                     totalAmount:
                                                         _currentShipment
                                                             .financeSnapshot!
                                                             .amount,
                                                     onConfirm: (receiptFile) {
-                                                      debugPrint(
-                                                        '✅ onConfirm called',
-                                                      ); // تأكد إنه بيتكال
-
-                                                      setState(() {
-                                                        _cashCollectionDone =
-                                                            true;
-                                                      });
+                                                      if (receiptFile == null) {
+                                                        CustomSnackBar.showWarning(
+                                                          context,
+                                                          "من فضلك حمل صورة الوصل",
+                                                        );
+                                                        return;
+                                                      }
+                                                      BlocProvider.of<
+                                                            ConfirmCashCubit
+                                                          >(context)
+                                                          .confirmExternalCash(
+                                                            shipmentId: widget
+                                                                .shipment
+                                                                .id,
+                                                            image: receiptFile,
+                                                          );
                                                     },
                                                   ),
-                                              maxHeight: 320,
-                                            )
-                                          : const SizedBox.shrink(),
+                                                  maxHeight: 320,
+                                                )
+                                              : const SizedBox.shrink(),
 
-                                      const SizedBox(height: 25),
-                                    ],
+                                          const SizedBox(height: 25),
+                                        ],
+                                      );
+                                    },
                                   ),
 
                                 ExpandableCard(

@@ -169,11 +169,13 @@ class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
       apiCall: () async {
         final response = await apiServices.get(
           endPoint: ApiEndpoints.financeMealShipments,
+          query: {'shipmentId': shipmentId},
         );
 
-        final data = response['data']['eligibleShipments'];
-
-        return data.map((e) => ShipmentCashItem.fromJson(e)).toList();
+        final data = response['data']['eligibleShipments'] as List<dynamic>;
+        return data
+            .map((e) => ShipmentCashItem.fromJson(e as Map<String, dynamic>))
+            .toList();
       },
       errorContext: 'get all shipments',
     );
@@ -227,7 +229,7 @@ class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
 
     return FormData.fromMap({
       'shipmentIds': shipments,
-      'images': imagesFiles.first,
+      'paymentProof': imagesFiles.first,
     });
   }
 }

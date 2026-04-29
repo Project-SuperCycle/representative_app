@@ -15,7 +15,10 @@ class ErrorHandler {
     try {
       final result = await apiCall();
       return right(result);
-    } on DioException catch (dioError) {
+    } on DioException catch (dioError, trace) {
+      Logger().e(dioError.message);
+      Logger().i(trace);
+
       return left(ServerFailure.fromDioError(dioError));
     } on FormatException catch (formatError) {
       _logger.e('❌ FormatException during $errorContext: $formatError');

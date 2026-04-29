@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:representative_app/core/utils/app_colors.dart';
-import 'package:representative_app/features/representative_shipment_details/presentation/widgets/rep_shipment_cash_section/rep_shipment_cash_section.dart';
+import 'package:representative_app/features/representative_shipment_details/data/models/shipment_cash_item.dart';
 
 class ConfirmButton extends StatefulWidget {
   final AnimationController pulseController;
