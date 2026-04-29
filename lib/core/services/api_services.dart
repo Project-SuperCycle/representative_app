@@ -4,7 +4,7 @@ import 'package:representative_app/core/services/storage_services.dart';
 class ApiServices {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://supercycle-api-995332059142.europe-west1.run.app',
+      baseUrl: 'https://supercycle-api-855015056699.europe-west1.run.app',
       connectTimeout: const Duration(seconds: 60),
       receiveTimeout: const Duration(seconds: 60),
       headers: {'Accept': 'application/json', 'lang': 'ar'},

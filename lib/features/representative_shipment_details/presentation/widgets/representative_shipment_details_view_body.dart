@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:representative_app/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:representative_app/core/constants.dart';
+import 'package:representative_app/core/models/shipment/single_shipment_model.dart';
 import 'package:representative_app/core/utils/app_assets.dart';
 import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/core/widgets/custom_button.dart';
 import 'package:representative_app/core/widgets/custom_text_field.dart';
 import 'package:representative_app/core/widgets/shipment/client_data_content.dart';
-import 'package:representative_app/core/widgets/shipment/expandable_section.dart';
 import 'package:representative_app/core/widgets/shipment/progress_widgets.dart';
 import 'package:representative_app/core/widgets/shipment/shipment_logo.dart';
-import 'package:representative_app/core/models/shipment/single_shipment_model.dart';
+import 'package:representative_app/features/representative_shipment_details/presentation/widgets/expandable_card/expandable_card.dart';
+import 'package:representative_app/features/representative_shipment_details/presentation/widgets/rep_shipment_cash_section/rep_shipment_cash_section.dart';
+import 'package:representative_app/features/representative_shipment_details/presentation/widgets/rep_shipment_cash_section/rep_shipment_cash_simple_section.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_actions_row.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_details_content.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_details_header.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_details_notes.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_notes_content.dart';
+import 'package:representative_app/features/representative_shipment_review/presentation/views/representative_shipment_review_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RepresentativeShipmentDetailsViewBody extends StatefulWidget {
   const RepresentativeShipmentDetailsViewBody({
@@ -38,6 +40,8 @@ class _RepresentativeShipmentDetailsViewBodyState
   bool isInspectedItemsExpanded = false;
   bool isClientDataExpanded = false;
   bool isNotesDataExpanded = false;
+
+  bool isCashCollectionExpanded = false;
   bool hasActionBeenTaken = false;
   bool showInspectionActions = false;
   bool _isNavigating = false; // ✅ Simplified: One flag is enough
@@ -150,9 +154,8 @@ class _RepresentativeShipmentDetailsViewBodyState
       final updatedShipment = await Navigator.push<SingleShipmentModel>(
         context,
         MaterialPageRoute(
-          builder: (context) => RepresentativeShipmentReviewView(
-            shipment: _currentShipment,
-          ),
+          builder: (context) =>
+              RepresentativeShipmentReviewView(shipment: _currentShipment),
         ),
       );
 
@@ -236,7 +239,7 @@ class _RepresentativeShipmentDetailsViewBodyState
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 10),
-                                _buildExpandableCard(
+                                ExpandableCard(
                                   title: 'تفاصيل الشحنة',
                                   icon: AppAssets.boxPerspective,
                                   isExpanded: isShipmentDetailsExpanded,
@@ -250,21 +253,73 @@ class _RepresentativeShipmentDetailsViewBodyState
                                 if (_currentShipment.inspectedItems.isNotEmpty)
                                   Column(
                                     children: [
-                                      _buildExpandableCard(
+                                      ExpandableCard(
                                         title: 'الشحنة بعد المعاينة',
                                         icon: AppAssets.boxPerspective,
                                         isExpanded: isInspectedItemsExpanded,
                                         onTap: _toggleInspectedItems,
                                         content:
-                                        RepresentativeShipmentDetailsContent(
-                                          items: _currentShipment.inspectedItems,
-                                        ),
+                                            RepresentativeShipmentDetailsContent(
+                                              items: _currentShipment
+                                                  .inspectedItems,
+                                            ),
                                         maxHeight: 320,
                                       ),
                                       const SizedBox(height: 16),
                                     ],
                                   ),
-                                _buildExpandableCard(
+
+                                if (_currentShipment.status ==
+                                        "complete_weighted" &&
+                                    _currentShipment.financeSnapshot!.method ==
+                                        'cash')
+                                  Column(
+                                    children: [
+                                      (_currentShipment.financeSnapshot!.type !=
+                                              'meal')
+                                          ? ExpandableCard(
+                                              title: 'تحصيل النقدية',
+                                              icon: AppAssets.boxPerspective,
+                                              isExpanded:
+                                                  isCashCollectionExpanded,
+                                              onTap: _toggleCachCollection,
+                                              content: CashCollectionSection(
+                                                onConfirm: (selected, receipt) {
+                                                  final total = selected.fold(
+                                                    0.0,
+                                                    (s, e) => s + e.amount,
+                                                  );
+                                                },
+                                              ),
+                                              maxHeight: 320,
+                                            )
+                                          : (_currentShipment
+                                                    .financeSnapshot!
+                                                    .type ==
+                                                'meal')
+                                          ? ExpandableCard(
+                                              title: 'تحصيل النقدية',
+                                              icon: AppAssets.boxPerspective,
+                                              isExpanded:
+                                                  isCashCollectionExpanded,
+                                              onTap: _toggleCachCollection,
+                                              content:
+                                                  CashCollectionSimpleSection(
+                                                    totalAmount:
+                                                        _currentShipment
+                                                            .financeSnapshot!
+                                                            .amount,
+                                                    onConfirm: (receiptFile) {},
+                                                  ),
+                                              maxHeight: 320,
+                                            )
+                                          : const SizedBox.shrink(),
+
+                                      const SizedBox(height: 25),
+                                    ],
+                                  ),
+
+                                ExpandableCard(
                                   title: 'بيانات جهة التعامل',
                                   icon: AppAssets.entityCard,
                                   isExpanded: isClientDataExpanded,
@@ -279,7 +334,7 @@ class _RepresentativeShipmentDetailsViewBodyState
                                     ? _buildAddressSection()
                                     : _buildBranchSection(),
                                 const SizedBox(height: 20),
-                                _buildExpandableCard(
+                                ExpandableCard(
                                   title: 'ملاحظات من التاجر / الاداره',
                                   icon: AppAssets.entityCard,
                                   isExpanded: isNotesDataExpanded,
@@ -317,43 +372,6 @@ class _RepresentativeShipmentDetailsViewBodyState
     );
   }
 
-  Widget _buildExpandableCard({
-    required String title,
-    required String icon,
-    required bool isExpanded,
-    required VoidCallback onTap,
-    required Widget content,
-    required double maxHeight,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isExpanded ? Colors.green.shade200 : Colors.grey.shade200,
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: isExpanded
-                ? Colors.green.withOpacity(0.2)
-                : Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ExpandableSection(
-        title: title,
-        iconPath: icon,
-        isExpanded: isExpanded,
-        maxHeight: maxHeight,
-        onTap: onTap,
-        content: content,
-      ),
-    );
-  }
-
   Widget _buildAddressSection() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -388,8 +406,9 @@ class _RepresentativeShipmentDetailsViewBodyState
               const SizedBox(width: 4),
               Text(
                 "سيتم استلام الشحنة من هذا العنوان",
-                style: AppStyles.styleSemiBold12(context)
-                    .copyWith(color: AppColors.subTextColor),
+                style: AppStyles.styleSemiBold12(
+                  context,
+                ).copyWith(color: AppColors.subTextColor),
               ),
             ],
           ),
@@ -426,8 +445,9 @@ class _RepresentativeShipmentDetailsViewBodyState
               const SizedBox(width: 12),
               Text(
                 'الفرع',
-                style: AppStyles.styleSemiBold16(context)
-                    .copyWith(color: AppColors.mainTextColor),
+                style: AppStyles.styleSemiBold16(
+                  context,
+                ).copyWith(color: AppColors.mainTextColor),
               ),
             ],
           ),
@@ -461,14 +481,16 @@ class _RepresentativeShipmentDetailsViewBodyState
                     children: [
                       Text(
                         _currentShipment.branch?.branchName ?? '',
-                        style: AppStyles.styleSemiBold14(context)
-                            .copyWith(color: Colors.grey.shade800),
+                        style: AppStyles.styleSemiBold14(
+                          context,
+                        ).copyWith(color: Colors.grey.shade800),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         _currentShipment.branch?.address ?? '',
-                        style: AppStyles.styleSemiBold14(context)
-                            .copyWith(color: Colors.grey.shade400),
+                        style: AppStyles.styleSemiBold14(
+                          context,
+                        ).copyWith(color: Colors.grey.shade400),
                       ),
                     ],
                   ),
@@ -521,6 +543,12 @@ class _RepresentativeShipmentDetailsViewBodyState
   void _toggleNotesData() {
     setState(() {
       isNotesDataExpanded = !isNotesDataExpanded;
+    });
+  }
+
+  void _toggleCachCollection() {
+    setState(() {
+      isCashCollectionExpanded = !isCashCollectionExpanded;
     });
   }
 }

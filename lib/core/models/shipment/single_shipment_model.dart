@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:representative_app/core/functions/shipment_manager.dart';
 import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
+import 'package:representative_app/core/models/shipment/finance_snapshot.dart';
 import 'package:representative_app/core/models/shipment/representitive_model.dart';
 import 'package:representative_app/core/models/shipment_trader_model.dart';
 import 'package:representative_app/features/representative_shipment_details/data/models/rep_note_model.dart';
@@ -29,6 +31,8 @@ class SingleShipmentModel {
   final bool isExtra;
   final bool isFullyWeighted;
 
+  final FinanceSnapshotModel? financeSnapshot;
+
   SingleShipmentModel({
     required this.id,
     required this.shipmentNumber,
@@ -48,6 +52,7 @@ class SingleShipmentModel {
     required this.isFullyWeighted,
     required this.type,
     this.branch,
+    this.financeSnapshot,
     this.representitive,
     this.trader,
     this.images = const [],
@@ -112,6 +117,9 @@ class SingleShipmentModel {
       type: json['type'],
       isExtra: json['isExtra'] ?? false,
       isFullyWeighted: json['isFullyWeighted'] ?? false,
+      financeSnapshot: json['financeSnapshot'] != null
+          ? FinanceSnapshotModel.fromJson(json['financeSnapshot'])
+          : null,
     );
   }
 
@@ -139,6 +147,7 @@ class SingleShipmentModel {
       'type': type,
       'isExtra': isExtra,
       'isFullyWeighted': isFullyWeighted,
+      'financeSnapshot': financeSnapshot?.toJson(),
     };
   }
 
@@ -155,6 +164,7 @@ class SingleShipmentModel {
       'type': type,
       'isExtra': isExtra,
       'isFullyWeighted': isFullyWeighted,
+      'financeSnapshot': financeSnapshot?.toJson(),
     };
   }
 
@@ -185,6 +195,7 @@ class SingleShipmentModel {
     String? type,
     bool? isExtra,
     bool? isFullyWeighted,
+    FinanceSnapshotModel? financeSnapshot,
   }) {
     return SingleShipmentModel(
       id: id ?? this.id,
@@ -208,6 +219,7 @@ class SingleShipmentModel {
       type: type ?? this.type,
       isExtra: isExtra ?? this.isExtra,
       isFullyWeighted: isFullyWeighted ?? this.isFullyWeighted,
+      financeSnapshot: financeSnapshot ?? this.financeSnapshot,
     );
   }
 }

@@ -271,7 +271,7 @@ class SalesLineChartState extends State<SalesLineChart> {
   @override
   void initState() {
     super.initState();
-
+    _loadTypeHistory();
     // عرض الداتا المخزنة لو موجودة
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final cubit = context.read<HomeCubit>();
@@ -290,7 +290,7 @@ class SalesLineChartState extends State<SalesLineChart> {
   }
 
   void _loadTypeHistory([String? typeId]) {
-    final id = typeId ?? _selectedTypeId ?? '68a8567bf5a2951a1ee9e982';
+    final id = typeId ?? _selectedTypeId ?? '69ea9f4ec1445d056340b2cc';
     BlocProvider.of<HomeCubit>(context).fetchTypeHistory(typeId: id);
   }
 
