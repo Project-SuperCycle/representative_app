@@ -25,6 +25,8 @@ import 'package:representative_app/features/notifications/data/cubits/get_notifi
 import 'package:representative_app/features/notifications/data/cubits/read_notification/read_notification_cubit.dart';
 import 'package:representative_app/features/notifications/data/repos/notifications_repo_imp.dart';
 import 'package:representative_app/features/representative_shipment_details/data/cubits/accept_shipment_cubit/accept_shipment_cubit.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/confirm_cash/confirm_cash_cubit.dart';
+import 'package:representative_app/features/representative_shipment_details/data/cubits/get_meal_shipments/get_meal_shipments_cubit.dart';
 import 'package:representative_app/features/representative_shipment_details/data/cubits/reject_shipment_cubit/reject_shipment_cubit.dart';
 import 'package:representative_app/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_cubit.dart';
 import 'package:representative_app/features/representative_shipment_details/data/repos/rep_shipment_details_repo_imp.dart';
@@ -141,6 +143,17 @@ void main() async {
         BlocProvider(
           create: (context) =>
               DeleteNotificationCubit(repo: getIt.get<NotificationsRepoImp>()),
+        ),
+
+        BlocProvider(
+          create: (context) => GetMealShipmentsCubit(
+            repo: getIt.get<RepShipmentDetailsRepoImp>(),
+          ),
+        ),
+
+        BlocProvider(
+          create: (context) =>
+              ConfirmCashCubit(repo: getIt.get<RepShipmentDetailsRepoImp>()),
         ),
 
         BlocProvider(create: (context) => ProfileCubit()),

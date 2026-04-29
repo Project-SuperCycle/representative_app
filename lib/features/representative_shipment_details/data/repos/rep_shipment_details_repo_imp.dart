@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:representative_app/core/errors/failures.dart';
@@ -8,6 +9,7 @@ import 'package:representative_app/core/services/api_endpoints.dart';
 import 'package:representative_app/core/services/api_services.dart';
 import 'package:representative_app/features/representative_shipment_details/data/models/accept_shipment_model.dart';
 import 'package:representative_app/features/representative_shipment_details/data/models/reject_shipment_model.dart';
+import 'package:representative_app/features/representative_shipment_details/data/models/shipment_cash_item.dart';
 import 'package:representative_app/features/representative_shipment_details/data/models/update_shipment_model.dart';
 import 'package:representative_app/features/representative_shipment_details/data/repos/rep_shipment_details_repo.dart';
 
@@ -94,6 +96,89 @@ class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
     );
   }
 
+  @override
+  Future<Either<Failure, String>> confirmExternalCash({
+    required String shipmentId,
+    required File receiptImage,
+  }) async {
+    // TODO: implement confirmExternalCash
+    return ErrorHandler.handleApiCall<String>(
+      apiCall: () async {
+        final formData = await _confirmExternalCashFormData(
+          receiptImage: receiptImage,
+        );
+
+        final response = await apiServices.postFormData(
+          endPoint: ApiEndpoints.financeExternalCash.replaceFirst(
+            '{id}',
+            shipmentId,
+          ),
+          data: formData,
+        );
+
+        if (response['status'] != 'success') {
+          if (response['message'] == null) {
+            throw ServerFailure('Invalid response: Missing message', 422);
+          }
+          throw ServerFailure(response['message'], 422);
+        }
+
+        return 'تم استلام النقدية بنجاح';
+      },
+      errorContext: 'confirm external cash',
+    );
+  }
+
+  @override
+  Future<Either<Failure, String>> confirmMealCash({
+    required List<String> shipments,
+    required File receiptImage,
+  }) async {
+    // TODO: implement confirmMealCash
+    return ErrorHandler.handleApiCall<String>(
+      apiCall: () async {
+        final formData = await _confirmMealCashFormData(
+          shipments: shipments,
+          receiptImage: receiptImage,
+        );
+
+        final response = await apiServices.postFormData(
+          endPoint: ApiEndpoints.financeMealCash,
+          data: formData,
+        );
+
+        if (response['status'] != 'success') {
+          if (response['message'] == null) {
+            throw ServerFailure('Invalid response: Missing message', 422);
+          }
+          throw ServerFailure(response['message'], 422);
+        }
+
+        return 'تم استلام النقدية بنجاح';
+      },
+      errorContext: 'confirm meal cash',
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<ShipmentCashItem>>> getMealShipments({
+    required String shipmentId,
+  }) async {
+    // TODO: implement getMealShipments
+    return ErrorHandler.handleApiCall<List<ShipmentCashItem>>(
+      apiCall: () async {
+        final response = await apiServices.get(
+          endPoint: ApiEndpoints.financeMealShipments,
+        );
+
+        final data = response['data']['eligibleShipments'];
+
+        return data.map((e) => ShipmentCashItem.fromJson(e)).toList();
+      },
+      errorContext: 'get all shipments',
+    );
+  }
+
   // =======================
   // FormData Helpers
   // =======================
@@ -124,5 +209,25 @@ class RepShipmentDetailsRepoImp implements RepShipmentDetailsRepo {
 
   Future<List<MultipartFile>> _mapImagesToMultipart(List<File> images) async {
     return ShipmentManager.createMultipartImages(images: images);
+  }
+
+  Future<FormData> _confirmExternalCashFormData({
+    required File receiptImage,
+  }) async {
+    final imagesFiles = await _mapImagesToMultipart([receiptImage]);
+
+    return FormData.fromMap({'paymentProof': imagesFiles.first});
+  }
+
+  Future<FormData> _confirmMealCashFormData({
+    required List<String> shipments,
+    required File receiptImage,
+  }) async {
+    final imagesFiles = await _mapImagesToMultipart([receiptImage]);
+
+    return FormData.fromMap({
+      'shipmentIds': shipments,
+      'images': imagesFiles.first,
+    });
   }
 }

@@ -178,6 +178,12 @@ class _RepresentativeShipmentDetailsViewBodyState
     }
   }
 
+  bool get showCashCollection =>
+      _currentShipment.status == "complete_weighted" &&
+      (_currentShipment.financeSnapshot?.method == 'cash');
+
+  bool _cashCollectionDone = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -269,15 +275,18 @@ class _RepresentativeShipmentDetailsViewBodyState
                                     ],
                                   ),
 
-                                if (_currentShipment.status ==
-                                        "complete_weighted" &&
-                                    _currentShipment.financeSnapshot!.method ==
-                                        'cash')
+                                if (showCashCollection && !_cashCollectionDone)
                                   Column(
+                                    key: const ValueKey(
+                                      'cash_collection_section',
+                                    ), // ✅ أضف key
                                     children: [
-                                      (_currentShipment.financeSnapshot!.type !=
+                                      (_currentShipment.financeSnapshot!.type ==
                                               'meal')
                                           ? ExpandableCard(
+                                              key: const ValueKey(
+                                                'cash_full',
+                                              ), // ✅
                                               title: 'تحصيل النقدية',
                                               icon: AppAssets.boxPerspective,
                                               isExpanded:
@@ -289,6 +298,12 @@ class _RepresentativeShipmentDetailsViewBodyState
                                                     0.0,
                                                     (s, e) => s + e.amount,
                                                   );
+                                                  debugPrint(
+                                                    '✅ onConfirm called',
+                                                  ); // تأكد إنه بيتكال
+                                                  setState(() {
+                                                    _cashCollectionDone = true;
+                                                  });
                                                 },
                                               ),
                                               maxHeight: 320,
@@ -296,8 +311,11 @@ class _RepresentativeShipmentDetailsViewBodyState
                                           : (_currentShipment
                                                     .financeSnapshot!
                                                     .type ==
-                                                'meal')
+                                                'external')
                                           ? ExpandableCard(
+                                              key: const ValueKey(
+                                                'cash_simple',
+                                              ), // ✅
                                               title: 'تحصيل النقدية',
                                               icon: AppAssets.boxPerspective,
                                               isExpanded:
@@ -309,7 +327,16 @@ class _RepresentativeShipmentDetailsViewBodyState
                                                         _currentShipment
                                                             .financeSnapshot!
                                                             .amount,
-                                                    onConfirm: (receiptFile) {},
+                                                    onConfirm: (receiptFile) {
+                                                      debugPrint(
+                                                        '✅ onConfirm called',
+                                                      ); // تأكد إنه بيتكال
+
+                                                      setState(() {
+                                                        _cashCollectionDone =
+                                                            true;
+                                                      });
+                                                    },
                                                   ),
                                               maxHeight: 320,
                                             )

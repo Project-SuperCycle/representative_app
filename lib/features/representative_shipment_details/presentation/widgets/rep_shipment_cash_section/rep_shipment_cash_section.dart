@@ -205,6 +205,7 @@ class _CashCollectionSectionState extends State<CashCollectionSection>
             shipments: shipments,
             receiptImage: _receiptImage,
             totalSelected: _totalSelected,
+            onConfirm: widget.onConfirm,
           ),
         ],
       ),

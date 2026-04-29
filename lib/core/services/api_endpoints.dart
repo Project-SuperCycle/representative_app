@@ -42,6 +42,13 @@ abstract class ApiEndpoints {
   static const String failShipmentSegment =
       '/representatives/shipments/{shipmentId}/segments/{segmentId}/fail';
 
+  static const String financeExternalCash =
+      '/finance/shipments/{id}/confirm-cash';
+
+  static const String financeMealCash = '/finance/meal/settle';
+
+  static const String financeMealShipments = '/finance/meal/eligible-shipments';
+
   // notifications
   static const String registerDevice = '/auth/device-token';
   static const String getNotifications = '/notifications';
