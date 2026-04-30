@@ -3,9 +3,9 @@ import 'package:representative_app/core/services/size_config.dart';
 import 'package:representative_app/core/utils/app_colors.dart';
 
 abstract class AppStyles {
-  static const fontFamily = 'Cairo';
+  static const fontFamily = 'Beiruti';
   static const textHeight = 1.4;
-  static const letterSpacing = 1.2;
+  static const letterSpacing = 1.0;
 
   // Styles 14
   static TextStyle styleRegular12(BuildContext context) {
@@ -335,11 +335,11 @@ abstract class AppStyles {
   static double getScaleFactor(context) {
     double width = MediaQuery.sizeOf(context).width;
     if (width < SizeConfig.tablet) {
-      return width / 400;
+      return width / 350;
     } else if (width < SizeConfig.desktop) {
-      return width / 800;
+      return width / 700;
     } else {
-      return width / 1800;
+      return width / 1600;
     }
   }
 }

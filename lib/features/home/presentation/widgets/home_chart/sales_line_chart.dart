@@ -134,16 +134,19 @@ class _LineChart extends StatelessWidget {
         if ((rounded - value).abs() > 0.01) return const SizedBox.shrink();
 
         const style = TextStyle(
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
           fontSize: 14,
-          fontFamily: 'Cairo',
+          fontFamily: 'Beiruti',
           color: Colors.grey,
         );
         final price =
-            priceFormatter?.call(value) ?? '\$${value.toStringAsFixed(1)}';
+            priceFormatter?.call(value) ?? '${value.toStringAsFixed(1)} ج.م ';
         return SideTitleWidget(
           meta: meta,
-          child: Text(price, style: style, textAlign: TextAlign.center),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(price, style: style, textAlign: TextAlign.center),
+          ),
         );
       },
     );
@@ -156,9 +159,9 @@ class _LineChart extends StatelessWidget {
       interval: showAllMonths ? 1 : null,
       getTitlesWidget: (value, meta) {
         const style = TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 14,
-          fontFamily: 'Cairo',
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+          fontFamily: 'Beiruti',
           color: Colors.grey,
         );
         final index = value.toInt();
