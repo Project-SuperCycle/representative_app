@@ -7,7 +7,9 @@ import 'package:representative_app/generated/l10n.dart';
 
 class ClientDataContent extends StatefulWidget {
   final ShipmentTraderModel? trader;
-  const ClientDataContent({super.key, this.trader});
+
+  final String? paymentMethod;
+  const ClientDataContent({super.key, this.trader, this.paymentMethod});
 
   @override
   State<ClientDataContent> createState() => _ClientDataContentState();
@@ -106,16 +108,11 @@ class _ClientDataContentState extends State<ClientDataContent> {
         ),
         const SizedBox(height: 16),
         ModernDataRow(
-          icon: Icons.calendar_today,
-          label: S.of(context).start_date,
-          value: '15 Mar 2020',
-          iconColor: Colors.indigo,
-        ),
-        const SizedBox(height: 12),
-        ModernDataRow(
           icon: Icons.account_balance,
           label: S.of(context).payment_method,
-          value: 'تحويل بنكي',
+          value: (widget.paymentMethod == null)
+              ? null
+              : getPaymentType(widget.paymentMethod!),
           iconColor: Colors.teal,
         ),
         const SizedBox(height: 8),
@@ -194,7 +191,7 @@ class ModernDataRow extends StatelessWidget {
               style: AppStyles.styleMedium14(
                 context,
               ).copyWith(fontWeight: FontWeight.w600, color: Colors.grey[800]),
-              textAlign: TextAlign.left,
+              textAlign: TextAlign.right,
             ),
           ),
           const SizedBox(width: 12),
@@ -212,5 +209,18 @@ class ModernDataRow extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+String getPaymentType(String paymentMethod) {
+  switch (paymentMethod) {
+    case 'cash':
+      return 'نقدي';
+    case 'bankTransfer':
+      return 'بنكي';
+    case 'wallet':
+      return 'محفظة';
+    default:
+      return 'نقدي';
   }
 }

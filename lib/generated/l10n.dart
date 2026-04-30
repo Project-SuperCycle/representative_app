@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -465,10 +464,10 @@ class S {
     );
   }
 
-  /// `Shipment data`
+  /// `Shipment date`
   String get shipment_date {
     return Intl.message(
-      'Shipment data',
+      'Shipment date',
       name: 'shipment_date',
       desc: '',
       args: [],
@@ -495,10 +494,10 @@ class S {
     );
   }
 
-  /// `Registration data`
+  /// `Registration date`
   String get registration_date {
     return Intl.message(
-      'Registration data',
+      'Registration date',
       name: 'registration_date',
       desc: '',
       args: [],
@@ -970,20 +969,20 @@ class S {
     );
   }
 
-  /// `Start data of cooperation`
+  /// `Start date of cooperation`
   String get start_date {
     return Intl.message(
-      'Start data of cooperation',
+      'Start date of cooperation',
       name: 'start_date',
       desc: '',
       args: [],
     );
   }
 
-  /// `Preferred payment method`
+  /// `Payment method`
   String get payment_method {
     return Intl.message(
-      'Preferred payment method',
+      'Payment method',
       name: 'payment_method',
       desc: '',
       args: [],

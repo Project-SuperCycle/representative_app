@@ -23,8 +23,9 @@ class ErrorHandler {
     } on FormatException catch (formatError) {
       _logger.e('❌ FormatException during $errorContext: $formatError');
       return left(ServerFailure(formatError.toString(), 422));
-    } on TypeError catch (typeError) {
+    } on TypeError catch (typeError, trace) {
       _logger.e('❌ TypeError during $errorContext: $typeError');
+      _logger.i(trace);
       return left(
         ServerFailure('Data parsing error: ${typeError.toString()}', 422),
       );

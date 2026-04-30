@@ -228,7 +228,7 @@ class _RepresentativeShipmentDetailsViewBodyState
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 20,
                         offset: const Offset(0, -5),
                       ),
@@ -411,6 +411,13 @@ class _RepresentativeShipmentDetailsViewBodyState
                                   onTap: _toggleClientData,
                                   content: ClientDataContent(
                                     trader: _currentShipment.trader,
+                                    paymentMethod:
+                                        (_currentShipment.financeSnapshot ==
+                                            null)
+                                        ? null
+                                        : _currentShipment
+                                              .financeSnapshot!
+                                              .method,
                                   ),
                                   maxHeight: 320,
                                 ),
@@ -461,7 +468,7 @@ class _RepresentativeShipmentDetailsViewBodyState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.green.shade50.withOpacity(0.6),
+        color: Colors.green.shade50.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.green.shade200, width: 1.5),
       ),
@@ -506,7 +513,7 @@ class _RepresentativeShipmentDetailsViewBodyState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.green.shade50.withOpacity(0.6),
+        color: Colors.green.shade50.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.green.shade200, width: 1.5),
       ),
@@ -597,7 +604,7 @@ class _RepresentativeShipmentDetailsViewBodyState
         border: Border.all(color: Colors.grey.shade200, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

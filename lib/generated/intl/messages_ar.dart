@@ -151,9 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwords_do_not_match": MessageLookupByLibrary.simpleMessage(
       " كلمات المرور غير متطابقة",
     ),
-    "payment_method": MessageLookupByLibrary.simpleMessage(
-      "طريقة السداد المفضلة",
-    ),
+    "payment_method": MessageLookupByLibrary.simpleMessage("طريقة السداد"),
     "pending_shipment_hint": MessageLookupByLibrary.simpleMessage(
       "سيتم تسليمها خلال الشهر",
     ),

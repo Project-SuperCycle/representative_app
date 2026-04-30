@@ -29,7 +29,7 @@ class FinanceTransactionCard extends StatelessWidget {
             // ── Row 1: Status + ID + Icon ──
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width: 40,
@@ -52,8 +52,7 @@ class FinanceTransactionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        transaction.traderName,
-
+                        transaction.traderName + 'الاسم الكامل',
                         style: AppStyles.styleBold16(
                           context,
                         ).copyWith(color: Color(0xFF10B981)),
@@ -224,14 +223,6 @@ class FinanceTransactionCard extends StatelessWidget {
   }
 }
 
-String getWeightUnit(num totalWeight) {
-  return totalWeight < 1000 ? 'كجم' : 'طن';
-}
-
-num getWeightValue(num totalWeight) {
-  return totalWeight < 1000 ? totalWeight : totalWeight / 1000;
-}
-
 String getPaymentIcon(String paymentMethod) {
   switch (paymentMethod) {
     case 'cash':
@@ -256,8 +247,4 @@ String getPaymentType(String paymentMethod) {
     default:
       return 'نقدي';
   }
-}
-
-String getTransactionType(String settlementType) {
-  return (settlementType == 'external') ? 'خارج التعاقد' : 'داخل التعاقد';
 }

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:representative_app/core/constants.dart';
+import 'package:representative_app/core/helpers/custom_back_button.dart';
 import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
 import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:representative_app/core/models/shipment/dosh_item_model.dart';
@@ -12,21 +15,19 @@ import 'package:representative_app/core/utils/app_assets.dart';
 import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/core/widgets/custom_button.dart';
+import 'package:representative_app/core/widgets/custom_text_field.dart';
 import 'package:representative_app/core/widgets/shipment/client_data_content.dart';
-import 'package:representative_app/core/helpers/custom_back_button.dart';
 import 'package:representative_app/core/widgets/shipment/entry_shipment_details_cotent.dart';
 import 'package:representative_app/core/widgets/shipment/expandable_section.dart';
-import 'package:representative_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:representative_app/core/widgets/shipment/progress_widgets.dart';
-import 'package:representative_app/core/widgets/custom_text_field.dart';
+import 'package:representative_app/core/widgets/shipment/shipment_details_notes.dart';
+import 'package:representative_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:representative_app/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_cubit.dart';
 import 'package:representative_app/features/representative_shipment_details/data/cubits/update_shipment_cubit/update_shipment_state.dart';
 import 'package:representative_app/features/representative_shipment_details/data/models/update_shipment_model.dart';
 import 'package:representative_app/features/representative_shipment_details/presentation/widgets/representative_shipment_notes_content.dart';
-import 'package:representative_app/core/widgets/shipment/shipment_details_notes.dart';
 import 'package:representative_app/features/shipment_edit/presentation/widgets/shipment_edit_header.dart';
 import 'package:representative_app/generated/l10n.dart';
-import 'dart:io';
 
 class RepresentativeShipmentEditBody extends StatefulWidget {
   final SingleShipmentModel shipment;
@@ -187,7 +188,12 @@ class _RepresentativeShipmentEditBodyState
                                 isExpanded: isClientDataExpanded,
                                 maxHeight: 320,
                                 onTap: _toggleClientData,
-                                content: const ClientDataContent(),
+                                content: ClientDataContent(
+                                  paymentMethod:
+                                      (widget.shipment.financeSnapshot == null)
+                                      ? null
+                                      : widget.shipment.financeSnapshot!.method,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 25),
@@ -318,7 +324,9 @@ class _RepresentativeShipmentEditBodyState
     }).toList();
 
     // إنشاء نسخة جديدة من shipment بالـ items المعدلة
-    final adjustedModel = updateShipmentModel.copyWith(updatedItems: adjustedItems);
+    final adjustedModel = updateShipmentModel.copyWith(
+      updatedItems: adjustedItems,
+    );
 
     BlocProvider.of<UpdateShipmentCubit>(
       context,
