@@ -201,6 +201,7 @@ class _RepresentativeShipmentDetailsViewBodyState
   }
 
   bool get showCashCollection =>
+      _currentShipment.financialStatus != "paid" &&
       _currentShipment.status == "complete_weighted" &&
       (_currentShipment.financeSnapshot?.method == 'cash');
 

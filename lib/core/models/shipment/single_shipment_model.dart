@@ -31,6 +31,7 @@ class SingleShipmentModel {
   final bool isExtra;
   final bool isFullyWeighted;
 
+  final String? financialStatus;
   final FinanceSnapshotModel? financeSnapshot;
 
   SingleShipmentModel({
@@ -55,6 +56,7 @@ class SingleShipmentModel {
     this.financeSnapshot,
     this.representitive,
     this.trader,
+    this.financialStatus,
     this.images = const [],
   });
 
@@ -120,6 +122,7 @@ class SingleShipmentModel {
       financeSnapshot: json['financeSnapshot'] != null
           ? FinanceSnapshotModel.fromJson(json['financeSnapshot'])
           : null,
+      financialStatus: json['financialStatus'],
     );
   }
 
@@ -147,6 +150,7 @@ class SingleShipmentModel {
       'type': type,
       'isExtra': isExtra,
       'isFullyWeighted': isFullyWeighted,
+      'financialStatus': financialStatus,
       'financeSnapshot': financeSnapshot?.toJson(),
     };
   }
@@ -164,6 +168,7 @@ class SingleShipmentModel {
       'type': type,
       'isExtra': isExtra,
       'isFullyWeighted': isFullyWeighted,
+      'financialStatus': financialStatus,
       'financeSnapshot': financeSnapshot?.toJson(),
     };
   }
@@ -195,6 +200,7 @@ class SingleShipmentModel {
     String? type,
     bool? isExtra,
     bool? isFullyWeighted,
+    String? financialStatus,
     FinanceSnapshotModel? financeSnapshot,
   }) {
     return SingleShipmentModel(
@@ -220,6 +226,7 @@ class SingleShipmentModel {
       isExtra: isExtra ?? this.isExtra,
       isFullyWeighted: isFullyWeighted ?? this.isFullyWeighted,
       financeSnapshot: financeSnapshot ?? this.financeSnapshot,
+      financialStatus: financialStatus ?? this.financialStatus,
     );
   }
 }
