@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:representative_app/core/repos/shipment_notes_repo_imp.dart';
 import 'package:representative_app/core/services/api_services.dart';
 import 'package:representative_app/core/services/dosh_types_manager.dart';
+import 'package:representative_app/features/finances/data/repos/representative_finances_repo_imp.dart';
 import 'package:representative_app/features/forget_password/data/repos/forget_password_repo_imp.dart';
 import 'package:representative_app/features/home/data/repos/home_repo_imp.dart';
 import 'package:representative_app/features/notifications/data/repos/notifications_repo_imp.dart';
@@ -51,5 +52,9 @@ void setupServiceLocator() {
 
   getIt.registerSingleton<NotificationsRepoImp>(
     NotificationsRepoImp(apiServices: getIt.get<ApiServices>()),
+  );
+
+  getIt.registerSingleton<RepresentativeFinancesRepoImp>(
+    RepresentativeFinancesRepoImp(apiServices: getIt.get<ApiServices>()),
   );
 }

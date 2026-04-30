@@ -192,7 +192,7 @@ class _CashCollectionSectionState extends State<CashCollectionSection>
             },
             builder: (context, state) {
               if (state is ConfirmCashLoading) {
-                Center(
+                return Center(
                   child: SizedBox(
                     width: 50,
                     height: 50,

@@ -74,7 +74,7 @@ class CustomSnackBar {
             context,
           ).copyWith(color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF3B82F6),
+        backgroundColor: Colors.blueAccent,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         duration: const Duration(seconds: 2),

@@ -14,6 +14,8 @@ import 'package:representative_app/core/services/notifications/local_notificatio
 import 'package:representative_app/core/services/notifications/push_notifications_service.dart';
 import 'package:representative_app/core/services/services_locator.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/features/finances/data/cubits/get_finances_cubit.dart';
+import 'package:representative_app/features/finances/data/repos/representative_finances_repo_imp.dart';
 import 'package:representative_app/features/forget_password/data/cubits/forget_password_cubit.dart';
 import 'package:representative_app/features/forget_password/data/repos/forget_password_repo_imp.dart';
 import 'package:representative_app/features/home/data/managers/home_cubit/home_cubit.dart';
@@ -154,6 +156,12 @@ void main() async {
         BlocProvider(
           create: (context) =>
               ConfirmCashCubit(repo: getIt.get<RepShipmentDetailsRepoImp>()),
+        ),
+
+        BlocProvider(
+          create: (context) => GetFinancesCubit(
+            repo: getIt.get<RepresentativeFinancesRepoImp>(),
+          ),
         ),
 
         BlocProvider(create: (context) => ProfileCubit()),

@@ -22,7 +22,7 @@ class ShipmentsCalendarHelper {
           .where((s) => _isSameDate(s.requestedPickupAt, targetDate))
           .toList();
     } catch (e) {
-      // Handle invalid date format
+      // Handle invalid data format
       return [];
     }
   }

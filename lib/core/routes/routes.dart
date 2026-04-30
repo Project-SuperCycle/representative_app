@@ -5,6 +5,7 @@ import 'package:representative_app/core/models/shipment/single_shipment_model.da
 import 'package:representative_app/core/models/user_profile_model.dart';
 import 'package:representative_app/core/routes/end_points.dart';
 import 'package:representative_app/features/contact_us/presentation/view/contact_us_view.dart';
+import 'package:representative_app/features/finances/presentation/views/representative_finances_view.dart';
 import 'package:representative_app/features/forget_password/presentation/views/forget_password_view.dart';
 import 'package:representative_app/features/forget_password/presentation/views/reset_password_view.dart';
 import 'package:representative_app/features/forget_password/presentation/views/verify_reset_otp_view.dart';
@@ -227,6 +228,18 @@ class AppRouter {
         name: 'Notifications View',
         pageBuilder: (context, state) =>
             AppTransitions.fadeForMain(state.pageKey, NotificationsView()),
+      ),
+
+      // ============================================================
+      // Representative Finances View - Main Style
+      // ============================================================
+      GoRoute(
+        path: EndPoints.representativeFinancesView,
+        name: 'Representative Finances View',
+        pageBuilder: (context, state) => AppTransitions.fadeForMain(
+          state.pageKey,
+          RepresentativeFinancesView(),
+        ),
       ),
     ],
 

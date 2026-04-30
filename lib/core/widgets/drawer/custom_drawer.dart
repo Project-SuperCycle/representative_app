@@ -157,6 +157,20 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       },
                     ),
 
+                  if (user != null)
+                    _buildDrawerItem(
+                      icon: Icons.payment_rounded,
+                      title: 'السجل المالي',
+                      isActive: false,
+                      onTap: () {
+                        Navigator.pop(context);
+
+                        GoRouter.of(
+                          context,
+                        ).push(EndPoints.representativeFinancesView);
+                      },
+                    ),
+
                   _buildDrawerItem(
                     icon: Icons.support_agent_rounded,
                     title: 'الدعم والمساعدة',

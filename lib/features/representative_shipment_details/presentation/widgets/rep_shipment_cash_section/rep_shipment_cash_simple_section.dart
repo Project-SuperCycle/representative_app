@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
+import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/features/representative_shipment_details/data/cubits/confirm_cash/confirm_cash_cubit.dart';
 import 'package:representative_app/features/representative_shipment_details/data/cubits/confirm_cash/confirm_cash_state.dart';
@@ -350,10 +351,17 @@ class _CashCollectionSimpleSectionState
       child: BlocConsumer<ConfirmCashCubit, ConfirmCashState>(
         listener: (context, state) {
           // TODO: implement listener
+          if (state is ConfirmCashSuccess) {
+            CustomSnackBar.showInfo(context, "تم تسليم النقدية بنجاح");
+          }
+
+          if (state is ConfirmCashFailure) {
+            CustomSnackBar.showError(context, state.errorMessage);
+          }
         },
         builder: (context, state) {
           if (state is ConfirmCashLoading) {
-            Center(
+            return Center(
               child: SizedBox(
                 width: 50,
                 height: 50,

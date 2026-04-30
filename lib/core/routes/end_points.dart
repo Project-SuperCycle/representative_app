@@ -32,6 +32,9 @@ abstract class EndPoints {
   static const String representativeShipmentEditView =
       '/representativeShipmentEditView';
 
+  static const String representativeFinancesView =
+      '/representativeFinancesView';
+
   // Notifications
   static const String notificationsView = '/notificationsView';
 }

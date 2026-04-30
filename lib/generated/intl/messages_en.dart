@@ -177,7 +177,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "quantity": MessageLookupByLibrary.simpleMessage("Quantity"),
     "registration_date": MessageLookupByLibrary.simpleMessage(
-      "Registration date",
+      "Registration data",
     ),
     "representative": MessageLookupByLibrary.simpleMessage("Representative"),
     "sale_process": MessageLookupByLibrary.simpleMessage("Sale Process"),
@@ -187,7 +187,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "select_type": MessageLookupByLibrary.simpleMessage("Select type"),
     "sell_title": MessageLookupByLibrary.simpleMessage("Do you want to sell?"),
-    "shipment_date": MessageLookupByLibrary.simpleMessage("Shipment date"),
+    "shipment_date": MessageLookupByLibrary.simpleMessage("Shipment data"),
     "shipment_edit": MessageLookupByLibrary.simpleMessage("Edit Shipment"),
     "shipment_number": MessageLookupByLibrary.simpleMessage("Shipment number"),
     "shipment_review": MessageLookupByLibrary.simpleMessage("Shipment Review"),
@@ -218,7 +218,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
     "start_date": MessageLookupByLibrary.simpleMessage(
-      "Start date of cooperation",
+      "Start data of cooperation",
     ),
     "table_of_shipments": MessageLookupByLibrary.simpleMessage(
       "Table of Shipments",
