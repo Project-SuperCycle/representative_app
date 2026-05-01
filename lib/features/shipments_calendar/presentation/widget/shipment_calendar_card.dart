@@ -21,7 +21,7 @@ class ShipmentsCalendarCard extends StatefulWidget {
 
 class _ShipmentsCalendarCardState extends State<ShipmentsCalendarCard> {
   String userRole = "";
-  bool _isNavigating = false;
+  final bool _isNavigating = false;
 
   @override
   void initState() {

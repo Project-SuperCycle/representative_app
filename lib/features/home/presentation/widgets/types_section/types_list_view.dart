@@ -6,6 +6,7 @@ import 'package:representative_app/core/services/services_locator.dart';
 import 'package:representative_app/features/home/data/managers/home_cubit/home_cubit.dart';
 import 'package:representative_app/features/home/presentation/widgets/types_section/loading/types_list_loading_indicator.dart';
 import 'package:representative_app/features/home/presentation/widgets/types_section/type_card_item.dart';
+import 'package:representative_app/features/home/presentation/widgets/types_section/types_empty.dart';
 
 class TypesListView extends StatefulWidget {
   const TypesListView({super.key});
@@ -49,9 +50,11 @@ class _TypesListViewState extends State<TypesListView> {
 
         if (state is FetchDoshTypesSuccess) {
           if (state.doshTypes.isEmpty) {
-            return const Center(child: Text('No Dosh Types'));
+            return TypesEmpty();
           }
           final items = state.doshTypes;
+          return TypesEmpty();
+
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
