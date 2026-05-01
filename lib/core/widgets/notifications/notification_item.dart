@@ -35,7 +35,7 @@ class _NotificationItemState extends State<NotificationItem> {
     return GestureDetector(
       onTap: () {
         _handleRooting(notification: widget.notification, context: context);
-        widget.onTap;
+        widget.onTap?.call();
       },
       child: Container(
         padding: const EdgeInsets.all(16),

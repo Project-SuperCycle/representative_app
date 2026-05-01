@@ -86,9 +86,7 @@ class ShipmentsCalendarViewBodyState extends State<ShipmentsCalendarViewBody> {
         child: SafeArea(
           child: Column(
             children: [
-              Column(
-                children: [const ShipmentLogo(), const SizedBox(height: 20)],
-              ),
+              const ShipmentLogo(),
               Expanded(
                 child:
                     BlocConsumer<

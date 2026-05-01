@@ -151,6 +151,6 @@ class _NotificationsSheetState extends State<NotificationsSheet>
   }
 
   void _handleNotificationTap(NotificationModel notification) {
-    // TODO: اعملي الأكشن اللي عايزاه لما يضغط على إشعار
+    Navigator.of(context).pop();
   }
 }

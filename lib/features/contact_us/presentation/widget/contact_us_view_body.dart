@@ -124,6 +124,7 @@ class _ContactUsViewBodyState extends State<ContactUsViewBody>
           endPoint: ApiEndpoints.contactUs,
           data: contactModel.toJson(),
         );
+
         await _showSuccessDialog();
         _formController.resetForm();
       } else {

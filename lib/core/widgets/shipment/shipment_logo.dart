@@ -9,7 +9,12 @@ class ShipmentLogo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset(AppAssets.logoName, fit: BoxFit.contain, scale: 6.0),
+        Image.asset(
+          AppAssets.logoName,
+          fit: BoxFit.contain,
+          scale: 6.0,
+          color: Colors.white,
+        ),
         SizedBox(width: 5),
         Image.asset(AppAssets.logoIcon, fit: BoxFit.contain, scale: 7.5),
       ],

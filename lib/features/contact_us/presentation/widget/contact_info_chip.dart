@@ -17,21 +17,21 @@ class ContactInfoChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.grey.shade300),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: AppColors.primaryColor, size: 16),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.primaryColor, size: 16),
+            const SizedBox(width: 8),
+            Text(
               text,
               style: AppStyles.styleSemiBold14(
                 context,
               ).copyWith(color: AppColors.subTextColor),
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

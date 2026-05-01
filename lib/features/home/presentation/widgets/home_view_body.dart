@@ -54,9 +54,9 @@ class _HomeViewBodyState extends State<HomeViewBody>
     context.read<HomeCubit>().fetchInitialData();
 
     // // جلب بيانات الشحنات إذا كان المستخدم مسجل دخول
-    // if (isUserLoggedIn) {
-    //   context.read<TodayShipmentsCubit>().fetchInitialData();
-    // }
+    if (isUserLoggedIn) {
+      context.read<TodayShipmentsCubit>().fetchInitialData();
+    }
   }
 
   /// يتم استدعاؤها عند تغيير حالة المصادقة

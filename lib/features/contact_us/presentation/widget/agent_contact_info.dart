@@ -37,14 +37,11 @@ class AgentContactInfo extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
-                      ContactInfoChip(
-                        icon: Icons.phone,
-                        text: '+20 123 456 7890',
-                      ),
+                      ContactInfoChip(icon: Icons.phone, text: '01228851029'),
                       SizedBox(height: 8),
                       ContactInfoChip(
                         icon: Icons.email,
-                        text: 'agent@company.com',
+                        text: 'supercycle.eg@gmail.com',
                       ),
                     ],
                   ),
