@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:representative_app/core/constants.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
 
 class PaginationFooter extends StatelessWidget {
   const PaginationFooter({
@@ -33,11 +34,11 @@ class PaginationFooter extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: const Color(0xFF3BC577),
+            color: AppColors.primaryColor,
             borderRadius: BorderRadius.circular(kBorderRadius / 2),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF3BC577).withValues(alpha: 0.3),
+                color: AppColors.primaryColor.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -97,7 +98,9 @@ class _NavButton extends StatelessWidget {
         child: Icon(
           icon,
           size: 20,
-          color: isEnabled ? const Color(0xFF3BC577) : Colors.grey.shade300,
+          color: isEnabled
+              ? AppColors.primaryColor.withValues(alpha: 0.9)
+              : Colors.grey.shade300,
         ),
       ),
     );

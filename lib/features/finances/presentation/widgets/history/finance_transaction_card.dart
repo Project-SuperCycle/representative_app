@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:representative_app/core/constants.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/features/finances/data/models/finance_payment_model.dart';
 
@@ -35,12 +36,12 @@ class FinanceTransactionCard extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF3BC577).withValues(alpha: 0.1),
+                    color: AppColors.primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.check_circle_outline_rounded,
-                    color: const Color(0xFF3BC577),
+                    color: AppColors.primaryColor,
                     size: 22,
                   ),
                 ),
@@ -52,10 +53,10 @@ class FinanceTransactionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        transaction.traderName + 'الاسم الكامل',
+                        transaction.traderName,
                         style: AppStyles.styleBold16(
                           context,
-                        ).copyWith(color: Color(0xFF10B981)),
+                        ).copyWith(color: AppColors.primaryColor),
                       ),
                       const SizedBox(height: 2),
                       Text(
@@ -63,7 +64,7 @@ class FinanceTransactionCard extends StatelessWidget {
                         textDirection: TextDirection.rtl,
                         style: AppStyles.styleMedium12(
                           context,
-                        ).copyWith(color: Colors.grey.shade400),
+                        ).copyWith(color: Colors.grey.shade500),
                       ),
                     ],
                   ),
@@ -77,7 +78,7 @@ class FinanceTransactionCard extends StatelessWidget {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF3BC577).withValues(alpha: 0.12),
+                    color: AppColors.primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -109,7 +110,7 @@ class FinanceTransactionCard extends StatelessWidget {
                         textDirection: TextDirection.rtl,
                         style: AppStyles.styleMedium12(
                           context,
-                        ).copyWith(color: Colors.grey.shade400),
+                        ).copyWith(color: Colors.grey.shade500),
                       ),
                       const SizedBox(height: 2),
                       Row(
@@ -124,7 +125,7 @@ class FinanceTransactionCard extends StatelessWidget {
                             textDirection: TextDirection.rtl,
                             style: AppStyles.styleBold16(
                               context,
-                            ).copyWith(color: Color(0xFF10B981)),
+                            ).copyWith(color: AppColors.primaryColor),
                           ),
                         ],
                       ),
@@ -141,7 +142,7 @@ class FinanceTransactionCard extends StatelessWidget {
                       textDirection: TextDirection.rtl,
                       style: AppStyles.styleMedium12(
                         context,
-                      ).copyWith(color: Colors.grey.shade400),
+                      ).copyWith(color: Colors.grey.shade500),
                     ),
                     const SizedBox(height: 4),
                     Row(
@@ -150,7 +151,7 @@ class FinanceTransactionCard extends StatelessWidget {
                           transaction.relatedShipmentCount.toString(),
                           style: AppStyles.styleBold18(
                             context,
-                          ).copyWith(color: Color(0xFF10B981)),
+                          ).copyWith(color: AppColors.primaryColor),
                         ),
                         const SizedBox(width: 3),
                         Text(
@@ -158,7 +159,7 @@ class FinanceTransactionCard extends StatelessWidget {
                           textDirection: TextDirection.rtl,
                           style: AppStyles.styleMedium12(
                             context,
-                          ).copyWith(color: Colors.grey.shade400),
+                          ).copyWith(color: Colors.grey.shade500),
                         ),
                       ],
                     ),
@@ -174,7 +175,7 @@ class FinanceTransactionCard extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFF3BC577).withValues(alpha: 0.07),
+                color: AppColors.primaryColor.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: const Color(0xFF3BC577).withValues(alpha: 0.15),
@@ -195,14 +196,14 @@ class FinanceTransactionCard extends StatelessWidget {
                             ),
                         style: AppStyles.styleBold20(
                           context,
-                        ).copyWith(color: Color(0xFF10B981)),
+                        ).copyWith(color: AppColors.primaryColor),
                       ),
                       const SizedBox(width: 4),
                       Text(
                         'جنيه',
                         style: AppStyles.styleMedium12(
                           context,
-                        ).copyWith(color: Colors.grey.shade400),
+                        ).copyWith(color: Colors.grey.shade500),
                       ),
                     ],
                   ),
@@ -211,7 +212,7 @@ class FinanceTransactionCard extends StatelessWidget {
                     textDirection: TextDirection.rtl,
                     style: AppStyles.styleSemiBold12(
                       context,
-                    ).copyWith(color: Colors.grey.shade400),
+                    ).copyWith(color: Colors.grey.shade500),
                   ),
                 ],
               ),

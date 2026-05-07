@@ -105,7 +105,7 @@ class _NotificationsViewBodyState extends State<NotificationsViewBody>
         child: TabBar(
           controller: _tabController,
           indicator: BoxDecoration(
-            color: const Color(0xFF10B981),
+            color: AppColors.primaryColor.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(10),
           ),
           labelColor: Colors.white,
