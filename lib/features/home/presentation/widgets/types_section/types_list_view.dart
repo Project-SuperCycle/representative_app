@@ -53,8 +53,6 @@ class _TypesListViewState extends State<TypesListView> {
             return TypesEmpty();
           }
           final items = state.doshTypes;
-          return TypesEmpty();
-
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
