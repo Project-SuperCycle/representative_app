@@ -63,45 +63,48 @@ class _UserInfoListTileState extends State<UserInfoListTile> {
         // TODO: implement listener
       },
       builder: (context, state) {
-        return Card(
-          color: const Color(0xFFFAFAFA),
-          elevation: 0,
-          child: Center(
-            child: ListTile(
-              leading: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: (state is ProfileLoading)
-                    ? SizedBox(
-                        width: 35,
-                        height: 35,
-                        child: CustomLoadingIndicator(),
-                      )
-                    : GestureDetector(
-                        onTap: () => (userName.isEmpty)
-                            ? GoRouter.of(context).push(EndPoints.signInView)
-                            : BlocProvider.of<ProfileCubit>(
-                                context,
-                              ).fetchUserProfile(context: context),
-                        child: Image.asset(
-                          AppAssets.defaultAvatar,
-                          fit: BoxFit.contain,
+        return Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Card(
+            color: const Color(0xFFFAFAFA),
+            elevation: 0,
+            child: Center(
+              child: ListTile(
+                leading: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: (state is ProfileLoading)
+                      ? SizedBox(
+                          width: 35,
+                          height: 35,
+                          child: CustomLoadingIndicator(),
+                        )
+                      : GestureDetector(
+                          onTap: () => (userName.isEmpty)
+                              ? GoRouter.of(context).push(EndPoints.signInView)
+                              : BlocProvider.of<ProfileCubit>(
+                                  context,
+                                ).fetchUserProfile(context: context),
+                          child: Image.asset(
+                            AppAssets.defaultAvatar,
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                      ),
-              ),
-              title: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: AlignmentDirectional.centerStart,
-                child: Text(
-                  userName,
-                  style: AppStyles.styleSemiBold16(context),
                 ),
-              ),
-              subtitle: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: AlignmentDirectional.centerStart,
-                child: Text(
-                  businessType,
-                  style: AppStyles.styleRegular12(context),
+                title: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    userName,
+                    style: AppStyles.styleSemiBold16(context),
+                  ),
+                ),
+                subtitle: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    businessType,
+                    style: AppStyles.styleRegular12(context),
+                  ),
                 ),
               ),
             ),

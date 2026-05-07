@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:representative_app/core/helpers/custom_snack_bar.dart';
 import 'package:representative_app/core/models/shipment/single_shipment_model.dart';
 import 'package:representative_app/core/routes/end_points.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -21,11 +22,17 @@ class RepresentativeShipmentModal {
   }) {
     final isReject = actionType == ShipmentActionType.reject;
     final primaryColor = isReject
-        ? const Color(0xFFE53935)
-        : const Color(0xFF00C853);
+        ? AppColors.failureColor.withValues(alpha: 0.8)
+        : AppColors.primaryColor.withValues(alpha: 0.9);
     final gradientColors = isReject
-        ? [const Color(0xFFE53935), const Color(0xFFD32F2F)]
-        : [const Color(0xFF00C853), const Color(0xFF00B248)];
+        ? [
+            AppColors.failureColor.withValues(alpha: 0.9),
+            AppColors.failureColor.withValues(alpha: 0.8),
+          ]
+        : [
+            AppColors.primaryColor.withValues(alpha: 0.95),
+            AppColors.primaryColor.withValues(alpha: 0.9),
+          ];
 
     WoltModalSheet.show<void>(
       context: context,

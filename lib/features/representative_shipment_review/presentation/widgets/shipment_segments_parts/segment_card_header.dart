@@ -18,7 +18,7 @@ class SegmentCardHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.primaryColor,
+        color: AppColors.primaryColor.withValues(alpha: 0.9),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),

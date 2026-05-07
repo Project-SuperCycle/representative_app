@@ -15,13 +15,7 @@ import 'package:representative_app/features/representative_shipment_review/prese
 import 'package:representative_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_destination_section.dart';
 import 'package:representative_app/features/representative_shipment_review/presentation/widgets/shipment_segments_parts/segment_products_details.dart';
 
-enum SegmentStep {
-  initial,
-  moved,
-  weighted,
-  delivered,
-  failed,
-}
+enum SegmentStep { initial, moved, weighted, delivered, failed }
 
 class ShipmentSegmentCard extends StatefulWidget {
   final String shipmentID;
@@ -98,9 +92,7 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
     if (segmentId != _currentSegment.id) return;
 
     setState(() {
-      _currentSegment = _currentSegment.copyWith(
-        status: 'in_transit_to_scale',
-      );
+      _currentSegment = _currentSegment.copyWith(status: 'in_transit_to_scale');
     });
 
     // ✅ Notify parent with full segment
@@ -114,7 +106,9 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
       // ✅ تحويل WeighSegmentModel إلى WeightReportModel
       final weightReport = WeightReportModel(
         actualWeightKg: model.actualWeightKg,
-        images: model.images.map((file) => file.path).toList(), // ✅ File paths as strings
+        images: model.images
+            .map((file) => file.path)
+            .toList(), // ✅ File paths as strings
       );
 
       _currentSegment = _currentSegment.copyWith(
@@ -149,7 +143,7 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
   Widget build(BuildContext context) {
     return BlocListener<StartSegmentCubit, StartSegmentState>(
       listenWhen: (_, current) =>
-      current is StartSegmentSuccess &&
+          current is StartSegmentSuccess &&
           current.segmentId == _currentSegment.id,
       listener: (_, state) {
         final success = state as StartSegmentSuccess;
@@ -157,58 +151,61 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
       },
       child: Directionality(
         textDirection: TextDirection.ltr,
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withAlpha(50),
-                blurRadius: 20,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              SegmentCardHeader(
-                driverName: _currentSegment.driverName ?? '',
-                phoneNumber: _currentSegment.driverPhone ?? '',
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 6,
-                      ),
-                      child: SegmentCardProgress(
-                        currentStep: currentStep,
-                        segmentStatus: _currentSegment.status!,
-                      ),
-                    ),
-                    SegmentTruckInfo(
-                      truckNumber: _currentSegment.vehicleNumber!,
-                    ),
-                    SegmentDestinationSection(
-                      destinationTitle: _currentSegment.destName ?? '',
-                      destinationAddress: _currentSegment.destAddress ?? '',
-                    ),
-                    ..._currentSegment.items.map(
-                          (item) => SegmentProductsDetails(
-                        quantity: item.quantity,
-                        productType: item.name,
-                      ),
-                    ),
-                    _buildCurrentStep(),
-                  ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withValues(alpha: 0.25),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
+              ],
+            ),
+            child: Column(
+              children: [
+                SegmentCardHeader(
+                  driverName: _currentSegment.driverName ?? '',
+                  phoneNumber: _currentSegment.driverPhone ?? '',
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 6,
+                        ),
+                        child: SegmentCardProgress(
+                          currentStep: currentStep,
+                          segmentStatus: _currentSegment.status!,
+                        ),
+                      ),
+                      SegmentTruckInfo(
+                        truckNumber: _currentSegment.vehicleNumber!,
+                      ),
+                      SegmentDestinationSection(
+                        destinationTitle: _currentSegment.destName ?? '',
+                        destinationAddress: _currentSegment.destAddress ?? '',
+                      ),
+                      ..._currentSegment.items.map(
+                        (item) => SegmentProductsDetails(
+                          quantity: item.quantity,
+                          productType: item.name,
+                        ),
+                      ),
+                      _buildCurrentStep(),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
@@ -231,7 +228,7 @@ class _ShipmentSegmentCardState extends State<ShipmentSegmentCard> {
         return ShipmentSegmentStep3(
           segment: _currentSegment,
           isDelivered:
-          segmentStep == SegmentStep.delivered ||
+              segmentStep == SegmentStep.delivered ||
               segmentStep == SegmentStep.failed,
           onDeliveredPressed: onDeliveredPressed,
           onFailedPressed: onFailedPressed,

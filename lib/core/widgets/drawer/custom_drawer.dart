@@ -6,6 +6,7 @@ import 'package:representative_app/core/routes/end_points.dart';
 import 'package:representative_app/core/services/auth_manager_services.dart';
 import 'package:representative_app/core/services/storage_services.dart';
 import 'package:representative_app/core/utils/app_assets.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/core/widgets/drawer/user_info_list_tile.dart';
 import 'package:representative_app/features/notifications/data/cubits/get_notifications/get_notifications_cubit.dart';
@@ -247,7 +248,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: Material(
         color: isActive
-            ? const Color(0xFF10B981).withAlpha(25)
+            ? AppColors.primaryColor.withValues(alpha: 0.05)
             : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
@@ -259,7 +260,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
               children: [
                 Icon(
                   icon,
-                  color: isActive ? const Color(0xFF10B981) : Colors.grey[600],
+                  color: isActive
+                      ? AppColors.primaryColor.withValues(alpha: 0.9)
+                      : Colors.grey[600],
                   size: 24,
                 ),
                 const SizedBox(width: 16),
@@ -269,7 +272,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     style: isActive
                         ? AppStyles.styleBold16(
                             context,
-                          ).copyWith(color: const Color(0xFF10B981))
+                          ).copyWith(color: AppColors.primaryColor)
                         : AppStyles.styleMedium16(
                             context,
                           ).copyWith(color: Colors.grey[700]),
@@ -280,7 +283,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     width: 4,
                     height: 24,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981),
+                      color: AppColors.primaryColor.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:representative_app/core/helpers/custom_loading_indicator.dart';
 import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/features/representative_shipment_review/data/models/shipment_segment_model.dart';
@@ -64,13 +65,14 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(50),
-            blurRadius: 10,
+            color: Colors.grey.withValues(alpha: 0.25),
+            blurRadius: 5,
             offset: const Offset(0, 2),
           ),
         ],
@@ -246,13 +248,7 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
             return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                    loadingProgress.expectedTotalBytes!
-                    : null,
-                color: AppColors.primaryColor,
-              ),
+              child: CustomLoadingIndicator(color: AppColors.primaryColor),
             );
           },
           errorBuilder: (context, error, stackTrace) {
@@ -287,7 +283,7 @@ class _SegmentWeightInfoState extends State<SegmentWeightInfo> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         _images.length,
-            (index) => AnimatedContainer(
+        (index) => AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           margin: const EdgeInsets.symmetric(horizontal: 4),
           width: _currentImageIndex == index ? 24 : 8,

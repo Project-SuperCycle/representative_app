@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:representative_app/core/helpers/shipments_calender_helper.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/core/utils/calendar_utils.dart';
 import 'package:representative_app/features/shipments_calendar/data/models/shipment_model.dart';
@@ -32,19 +33,19 @@ class _ShipmentCalendarDayState extends State<ShipmentCalendarDay> {
     );
 
     if (widget.isSelected) {
-      return Colors.blueAccent;
+      return Color(0xff284091).withValues(alpha: 0.90);
     }
 
     if (widget.isToday) {
-      return Colors.blueAccent;
+      return Color(0xff284091).withValues(alpha: 0.90);
     }
 
     if (shipmentsHelper.hasAnyPendingShipmentsWithTime(dateKey)) {
-      return Colors.deepOrange.shade500;
+      return Color(0xffD04A1D).withValues(alpha: 0.90);
     }
 
     if (shipmentsHelper.areAllShipmentsDeliveredWithTime(dateKey)) {
-      return Color(0xff3BC567);
+      return AppColors.primaryColor.withValues(alpha: 0.90);
     }
 
     return Colors.grey.shade200;

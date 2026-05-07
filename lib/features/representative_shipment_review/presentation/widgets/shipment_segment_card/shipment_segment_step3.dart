@@ -24,7 +24,7 @@ class ShipmentSegmentStep3 extends StatefulWidget {
   final ShipmentSegmentModel segment;
   final bool isDelivered;
   final VoidCallback onDeliveredPressed;
-  final VoidCallback onFailedPressed; // ✅ Add failed callback
+  final VoidCallback onFailedPressed;
   final Function(List<File>?)? onImagesSelected;
   final String shipmentID;
   final String segmentID;
@@ -95,7 +95,6 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
         BlocProvider.of<FailSegmentCubit>(
           context,
         ).failSegment(failModel: failModel);
-
       },
     );
   }
@@ -159,128 +158,132 @@ class _ShipmentSegmentStep3State extends State<ShipmentSegmentStep3> {
         // Action buttons or status
         widget.segment.status == "failed"
             ? SegmentStateInfo(
-          title: "حدث مشكلة",
-          icon: FontAwesomeIcons.xmark,
-          mainColor: AppColors.failureColor,
-        )
+                title: "حدث مشكلة",
+                icon: FontAwesomeIcons.xmark,
+                mainColor: AppColors.failureColor,
+              )
             : widget.isDelivered
             ? SegmentStateInfo(
-          title: "تم التسليم",
-          icon: Icons.check_circle_outline_rounded,
-          mainColor: AppColors.primaryColor,
-        )
+                title: "تم التسليم",
+                icon: Icons.check_circle_outline_rounded,
+                mainColor: AppColors.primaryColor,
+              )
             : Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Row(
-            textDirection: TextDirection.rtl,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(
-                child:
-                BlocConsumer<
-                    DeliverSegmentCubit,
-                    DeliverSegmentState
-                >(
-                  // ✅ Filter by segmentId
-                  listenWhen: (previous, current) {
-                    if (current is DeliverSegmentLoading) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    if (current is DeliverSegmentSuccess) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    if (current is DeliverSegmentFailure) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    return false;
-                  },
-                  buildWhen: (previous, current) {
-                    if (current is DeliverSegmentLoading) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    if (current is DeliverSegmentSuccess) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    if (current is DeliverSegmentFailure) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    return false;
-                  },
-                  listener: (context, state) {
-                    // TODO: implement listener
-                    if (state is DeliverSegmentSuccess) {
-                      widget.onDeliveredPressed(); // ✅ This will trigger update
-                      CustomSnackBar.showSuccess(
-                        context,
-                        "تم توصيل الشحنة بنجاح",
-                      );
-                    }
-                    if (state is DeliverSegmentFailure) {
-                      CustomSnackBar.showError(
-                        context,
-                        state.errorMessage,
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return SegmentActionButton(
-                      title: "تم التوصيل",
-                      onPressed: () => _showDeliverModal(context),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(width: 20),
-              Expanded(
-                child: BlocConsumer<FailSegmentCubit, FailSegmentState>(
-                  // ✅ Filter by segmentId
-                  listenWhen: (previous, current) {
-                    if (current is FailSegmentLoading) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    if (current is FailSegmentSuccess) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    if (current is FailSegmentFailure) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    return false;
-                  },
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  textDirection: TextDirection.rtl,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: BlocConsumer<DeliverSegmentCubit, DeliverSegmentState>(
+                        // ✅ Filter by segmentId
+                        listenWhen: (previous, current) {
+                          if (current is DeliverSegmentLoading) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          if (current is DeliverSegmentSuccess) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          if (current is DeliverSegmentFailure) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          return false;
+                        },
+                        buildWhen: (previous, current) {
+                          if (current is DeliverSegmentLoading) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          if (current is DeliverSegmentSuccess) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          if (current is DeliverSegmentFailure) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          return false;
+                        },
+                        listener: (context, state) {
+                          // TODO: implement listener
+                          if (state is DeliverSegmentSuccess) {
+                            widget
+                                .onDeliveredPressed(); // ✅ This will trigger update
+                            CustomSnackBar.showSuccess(
+                              context,
+                              "تم توصيل الشحنة بنجاح",
+                            );
+                          }
+                          if (state is DeliverSegmentFailure) {
+                            CustomSnackBar.showError(
+                              context,
+                              state.errorMessage,
+                            );
+                          }
+                        },
+                        builder: (context, state) {
+                          return SegmentActionButton(
+                            title: "تم التوصيل",
+                            onPressed: () => _showDeliverModal(context),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: BlocConsumer<FailSegmentCubit, FailSegmentState>(
+                        // ✅ Filter by segmentId
+                        listenWhen: (previous, current) {
+                          if (current is FailSegmentLoading) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          if (current is FailSegmentSuccess) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          if (current is FailSegmentFailure) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          return false;
+                        },
 
-                  buildWhen: (previous, current) {
-                    if (current is FailSegmentLoading) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    if (current is FailSegmentSuccess) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    if (current is FailSegmentFailure) {
-                      return current.segmentId == widget.segmentID;
-                    }
-                    return false;
-                  },
-                  listener: (context, state) {
-                    // TODO: implement listener
-                    if (state is FailSegmentSuccess) {
-                      widget.onFailedPressed(); // ✅ This will trigger update
-                      CustomSnackBar.showSuccess(context, "تم تسجيل العطلة");
-                    }
-                    if (state is FailSegmentFailure) {
-                      CustomSnackBar.showError(context, state.errorMessage);
-                    }
-                  },
-                  builder: (context, state) {
-                    return SegmentActionButton(
-                      backgroundColor: AppColors.failureColor,
-                      title: "عطلة",
-                      onPressed: () => _showFailModal(context),
-                    );
-                  },
+                        buildWhen: (previous, current) {
+                          if (current is FailSegmentLoading) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          if (current is FailSegmentSuccess) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          if (current is FailSegmentFailure) {
+                            return current.segmentId == widget.segmentID;
+                          }
+                          return false;
+                        },
+                        listener: (context, state) {
+                          // TODO: implement listener
+                          if (state is FailSegmentSuccess) {
+                            widget
+                                .onFailedPressed(); // ✅ This will trigger update
+                            CustomSnackBar.showSuccess(
+                              context,
+                              "تم تسجيل العطلة",
+                            );
+                          }
+                          if (state is FailSegmentFailure) {
+                            CustomSnackBar.showError(
+                              context,
+                              state.errorMessage,
+                            );
+                          }
+                        },
+                        builder: (context, state) {
+                          return SegmentActionButton(
+                            backgroundColor: AppColors.failureColor,
+                            title: "عطلة",
+                            onPressed: () => _showFailModal(context),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
       ],
     );
   }

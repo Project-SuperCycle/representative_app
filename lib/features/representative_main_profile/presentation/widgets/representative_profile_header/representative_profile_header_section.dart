@@ -6,6 +6,7 @@ import 'package:representative_app/core/models/user_profile_model.dart';
 import 'package:representative_app/core/routes/end_points.dart';
 import 'package:representative_app/core/utils/app_assets.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
+import 'package:representative_app/core/widgets/shipment/shipment_logo.dart';
 import 'package:representative_app/features/representative_main_profile/presentation/widgets/representative_profile_image.dart';
 
 class RepresentativeProfileHeaderSection extends StatelessWidget {
@@ -61,27 +62,7 @@ class RepresentativeProfileHeaderSection extends StatelessWidget {
                       ),
 
                       // Logo Section
-                      Expanded(
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                AppAssets.logoName,
-                                fit: BoxFit.contain,
-                                scale: 6.0,
-                              ),
-                              const SizedBox(width: 5),
-                              Image.asset(
-                                AppAssets.logoIcon,
-                                fit: BoxFit.contain,
-                                scale: 7.5,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      Expanded(child: Center(child: ShipmentLogo())),
 
                       // Back Button (Home)
                       Container(

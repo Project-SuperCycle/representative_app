@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:representative_app/core/models/notifications_model.dart';
+import 'package:representative_app/core/utils/app_colors.dart';
 import 'package:representative_app/core/utils/app_styles.dart';
 import 'package:representative_app/core/widgets/notifications/notification_item.dart';
 import 'package:representative_app/core/widgets/notifications/notifications_loading_indicator.dart';
@@ -251,7 +252,9 @@ class _NotificationsPanelState extends State<NotificationsPanel>
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF10B981) : Colors.grey[100],
+            color: isSelected
+                ? AppColors.primaryColor.withValues(alpha: 0.9)
+                : Colors.grey[100],
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(

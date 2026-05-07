@@ -13,10 +13,10 @@ class SegmentFailModal {
     required Function(List<File>, String) onSubmit,
     required String shipmentID,
   }) {
-    final primaryColor = AppColors.failureColor; // Orange color for issue
+    final primaryColor = AppColors.failureColor.withValues(alpha: 0.9);
     final gradientColors = [
-      AppColors.failureColor.withAlpha(400),
-      AppColors.failureColor.withAlpha(450),
+      AppColors.failureColor.withValues(alpha: 0.9),
+      AppColors.failureColor.withValues(alpha: 0.8),
     ];
 
     WoltModalSheet.show<void>(
@@ -441,10 +441,7 @@ class _ModalContentState extends State<_ModalContent>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: widget.primaryColor.withAlpha(150),
-          width: 2,
-        ),
+        border: Border.all(color: widget.primaryColor.withAlpha(150), width: 2),
         boxShadow: [
           BoxShadow(
             color: widget.primaryColor.withAlpha(50),
